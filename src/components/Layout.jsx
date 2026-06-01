@@ -39,7 +39,6 @@ const menu = [
     children: {
       Master: [
         { label: "Vendor Master",         path: "/vendors" },
-        { label: "Product Master",        path: "/products" },
       ],
       Transaction: [
         { label: "Purchase Requisition",   path: "/purchase/requisition" },
