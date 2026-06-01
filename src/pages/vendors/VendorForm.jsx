@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Layout from "../../components/Layout";
+import { api } from "../../lib/api.js";
 import {
   Save, X, Plus, Trash2, Edit2, FileText, CheckCircle,
   AlertCircle, RefreshCw, Printer, ChevronRight, ArrowLeft,
@@ -379,13 +380,14 @@ export default function VendorForm() {
   const isReadOnly = mode === "view";
 
   useEffect(() => {
-    const vendors = JSON.parse(localStorage.getItem("vendors") || "[]");
-    setAllVendors(vendors);
-    if (!isNew && id) {
-      const found = vendors.find((v) => v.id === id);
-      if (found) setForm(found);
-      else navigate("/vendors");
-    }
+    api.get("/api/vendors").then((vendors) => {
+      setAllVendors(vendors);
+      if (!isNew && id) {
+        const found = vendors.find((v) => v.id === id);
+        if (found) setForm(found);
+        else navigate("/vendors");
+      }
+    }).catch(console.error);
   }, [id, isNew]);
 
   const showToast = (msg, type = "success") => {
@@ -430,11 +432,10 @@ export default function VendorForm() {
   };
 
   // ── Save ──
-  const handleSave = () => {
+  const handleSave = async () => {
     const errs = validate(form, allVendors, isNew ? null : id);
     if (Object.keys(errs).length > 0) {
       setErrors(errs);
-      // Navigate to first tab with error
       const keys = Object.keys(errs);
       if (keys.some((k) => ["corporateCountry","corporateState","corporatePinCode","email",
         "gstRegistrationStatus","gstRegistrationNo","gstRegistrationDate","panNo"].includes(k)))
@@ -447,45 +448,48 @@ export default function VendorForm() {
       return;
     }
 
-    const vendors = JSON.parse(localStorage.getItem("vendors") || "[]");
     const now = new Date().toISOString();
     const userName = user.name || user.fullName || "System";
-
     const changeEntry = { timestamp: now, user: userName, action: isNew ? "Created" : "Updated", changes: isNew ? "Record created" : "Record updated" };
 
-    let saved;
-    if (isNew) {
-      saved = { ...form, id: Date.now().toString(), createdAt: now, updatedAt: now, createdBy: userName, updatedBy: userName, changelog: [changeEntry] };
-      vendors.push(saved);
-    } else {
-      saved = { ...form, updatedAt: now, updatedBy: userName, changelog: [...(form.changelog || []), changeEntry] };
-      const idx = vendors.findIndex((v) => v.id === id);
-      if (idx !== -1) vendors[idx] = saved;
+    try {
+      let saved;
+      if (isNew) {
+        const payload = { ...form, id: Date.now().toString(), createdAt: now, updatedAt: now, createdBy: userName, updatedBy: userName, changelog: [changeEntry] };
+        saved = await api.post("/api/vendors", payload);
+      } else {
+        const payload = { ...form, updatedAt: now, updatedBy: userName, changelog: [...(form.changelog || []), changeEntry] };
+        saved = await api.put(`/api/vendors/${id}`, payload);
+      }
+      setForm(saved);
+      setAllVendors((prev) => isNew ? [...prev, saved] : prev.map((v) => v.id === saved.id ? saved : v));
+      setMode("view");
+      setErrors({});
+      showToast("Vendor saved successfully.");
+      if (isNew) navigate(`/vendors/${saved.id}`, { replace: true });
+    } catch (err) {
+      showToast(err.message || "Failed to save vendor.", "error");
     }
-
-    localStorage.setItem("vendors", JSON.stringify(vendors));
-    setForm(saved);
-    setAllVendors(vendors);
-    setMode("view");
-    setErrors({});
-    showToast("Vendor saved successfully.");
-    if (isNew) navigate(`/vendors/${saved.id}`, { replace: true });
   };
 
-  const handleDiscard = () => {
+  const handleDiscard = async () => {
     if (isNew) { navigate("/vendors"); return; }
-    const vendors = JSON.parse(localStorage.getItem("vendors") || "[]");
-    const found = vendors.find((v) => v.id === id);
-    if (found) setForm(found);
+    try {
+      const found = await api.get(`/api/vendors/${id}`);
+      setForm(found);
+    } catch { /* keep current form */ }
     setMode("view");
     setErrors({});
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!window.confirm(`Delete vendor "${form.name}"? This cannot be undone.`)) return;
-    const vendors = JSON.parse(localStorage.getItem("vendors") || "[]").filter((v) => v.id !== id);
-    localStorage.setItem("vendors", JSON.stringify(vendors));
-    navigate("/vendors");
+    try {
+      await api.del(`/api/vendors/${id}`);
+      navigate("/vendors");
+    } catch (err) {
+      showToast(err.message || "Failed to delete vendor.", "error");
+    }
   };
 
   // ── Sub-table helpers ──

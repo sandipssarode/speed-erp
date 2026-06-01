@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../../components/Layout";
 import { Plus, Search, Edit2, Trash2, ChevronRight, Package } from "lucide-react";
+import { api } from "../../lib/api.js";
 
 // ─── Seed Categories ──────────────────────────────────────────
 export const SEED_CATEGORIES = [
@@ -127,25 +128,17 @@ const TYPE_BADGES = [
 export default function ProductList() {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [filterCategory, setFilterCategory] = useState("all");
   const [filterType, setFilterType] = useState("all");
 
   useEffect(() => {
-    // Seed categories if not present
-    const cats = JSON.parse(localStorage.getItem("productCategories") || "[]");
-    if (cats.length === 0) {
-      localStorage.setItem("productCategories", JSON.stringify(SEED_CATEGORIES));
-    }
-    // Seed products
-    const stored = JSON.parse(localStorage.getItem("products") || "[]");
-    if (stored.length === 0) {
-      localStorage.setItem("products", JSON.stringify(SEED_PRODUCTS));
-      setProducts(SEED_PRODUCTS);
-    } else {
-      setProducts(stored);
-    }
+    api.get("/api/products")
+      .then(setProducts)
+      .catch(console.error)
+      .finally(() => setLoading(false));
   }, []);
 
   const categories = [...new Set(products.map((p) => p.categoryCode).filter(Boolean))];
@@ -173,11 +166,14 @@ export default function ProductList() {
     return matchSearch && matchStatus && matchCat && matchType;
   });
 
-  const handleDelete = (id, name) => {
+  const handleDelete = async (id, name) => {
     if (!window.confirm(`Delete product "${name}"? This cannot be undone.`)) return;
-    const updated = products.filter((p) => p.id !== id);
-    localStorage.setItem("products", JSON.stringify(updated));
-    setProducts(updated);
+    try {
+      await api.del(`/api/products/${id}`);
+      setProducts((prev) => prev.filter((p) => p.id !== id));
+    } catch (err) {
+      alert("Failed to delete: " + err.message);
+    }
   };
 
   return (
@@ -236,6 +232,7 @@ export default function ProductList() {
           <span className="ml-auto text-xs text-gray-400">{filtered.length} of {products.length} record(s)</span>
         </div>
 
+        {loading && <p className="text-center text-sm text-gray-400 py-6">Loading products...</p>}
         {/* Table */}
         <div className="bg-white border border-gray-200 rounded overflow-hidden">
           <table className="w-full text-sm">

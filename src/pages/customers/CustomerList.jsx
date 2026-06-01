@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../../components/Layout";
 import { Plus, Search, Edit2, Trash2, ChevronRight } from "lucide-react";
+import { api } from "../../lib/api.js";
 
-// ─── Seed Data ───────────────────────────────────────────────
-const SEED_CUSTOMERS = [
+const _REMOVED = [
   {
     id: "2001",
     code: "C001", name: "Infosys BPO Solutions Ltd", group: "Corporate",
@@ -204,28 +204,24 @@ const SEED_CUSTOMERS = [
     remark: "Deactivated — contract lapsed Dec 2024. Reactivate only after new agreement.",
     createdAt: "2023-08-01T08:00:00.000Z", updatedAt: "2025-01-01T00:00:00.000Z",
     createdBy: "Admin", updatedBy: "Admin",
-    changelog: [
-      { timestamp: "2023-08-01T08:00:00.000Z", user: "Admin", action: "Created", changes: "Record created" },
-      { timestamp: "2025-01-01T00:00:00.000Z", user: "Admin", action: "Updated", changes: "Deactivated — contract lapsed" },
-    ],
+    changelog: [],
   },
 ];
+void _REMOVED; // suppress unused warning — seed data lives in api/init.js
 
 export default function CustomerList() {
   const navigate = useNavigate();
   const [customers, setCustomers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [filterGroup, setFilterGroup] = useState("all");
 
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem("customers") || "[]");
-    if (stored.length === 0) {
-      localStorage.setItem("customers", JSON.stringify(SEED_CUSTOMERS));
-      setCustomers(SEED_CUSTOMERS);
-    } else {
-      setCustomers(stored);
-    }
+    api.get("/api/customers")
+      .then(setCustomers)
+      .catch(console.error)
+      .finally(() => setLoading(false));
   }, []);
 
   const groups = [...new Set(customers.map((c) => c.group).filter(Boolean))];
@@ -247,11 +243,14 @@ export default function CustomerList() {
     return matchSearch && matchStatus && matchGroup;
   });
 
-  const handleDelete = (id, name) => {
+  const handleDelete = async (id, name) => {
     if (!window.confirm(`Delete customer "${name}"? This cannot be undone.`)) return;
-    const updated = customers.filter((c) => c.id !== id);
-    localStorage.setItem("customers", JSON.stringify(updated));
-    setCustomers(updated);
+    try {
+      await api.del(`/api/customers/${id}`);
+      setCustomers((prev) => prev.filter((c) => c.id !== id));
+    } catch (err) {
+      alert("Failed to delete: " + err.message);
+    }
   };
 
   return (
@@ -313,6 +312,7 @@ export default function CustomerList() {
           </span>
         </div>
 
+        {loading && <p className="text-center text-sm text-gray-400 py-6">Loading customers...</p>}
         {/* Table */}
         <div className="bg-white border border-gray-200 rounded overflow-hidden">
           <table className="w-full text-sm">

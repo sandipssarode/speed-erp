@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Layout from "../../components/Layout";
+import { api } from "../../lib/api.js";
 import {
   Save, X, Plus, Trash2, Edit2, FileText, CheckCircle,
   AlertCircle, RefreshCw, Printer, ChevronRight, ArrowLeft,
@@ -370,13 +371,14 @@ export default function CustomerForm() {
   const isReadOnly = mode === "view";
 
   useEffect(() => {
-    const customers = JSON.parse(localStorage.getItem("customers") || "[]");
-    setAllCustomers(customers);
-    if (!isNew && id) {
-      const found = customers.find((c) => c.id === id);
-      if (found) setForm(found);
-      else navigate("/sales/customers");
-    }
+    api.get("/api/customers").then((customers) => {
+      setAllCustomers(customers);
+      if (!isNew && id) {
+        const found = customers.find((c) => c.id === id);
+        if (found) setForm(found);
+        else navigate("/sales/customers");
+      }
+    }).catch(console.error);
   }, [id, isNew]);
 
   const showToast = (msg, type = "success") => {
@@ -419,7 +421,7 @@ export default function CustomerForm() {
   };
 
   // ── Save ──
-  const handleSave = () => {
+  const handleSave = async () => {
     const errs = validate(form, allCustomers, isNew ? null : id);
     if (Object.keys(errs).length > 0) {
       setErrors(errs);
@@ -437,44 +439,48 @@ export default function CustomerForm() {
       return;
     }
 
-    const customers = JSON.parse(localStorage.getItem("customers") || "[]");
     const now = new Date().toISOString();
     const userName = user.name || user.fullName || "System";
     const changeEntry = { timestamp: now, user: userName, action: isNew ? "Created" : "Updated", changes: isNew ? "Record created" : "Record updated" };
 
-    let saved;
-    if (isNew) {
-      saved = { ...form, id: Date.now().toString(), createdAt: now, updatedAt: now, createdBy: userName, updatedBy: userName, changelog: [changeEntry] };
-      customers.push(saved);
-    } else {
-      saved = { ...form, updatedAt: now, updatedBy: userName, changelog: [...(form.changelog || []), changeEntry] };
-      const idx = customers.findIndex((c) => c.id === id);
-      if (idx !== -1) customers[idx] = saved;
+    try {
+      let saved;
+      if (isNew) {
+        const payload = { ...form, id: Date.now().toString(), createdAt: now, updatedAt: now, createdBy: userName, updatedBy: userName, changelog: [changeEntry] };
+        saved = await api.post("/api/customers", payload);
+      } else {
+        const payload = { ...form, updatedAt: now, updatedBy: userName, changelog: [...(form.changelog || []), changeEntry] };
+        saved = await api.put(`/api/customers/${id}`, payload);
+      }
+      setForm(saved);
+      setAllCustomers((prev) => isNew ? [...prev, saved] : prev.map((c) => c.id === saved.id ? saved : c));
+      setMode("view");
+      setErrors({});
+      showToast("Customer saved successfully.");
+      if (isNew) navigate(`/sales/customers/${saved.id}`, { replace: true });
+    } catch (err) {
+      showToast(err.message || "Failed to save customer.", "error");
     }
-
-    localStorage.setItem("customers", JSON.stringify(customers));
-    setForm(saved);
-    setAllCustomers(customers);
-    setMode("view");
-    setErrors({});
-    showToast("Customer saved successfully.");
-    if (isNew) navigate(`/sales/customers/${saved.id}`, { replace: true });
   };
 
-  const handleDiscard = () => {
+  const handleDiscard = async () => {
     if (isNew) { navigate("/sales/customers"); return; }
-    const customers = JSON.parse(localStorage.getItem("customers") || "[]");
-    const found = customers.find((c) => c.id === id);
-    if (found) setForm(found);
+    try {
+      const found = await api.get(`/api/customers/${id}`);
+      setForm(found);
+    } catch { /* keep current form */ }
     setMode("view");
     setErrors({});
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!window.confirm(`Delete customer "${form.name}"? This cannot be undone.`)) return;
-    const customers = JSON.parse(localStorage.getItem("customers") || "[]").filter((c) => c.id !== id);
-    localStorage.setItem("customers", JSON.stringify(customers));
-    navigate("/sales/customers");
+    try {
+      await api.del(`/api/customers/${id}`);
+      navigate("/sales/customers");
+    } catch (err) {
+      showToast(err.message || "Failed to delete customer.", "error");
+    }
   };
 
   // ── Sub-table helpers ──

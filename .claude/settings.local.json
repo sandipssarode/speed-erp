@@ -5,7 +5,11 @@
       "Bash(npx vite *)",
       "PowerShell(cd \"D:\\\\ERP - Speed Innovations\\\\speed-erp\"; Get-ChildItem -Recurse -Directory | Select-Object -First 30 | ForEach-Object { $_.FullName })",
       "PowerShell(cd \"D:\\\\ERP - Speed Innovations\\\\speed-erp\"; Get-ChildItem -Path src -Recurse | ForEach-Object { $_.FullName })",
-      "PowerShell(cd \"D:\\\\ERP - Speed Innovations\\\\speed-erp\"; Get-ChildItem -Path . | Where-Object { $_.Name -match '\\\\.\\(jsx?|json|ts|tsx\\)$' })"
+      "PowerShell(cd \"D:\\\\ERP - Speed Innovations\\\\speed-erp\"; Get-ChildItem -Path . | Where-Object { $_.Name -match '\\\\.\\(jsx?|json|ts|tsx\\)$' })",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(npm install *)"
     ]
   }
 }

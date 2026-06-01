@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Layout from "../../components/Layout";
+import { api } from "../../lib/api.js";
 import {
   Save, X, Plus, Trash2, Edit2, FileText, CheckCircle,
   AlertCircle, ChevronRight, ArrowLeft, ChevronDown, Package,
@@ -252,9 +253,7 @@ function CategoryModal({ onSave, onClose, categories }) {
     if (Object.keys(e).length) { setErrs(e); return; }
 
     const newCat = { id: Date.now().toString(), code: cat.code.trim().toUpperCase(), name: cat.name.trim(), costMethod: cat.costMethod, expenseAccount: cat.expenseAccount, incomeAccount: cat.incomeAccount };
-    const all = JSON.parse(localStorage.getItem("productCategories") || "[]");
-    all.push(newCat);
-    localStorage.setItem("productCategories", JSON.stringify(all));
+    api.post("/api/product-categories", newCat).catch(console.error);
     onSave(newCat);
   };
 
@@ -317,17 +316,18 @@ export default function ProductForm() {
   const isReadOnly = mode === "view";
 
   useEffect(() => {
-    const cats = JSON.parse(localStorage.getItem("productCategories") || "[]");
-    setAllCategories(cats.length ? cats : SEED_CATEGORIES);
-
-    const prods = JSON.parse(localStorage.getItem("products") || "[]");
-    setAllProducts(prods);
-
-    if (!isNew && id) {
-      const found = prods.find((p) => p.id === id);
-      if (found) setForm(found);
-      else navigate("/products");
-    }
+    Promise.all([
+      api.get("/api/product-categories"),
+      api.get("/api/products"),
+    ]).then(([cats, prods]) => {
+      setAllCategories(cats.length ? cats : []);
+      setAllProducts(prods);
+      if (!isNew && id) {
+        const found = prods.find((p) => p.id === id);
+        if (found) setForm(found);
+        else navigate("/products");
+      }
+    }).catch(console.error);
   }, [id, isNew]);
 
   const showToast = (msg, type = "success") => {
@@ -360,18 +360,15 @@ export default function ProductForm() {
   };
 
   // ── Save ──
-  const handleSave = () => {
+  const handleSave = async () => {
     const errs = validate(form);
-    // Check code uniqueness
-    const products = JSON.parse(localStorage.getItem("products") || "[]");
-    if (form.code && products.some((p) => p.code === form.code && p.id !== (isNew ? null : id)))
+    if (form.code && allProducts.some((p) => p.code === form.code && p.id !== (isNew ? null : id)))
       errs.code = "Product Code already exists. Please enter a unique code.";
 
     if (Object.keys(errs).length > 0) {
       setErrors(errs);
       const keys = Object.keys(errs);
-      if (keys.some((k) => ["code","name","invoicingPolicy","typeFlags"].includes(k))) setActiveTab("general");
-      else if (keys.some((k) => ["salesPrice","categoryCode","categoryName","costMethod","stockUOM"].includes(k))) setActiveTab("general");
+      if (keys.some((k) => ["code","name","invoicingPolicy","typeFlags","salesPrice","categoryCode","categoryName","costMethod","stockUOM"].includes(k))) setActiveTab("general");
       else if (keys.some((k) => k.startsWith("cv_"))) setActiveTab("sales");
       showToast("Please correct the highlighted fields and try again.", "error");
       return;
@@ -381,38 +378,44 @@ export default function ProductForm() {
     const userName = user.name || user.fullName || "System";
     const changeEntry = { timestamp: now, user: userName, action: isNew ? "Created" : "Updated", changes: isNew ? "Record created" : "Record updated" };
 
-    let saved;
-    if (isNew) {
-      saved = { ...form, id: Date.now().toString(), createdAt: now, updatedAt: now, createdBy: userName, updatedBy: userName, changelog: [changeEntry] };
-      products.push(saved);
-    } else {
-      saved = { ...form, updatedAt: now, updatedBy: userName, changelog: [...(form.changelog || []), changeEntry] };
-      const idx = products.findIndex((p) => p.id === id);
-      if (idx !== -1) products[idx] = saved;
+    try {
+      let saved;
+      if (isNew) {
+        const payload = { ...form, id: Date.now().toString(), createdAt: now, updatedAt: now, createdBy: userName, updatedBy: userName, changelog: [changeEntry] };
+        saved = await api.post("/api/products", payload);
+      } else {
+        const payload = { ...form, updatedAt: now, updatedBy: userName, changelog: [...(form.changelog || []), changeEntry] };
+        saved = await api.put(`/api/products/${id}`, payload);
+      }
+      setForm(saved);
+      setAllProducts((prev) => isNew ? [...prev, saved] : prev.map((p) => p.id === saved.id ? saved : p));
+      setMode("view");
+      setErrors({});
+      showToast("Product saved successfully.");
+      if (isNew) navigate(`/products/${saved.id}`, { replace: true });
+    } catch (err) {
+      showToast(err.message || "Failed to save product.", "error");
     }
-
-    localStorage.setItem("products", JSON.stringify(products));
-    setForm(saved);
-    setAllProducts(products);
-    setMode("view");
-    setErrors({});
-    showToast("Product saved successfully.");
-    if (isNew) navigate(`/products/${saved.id}`, { replace: true });
   };
 
-  const handleDiscard = () => {
+  const handleDiscard = async () => {
     if (isNew) { navigate("/products"); return; }
-    const found = JSON.parse(localStorage.getItem("products") || "[]").find((p) => p.id === id);
-    if (found) setForm(found);
+    try {
+      const found = await api.get(`/api/products/${id}`);
+      setForm(found);
+    } catch { /* keep current form */ }
     setMode("view");
     setErrors({});
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!window.confirm(`Delete product "${form.name}"? This cannot be undone.`)) return;
-    const updated = JSON.parse(localStorage.getItem("products") || "[]").filter((p) => p.id !== id);
-    localStorage.setItem("products", JSON.stringify(updated));
-    navigate("/products");
+    try {
+      await api.del(`/api/products/${id}`);
+      navigate("/products");
+    } catch (err) {
+      showToast(err.message || "Failed to delete product.", "error");
+    }
   };
 
   // Sub-table helpers — Variants
