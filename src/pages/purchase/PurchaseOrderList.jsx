@@ -1138,7 +1138,6 @@ export default function PurchaseOrderList() {
                       <select
                         defaultValue=""
                         onChange={(e) => { addPRNo(e.target.value); e.target.value = ""; }}
-                        disabled={isReadOnly}
                         className="text-sm border border-gray-300 rounded px-2.5 py-1.5 bg-white focus:outline-none focus:ring-1 focus:ring-blue-400 min-w-[220px]"
                       >
                         <option value="">— Select PR Number —</option>
@@ -1223,7 +1222,7 @@ export default function PurchaseOrderList() {
                   <div className="flex items-center gap-3">
                     <button
                       onClick={handleCopyToPO}
-                      disabled={checkedItems.size === 0}
+                      disabled={checkedItems.size === 0 || isReadOnly}
                       className="flex items-center gap-1.5 text-xs px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium disabled:opacity-40 disabled:cursor-not-allowed"
                     >
                       <Plus size={13} /> Copy to PO Item Detail
