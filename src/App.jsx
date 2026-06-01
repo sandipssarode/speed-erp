@@ -11,6 +11,7 @@ import PurchaseOrderList from "./pages/purchase/PurchaseOrderList";
 import QuotationComparison from "./pages/purchase/QuotationComparison";
 import PurchaseInquiry from "./pages/purchase/PurchaseInquiry";
 import PurchaseRequisition from "./pages/purchase/PurchaseRequisition";
+import PurchaseQuotation from "./pages/purchase/PurchaseQuotation";
 import CustomerList from "./pages/customers/CustomerList";
 import CustomerForm from "./pages/customers/CustomerForm";
 import ProductList from "./pages/products/ProductList";
@@ -50,6 +51,7 @@ function App() {
         {/* Purchase */}
         <Route path="/purchase/requisition" element={<PurchaseRequisition />} />
         <Route path="/purchase/inquiry" element={<PurchaseInquiry />} />
+        <Route path="/purchase/quotation" element={<PurchaseQuotation />} />
         <Route path="/purchase/quotation-comparison" element={<QuotationComparison />} />
         <Route path="/purchase/order" element={<PurchaseOrderList />} />
         <Route path="/purchase/reports/pr" element={<WorkInProgress />} />

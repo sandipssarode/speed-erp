@@ -43,6 +43,7 @@ const menu = [
       Transaction: [
         { label: "Purchase Requisition",   path: "/purchase/requisition" },
         { label: "Purchase Inquiry",       path: "/purchase/inquiry" },
+        { label: "Purchase Quotation",     path: "/purchase/quotation" },
         { label: "Quotation Comparison",   path: "/purchase/quotation-comparison" },
         { label: "Purchase Order",         path: "/purchase/order" },
       ],
