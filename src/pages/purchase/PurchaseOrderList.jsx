@@ -284,6 +284,8 @@ export default function PurchaseOrderList() {
   const [taxRows,       setTaxRows]       = useState([]);
   const [summary,       setSummary]       = useState({ basicValue: 0, discountValue: 0, taxableAmt: 0, taxValue: 0, roundOff: 0, totalPOValue: 0 });
   const [poLevelDisc,   setPoLevelDisc]   = useState("");
+  const [selectedPRNos, setSelectedPRNos] = useState([]);   // PR numbers added to the lookup
+  const [checkedItems,  setCheckedItems]  = useState(new Set()); // "prId|itemIdx" keys
 
   const fileRef = useRef(null);
   const isReadOnly   = mode === "view";
@@ -434,21 +436,60 @@ export default function PurchaseOrderList() {
   const updMilestone = (i, k, v) => setForm((p) => { const milestones = [...p.milestones]; milestones[i] = { ...milestones[i], [k]: v }; return { ...p, milestones }; });
   const delMilestone = (i) => { if (!window.confirm("Remove this milestone?")) return; setForm((p) => ({ ...p, milestones: p.milestones.filter((_, x) => x !== i) })); };
 
-  // ── Load PR Items ──
-  const handleLoadPRItems = () => {
+  // ── PR Reference helpers ──
+  const addPRNo = (number) => {
+    if (!number || selectedPRNos.includes(number)) return;
+    setSelectedPRNos((p) => [...p, number]);
+  };
+
+  const removePRNo = (number) => {
+    setSelectedPRNos((p) => p.filter((n) => n !== number));
+    setCheckedItems((prev) => {
+      const prs = JSON.parse(localStorage.getItem("purchase_requisitions") || "[]");
+      const pr  = prs.find((p) => p.number === number);
+      if (!pr) return prev;
+      const next = new Set(prev);
+      (pr.items || []).forEach((_, idx) => next.delete(`${pr.id}|${idx}`));
+      return next;
+    });
+  };
+
+  const toggleItem = (key) => {
+    setCheckedItems((prev) => {
+      const next = new Set(prev);
+      next.has(key) ? next.delete(key) : next.add(key);
+      return next;
+    });
+  };
+
+  const toggleAllItems = (rows, allChecked) => {
+    setCheckedItems((prev) => {
+      const next = new Set(prev);
+      rows.forEach(({ key }) => allChecked ? next.delete(key) : next.add(key));
+      return next;
+    });
+  };
+
+  const handleCopyToPO = () => {
+    if (checkedItems.size === 0) { showToast("Select at least one item line to copy.", "error"); return; }
     const prs = JSON.parse(localStorage.getItem("purchase_requisitions") || "[]");
-    if (prs.length === 0) { showToast("No Purchase Requisitions found in system.", "error"); return; }
-    const prItems = prs.flatMap((pr) =>
-      (pr.items || []).map((it) => ({
-        id: uid(), itemCode: it.itemCode || "", description: it.description || "",
-        pQty: it.qty || "", pUoM: it.uom || "", sQty: "", sUoM: "KGS",
-        rate: it.budgetaryRate || "", discType: "", discValue: "",
-        remark: it.remark || "", vendorItemCode: "", drawingNo: "", revNo: "0",
-        hsnSACNo: "", gstPct: "18",
-      }))
-    );
-    setForm((p) => ({ ...p, items: [...p.items, ...prItems] }));
-    showToast(`${prItems.length} item(s) loaded from PR records.`);
+    const newLines = [];
+    prs.forEach((pr) => {
+      if (!selectedPRNos.includes(pr.number)) return;
+      (pr.items || []).forEach((it, idx) => {
+        if (!checkedItems.has(`${pr.id}|${idx}`)) return;
+        newLines.push({
+          id: uid(), itemCode: it.itemCode || "", description: it.description || "",
+          pQty: it.qty || "", pUoM: it.uom || "", sQty: "", sUoM: "KGS",
+          rate: it.budgetaryRate || "", discType: "", discValue: "",
+          remark: it.remark || "", vendorItemCode: "", drawingNo: "", revNo: "0",
+          hsnSACNo: "", gstPct: "18",
+        });
+      });
+    });
+    setForm((p) => ({ ...p, items: [...p.items, ...newLines] }));
+    setCheckedItems(new Set());
+    showToast(`${newLines.length} item(s) copied to PO Item Details.`);
     setActiveTab("items");
   };
 
@@ -1079,58 +1120,121 @@ export default function PurchaseOrderList() {
           <div className="p-4">
 
             {/* ════ TAB: PR REFERENCE ════ */}
-            {activeTab === "prref" && (
-              <div className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <button onClick={handleLoadPRItems}
-                    className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium">
-                    <Plus size={13} /> Load PR Items
-                  </button>
-                  <span className="text-xs text-gray-400">Copies all PR items into the PO Item Details tab.</span>
-                </div>
-                {(() => {
-                  const prs = JSON.parse(localStorage.getItem("purchase_requisitions") || "[]");
-                  return (
-                    <div className="border border-gray-200 rounded overflow-x-auto">
-                      <table className="w-full text-xs min-w-[800px]">
-                        <thead>
-                          <tr className="bg-gray-50 border-b border-gray-200">
-                            {["Year","Doc","PR No","Item Code","Item Name","Req Qty","Pending Qty","PO Qty"].map((h) => (
-                              <th key={h} className="px-3 py-2 text-left text-gray-500 font-semibold uppercase tracking-wide whitespace-nowrap">{h}</th>
-                            ))}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {prs.length === 0 ? (
-                            <tr>
-                              <td colSpan={8} className="py-8 text-center text-gray-400 text-sm">No Purchase Requisitions found.</td>
-                            </tr>
-                          ) : (
-                            prs.flatMap((pr) =>
-                              (pr.items || []).map((it, ii) => (
-                                <tr key={`${pr.id}-${ii}`} className="border-b border-gray-100 hover:bg-blue-50/20">
-                                  <td className="px-3 py-2 text-gray-600">{pr.year}</td>
-                                  <td className="px-3 py-2 text-gray-500 font-mono">{pr.series}</td>
-                                  <td className="px-3 py-2 text-blue-600 font-mono font-semibold">{pr.number}</td>
-                                  <td className="px-3 py-2 text-gray-700 font-mono">{it.itemCode}</td>
-                                  <td className="px-3 py-2 text-gray-600">{it.description}</td>
-                                  <td className="px-3 py-2 text-right text-gray-600">{it.qty} {it.uom}</td>
-                                  <td className="px-3 py-2 text-right text-gray-500">{it.qty} {it.uom}</td>
-                                  <td className="px-3 py-2 text-right">
-                                    <input type="number" min="0" defaultValue={it.qty}
-                                      className="w-20 px-1.5 py-1 text-xs border border-gray-300 rounded text-right focus:outline-none focus:ring-1 focus:ring-blue-300" />
-                                  </td>
-                                </tr>
-                              ))
-                            )
-                          )}
-                        </tbody>
-                      </table>
+            {activeTab === "prref" && (() => {
+              const allPRs  = JSON.parse(localStorage.getItem("purchase_requisitions") || "[]");
+              const selPRs  = allPRs.filter((pr) => selectedPRNos.includes(pr.number));
+              const rows    = selPRs.flatMap((pr) =>
+                (pr.items || []).map((it, idx) => ({ key: `${pr.id}|${idx}`, pr, it, idx }))
+              );
+              const allChecked = rows.length > 0 && rows.every((r) => checkedItems.has(r.key));
+
+              return (
+                <div className="space-y-4">
+
+                  {/* PR Number Lookup */}
+                  <div className="bg-gray-50 border border-gray-200 rounded p-3 space-y-2">
+                    <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Select Purchase Req. No</p>
+                    <div className="flex items-center gap-2">
+                      <select
+                        defaultValue=""
+                        onChange={(e) => { addPRNo(e.target.value); e.target.value = ""; }}
+                        disabled={isReadOnly}
+                        className="text-sm border border-gray-300 rounded px-2.5 py-1.5 bg-white focus:outline-none focus:ring-1 focus:ring-blue-400 min-w-[220px]"
+                      >
+                        <option value="">— Select PR Number —</option>
+                        {allPRs
+                          .filter((pr) => !selectedPRNos.includes(pr.number))
+                          .map((pr) => (
+                            <option key={pr.id} value={pr.number}>
+                              {pr.number} — {pr.buyer || pr.buyerCode} ({pr.items?.length || 0} items)
+                            </option>
+                          ))}
+                      </select>
+                      <span className="text-xs text-gray-400">Select one or more PR numbers to reference</span>
                     </div>
-                  );
-                })()}
-              </div>
-            )}
+
+                    {/* Selected PR tags */}
+                    {selectedPRNos.length > 0 && (
+                      <div className="flex flex-wrap gap-2 pt-1">
+                        {selectedPRNos.map((no) => (
+                          <span key={no} className="inline-flex items-center gap-1.5 bg-blue-50 border border-blue-200 text-blue-700 text-xs px-2.5 py-1 rounded-full font-medium">
+                            {no}
+                            {!isReadOnly && (
+                              <button onClick={() => removePRNo(no)} className="text-blue-400 hover:text-blue-700 leading-none">
+                                <X size={11} />
+                              </button>
+                            )}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Items table */}
+                  <div className="border border-gray-200 rounded overflow-x-auto">
+                    <table className="w-full text-xs min-w-[860px]">
+                      <thead>
+                        <tr className="bg-gray-50 border-b border-gray-200">
+                          <th className="px-3 py-2 w-8">
+                            {rows.length > 0 && (
+                              <input type="checkbox" checked={allChecked}
+                                onChange={() => toggleAllItems(rows, allChecked)}
+                                className="rounded" />
+                            )}
+                          </th>
+                          {["PR No","Year","Item Code","Item Description","Req Qty","UoM","Pending Qty"].map((h) => (
+                            <th key={h} className="px-3 py-2 text-left text-gray-500 font-semibold uppercase tracking-wide whitespace-nowrap">{h}</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {rows.length === 0 ? (
+                          <tr>
+                            <td colSpan={8} className="py-10 text-center text-gray-400 text-sm">
+                              {selectedPRNos.length === 0
+                                ? "Select a Purchase Requisition number above to view its items."
+                                : "No items found in the selected PR(s)."}
+                            </td>
+                          </tr>
+                        ) : (
+                          rows.map(({ key, pr, it }) => (
+                            <tr key={key}
+                              className={`border-b border-gray-100 cursor-pointer hover:bg-blue-50/30 ${checkedItems.has(key) ? "bg-blue-50/40" : ""}`}
+                              onClick={() => toggleItem(key)}>
+                              <td className="px-3 py-2 text-center" onClick={(e) => e.stopPropagation()}>
+                                <input type="checkbox" checked={checkedItems.has(key)}
+                                  onChange={() => toggleItem(key)} className="rounded" />
+                              </td>
+                              <td className="px-3 py-2 text-blue-600 font-mono font-semibold whitespace-nowrap">{pr.number}</td>
+                              <td className="px-3 py-2 text-gray-500">{pr.year}</td>
+                              <td className="px-3 py-2 text-gray-700 font-mono">{it.itemCode}</td>
+                              <td className="px-3 py-2 text-gray-600 max-w-xs truncate">{it.description}</td>
+                              <td className="px-3 py-2 text-right text-gray-700 font-mono">{it.qty}</td>
+                              <td className="px-3 py-2 text-gray-500">{it.uom}</td>
+                              <td className="px-3 py-2 text-right text-gray-500 font-mono">{it.qty}</td>
+                            </tr>
+                          ))
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Copy button */}
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={handleCopyToPO}
+                      disabled={checkedItems.size === 0}
+                      className="flex items-center gap-1.5 text-xs px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium disabled:opacity-40 disabled:cursor-not-allowed"
+                    >
+                      <Plus size={13} /> Copy to PO Item Detail
+                    </button>
+                    {checkedItems.size > 0 && (
+                      <span className="text-xs text-gray-500">{checkedItems.size} item(s) selected</span>
+                    )}
+                  </div>
+                </div>
+              );
+            })()}
 
             {/* ════ TAB: PO ITEM DETAILS ════ */}
             {activeTab === "items" && (
