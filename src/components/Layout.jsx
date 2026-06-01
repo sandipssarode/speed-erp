@@ -183,13 +183,20 @@ export default function Layout({ children }) {
         <div className="flex items-center gap-3">
           <svg viewBox="0 0 48 48" className="w-8 h-8 shrink-0 rounded-lg shadow-sm">
             <defs>
-              <linearGradient id="si-grad" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="#4338ca"/>
-                <stop offset="100%" stopColor="#7c3aed"/>
+              <linearGradient id="si-bg" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#050d1a"/>
+                <stop offset="100%" stopColor="#0f2045"/>
+              </linearGradient>
+              <linearGradient id="si-s" x1="34" y1="11" x2="12" y2="42" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#e2d4ff"/>
+                <stop offset="100%" stopColor="#60a5fa"/>
               </linearGradient>
             </defs>
-            <rect width="48" height="48" rx="12" fill="url(#si-grad)"/>
-            <path d="M 29 4 L 13 28 L 22 28 L 19 44 L 35 20 L 26 20 Z" fill="white" fillOpacity="0.95"/>
+            <rect width="48" height="48" rx="11" fill="url(#si-bg)"/>
+            <path d="M 34 11 C 34 11 12 11 12 20 C 12 28 34 26 34 35 C 34 41 12 42 12 42"
+              fill="none" stroke="url(#si-s)" strokeWidth="5.5" strokeLinecap="round"/>
+            <circle cx="34" cy="11" r="3.5" fill="white"/>
+            <circle cx="12" cy="42" r="2.5" fill="#93c5fd" fillOpacity="0.8"/>
           </svg>
           <div>
             <p className="text-sm font-bold text-gray-900 leading-none tracking-tight">Speed ERP</p>
