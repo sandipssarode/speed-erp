@@ -368,8 +368,8 @@ export default function ProductForm() {
     if (Object.keys(errs).length > 0) {
       setErrors(errs);
       const keys = Object.keys(errs);
-      if (keys.some((k) => ["code","name","invoicingPolicy","typeFlags","salesPrice","categoryCode","categoryName","costMethod","stockUOM"].includes(k))) setActiveTab("general");
-      else if (keys.some((k) => k.startsWith("cv_"))) setActiveTab("sales");
+      if (keys.some((k) => ["code","name","typeFlags","salesPrice","categoryCode","categoryName","costMethod","stockUOM"].includes(k))) setActiveTab("general");
+      else if (keys.some((k) => k === "invoicingPolicy" || k.startsWith("cv_"))) setActiveTab("sales");
       showToast("Please correct the highlighted fields and try again.", "error");
       return;
     }
@@ -437,8 +437,8 @@ export default function ProductForm() {
 
   const tabHasError = (tabId) => {
     const keys = Object.keys(errors);
-    if (tabId === "general") return keys.some((k) => ["code","name","invoicingPolicy","typeFlags","salesPrice","categoryCode","categoryName","costMethod","stockUOM"].includes(k));
-    if (tabId === "sales") return keys.some((k) => k.startsWith("cv_"));
+    if (tabId === "general") return keys.some((k) => ["code","name","typeFlags","salesPrice","categoryCode","categoryName","costMethod","stockUOM"].includes(k));
+    if (tabId === "sales") return keys.some((k) => k === "invoicingPolicy" || k.startsWith("cv_"));
     return false;
   };
 
@@ -576,8 +576,8 @@ export default function ProductForm() {
           </div>
 
           <div className="p-5 space-y-4">
-            {/* Row 1: Code, Name, Invoicing Policy */}
-            <div className="grid grid-cols-4 gap-4">
+            {/* Row 1: Code, Name */}
+            <div className="grid grid-cols-3 gap-4">
               <Field label="Product Code" required error={errors.code}>
                 <TInput value={form.code} onChange={(e) => setField("code", e.target.value.toUpperCase())}
                   disabled={isReadOnly} placeholder="Auto / Manual e.g. P001" error={errors.code} />
@@ -585,10 +585,6 @@ export default function ProductForm() {
               <Field label="Product Name" required error={errors.name} className="col-span-2">
                 <TInput value={form.name} onChange={(e) => setField("name", e.target.value)}
                   disabled={isReadOnly} placeholder="Full product name (max 128 chars)" maxLength={128} error={errors.name} />
-              </Field>
-              <Field label="Invoicing Policy" required error={errors.invoicingPolicy}>
-                <TSelect value={form.invoicingPolicy} onChange={(e) => setField("invoicingPolicy", e.target.value)}
-                  disabled={isReadOnly} options={INVOICING_POLICIES} placeholder="Select Policy" error={errors.invoicingPolicy} />
               </Field>
             </div>
 
@@ -797,6 +793,17 @@ export default function ProductForm() {
             {/* ══════════ SALES ══════════ */}
             {activeTab === "sales" && (
               <div className="space-y-5">
+
+                {/* Invoicing Policy */}
+                <div className="bg-gray-50 border border-gray-200 rounded p-4">
+                  <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-3">Invoicing</p>
+                  <div className="grid grid-cols-3 gap-4">
+                    <Field label="Invoicing Policy" required error={errors.invoicingPolicy}>
+                      <TSelect value={form.invoicingPolicy} onChange={(e) => setField("invoicingPolicy", e.target.value)}
+                        disabled={isReadOnly} options={INVOICING_POLICIES} placeholder="Select Policy" error={errors.invoicingPolicy} />
+                    </Field>
+                  </div>
+                </div>
 
                 {/* Upsell & Cross-sell */}
                 <div className="bg-gray-50 border border-gray-200 rounded p-4 space-y-3">
