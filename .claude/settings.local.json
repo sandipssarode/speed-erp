@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem -Path \"D:\\\\ERP - Speed Innovations\\\\speed-erp\\\\src\" -Recurse | Where-Object { $_.PSIsContainer } | Select-Object FullName)",
+      "Bash(npx vite *)",
+      "PowerShell(cd \"D:\\\\ERP - Speed Innovations\\\\speed-erp\"; Get-ChildItem -Recurse -Directory | Select-Object -First 30 | ForEach-Object { $_.FullName })",
+      "PowerShell(cd \"D:\\\\ERP - Speed Innovations\\\\speed-erp\"; Get-ChildItem -Path src -Recurse | ForEach-Object { $_.FullName })",
+      "PowerShell(cd \"D:\\\\ERP - Speed Innovations\\\\speed-erp\"; Get-ChildItem -Path . | Where-Object { $_.Name -match '\\\\.\\(jsx?|json|ts|tsx\\)$' })"
+    ]
+  }
+}
