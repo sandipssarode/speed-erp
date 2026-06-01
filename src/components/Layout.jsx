@@ -10,6 +10,8 @@ import {
   DollarSign,
   Settings,
   LayoutDashboard,
+  Menu,
+  X,
 } from "lucide-react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 
@@ -159,6 +161,7 @@ export default function Layout({ children }) {
   const active = getActiveState();
   const [openModule,  setOpenModule]  = useState(active.module);
   const [openSection, setOpenSection] = useState(active.section);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleLogoff = () => {
     localStorage.removeItem("loggedInUser");
@@ -174,13 +177,22 @@ export default function Layout({ children }) {
     setOpenSection((prev) => (prev === section ? null : section));
   };
 
+  const closeSidebar = () => setSidebarOpen(false);
+
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-gray-100 text-gray-800" style={{ fontFamily: "Inter, Arial, sans-serif" }}>
 
       {/* ── TOP BAR ── */}
-      <header className="bg-white border-b border-gray-200 flex items-center justify-between px-4 py-2 shadow-sm shrink-0">
-        {/* Logo */}
-        <div className="flex items-center gap-3">
+      <header className="bg-white border-b border-gray-200 flex items-center justify-between px-3 lg:px-4 py-2 shadow-sm shrink-0">
+        {/* Left — hamburger (mobile/tablet) + logo */}
+        <div className="flex items-center gap-2 lg:gap-3">
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="lg:hidden p-1.5 rounded hover:bg-gray-100 text-gray-600"
+            aria-label="Open menu"
+          >
+            <Menu size={20} />
+          </button>
           <svg viewBox="0 0 48 48" className="w-8 h-8 shrink-0 rounded-lg shadow-sm">
             <defs>
               <linearGradient id="si-bg" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
@@ -206,33 +218,55 @@ export default function Layout({ children }) {
 
         {/* Right — user info + actions */}
         <div className="flex items-center gap-2">
-          <div className="text-right mr-1">
+          <div className="text-right mr-1 hidden sm:block">
             <p className="text-xs font-medium text-gray-700">{user.name || user.fullName || "Guest"}</p>
             <p className="text-xs text-gray-400">Speed IT Innovations</p>
           </div>
           <Link
             to="/profile"
-            className="text-xs border border-gray-300 px-3 py-1.5 rounded text-gray-600 hover:bg-gray-50 flex items-center gap-1"
+            className="text-xs border border-gray-300 px-2 sm:px-3 py-1.5 rounded text-gray-600 hover:bg-gray-50 flex items-center gap-1"
           >
-            <User size={13} /> My Profile
+            <User size={13} /> <span className="hidden sm:inline">My Profile</span>
           </Link>
           <button
             onClick={handleLogoff}
-            className="text-xs border border-gray-300 px-3 py-1.5 rounded text-gray-600 hover:bg-gray-50 flex items-center gap-1"
+            className="text-xs border border-gray-300 px-2 sm:px-3 py-1.5 rounded text-gray-600 hover:bg-gray-50 flex items-center gap-1"
           >
-            <LogOut size={13} /> Log Off
+            <LogOut size={13} /> <span className="hidden sm:inline">Log Off</span>
           </button>
         </div>
       </header>
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden relative">
+
+        {/* ── SIDEBAR OVERLAY (mobile/tablet) ── */}
+        {sidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black/40 z-40 lg:hidden"
+            onClick={closeSidebar}
+          />
+        )}
 
         {/* ── SIDEBAR ── */}
-        <aside className="w-56 bg-white border-r border-gray-200 flex flex-col overflow-y-auto shrink-0">
+        <aside className={`
+          fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 flex flex-col overflow-y-auto
+          transition-transform duration-300 ease-in-out
+          ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+          lg:static lg:inset-auto lg:z-auto lg:w-56 lg:translate-x-0 lg:transition-none lg:shrink-0
+        `}>
+
+          {/* Close button (mobile/tablet only) */}
+          <div className="lg:hidden flex items-center justify-between px-4 py-3 border-b border-gray-100">
+            <span className="text-sm font-semibold text-gray-700">Menu</span>
+            <button onClick={closeSidebar} className="p-1 rounded hover:bg-gray-100 text-gray-500">
+              <X size={18} />
+            </button>
+          </div>
 
           {/* Dashboard button */}
           <Link
             to="/dashboard"
+            onClick={closeSidebar}
             className={`flex items-center gap-2.5 px-4 py-3 text-sm font-semibold border-b border-gray-100 transition-colors
               ${location.pathname === "/dashboard"
                 ? "bg-blue-600 text-white"
@@ -276,6 +310,7 @@ export default function Layout({ children }) {
                         <Link
                           key={link.path}
                           to={link.path}
+                          onClick={closeSidebar}
                           className={`block pl-8 pr-4 py-1.5 text-xs transition-colors
                             ${location.pathname === link.path
                               ? "bg-blue-50 text-blue-700 font-semibold border-r-2 border-blue-500"
@@ -305,6 +340,7 @@ export default function Layout({ children }) {
                             <Link
                               key={link.path}
                               to={link.path}
+                              onClick={closeSidebar}
                               className={`block pl-8 pr-4 py-1.5 text-xs transition-colors
                                 ${location.pathname === link.path
                                   ? "bg-blue-50 text-blue-700 font-semibold border-r-2 border-blue-500"
@@ -334,16 +370,16 @@ export default function Layout({ children }) {
         </aside>
 
         {/* ── MAIN CONTENT ── */}
-        <main className="flex-1 overflow-y-auto p-5">{children}</main>
+        <main className="flex-1 overflow-y-auto p-3 lg:p-5">{children}</main>
       </div>
 
       {/* ── FOOTER ── */}
-      <footer className="bg-white border-t border-gray-200 px-6 py-1.5 flex items-center justify-center gap-8 text-xs text-gray-400 shrink-0">
+      <footer className="bg-white border-t border-gray-200 px-4 py-1.5 flex items-center justify-center flex-wrap gap-2 sm:gap-8 text-xs text-gray-400 shrink-0">
         <span>Version 1.0.0</span>
-        <span>|</span>
-        <span>Login: {new Date().toLocaleString()}</span>
-        <span>|</span>
-        <span>Duration: 0h 0m</span>
+        <span className="hidden sm:inline">|</span>
+        <span className="hidden sm:inline">Login: {new Date().toLocaleString()}</span>
+        <span className="hidden sm:inline">|</span>
+        <span className="hidden sm:inline">Duration: 0h 0m</span>
       </footer>
     </div>
   );

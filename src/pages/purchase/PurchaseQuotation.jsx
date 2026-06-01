@@ -624,7 +624,7 @@ export default function PurchaseQuotation() {
           <div className="p-4 space-y-3">
 
             {/* Row 1: Year / Series / Number / Quotation Date */}
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Field label="Year">
                 <TInput value={form.year} disabled />
               </Field>
@@ -642,7 +642,7 @@ export default function PurchaseQuotation() {
             </div>
 
             {/* Row 2: Unit / Revision No / Revision Date / Validity */}
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Field label="Unit" required error={errors.unit}>
                 <TSelect value={form.unit} onChange={(e) => setField("unit", e.target.value)}
                   disabled={isReadOnly} options={UNIT_OPTIONS} placeholder="— Select Unit —" error={errors.unit} />
@@ -661,7 +661,7 @@ export default function PurchaseQuotation() {
             </div>
 
             {/* Row 3: Vendor Code / Vendor Name / Currency / Ex Rate */}
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Field label="Vendor Code" required error={errors.vendorCode}>
                 <select value={form.vendorCode} onChange={(e) => handleVendorSelect(e.target.value)}
                   disabled={isReadOnly} className={inputCls(isReadOnly, errors.vendorCode)}>
@@ -686,7 +686,7 @@ export default function PurchaseQuotation() {
             </div>
 
             {/* Row 4: Buyer Code / Buyer Name / Contact Person / Compared Quotation */}
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Field label="Buyer Code" required error={errors.buyerCode}>
                 <select value={form.buyerCode} onChange={(e) => handleBuyerSelect(e.target.value)}
                   disabled={isReadOnly} className={inputCls(isReadOnly, errors.buyerCode)}>

@@ -123,8 +123,8 @@ export default function Dashboard() {
         {showTicketForm && (
           <div className="border-b border-gray-200 p-4 bg-blue-50/40">
             <p className="text-xs font-semibold text-gray-600 mb-3 uppercase tracking-wide">New Support Ticket</p>
-            <div className="grid grid-cols-4 gap-3">
-              <div className="col-span-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              <div className="col-span-1 sm:col-span-2">
                 <label className="block text-xs font-medium text-gray-600 mb-1">Subject <span className="text-red-500">*</span></label>
                 <input type="text" placeholder="Briefly describe the issue..." className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-400" />
               </div>
@@ -143,7 +143,7 @@ export default function Dashboard() {
                   <option>Medium</option><option>High</option><option>Low</option>
                 </select>
               </div>
-              <div className="col-span-4">
+              <div className="col-span-1 sm:col-span-2 lg:col-span-4">
                 <label className="block text-xs font-medium text-gray-600 mb-1">Description</label>
                 <textarea rows={2} placeholder="Detailed description of the issue..." className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-400 resize-none" />
               </div>
@@ -156,7 +156,8 @@ export default function Dashboard() {
         )}
 
         {/* Tickets Table */}
-        <table className="w-full text-sm">
+        <div className="overflow-x-auto">
+        <table className="w-full text-sm min-w-[600px]">
           <thead>
             <tr className="border-b border-gray-100 text-xs font-semibold text-gray-500 uppercase tracking-wide">
               <th className="text-left px-4 py-2">Ticket ID</th>
@@ -184,12 +185,13 @@ export default function Dashboard() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
 
       {/* ── 3-column section ── */}
-      <div className="grid grid-cols-3 gap-0 border border-gray-200 rounded bg-white min-h-[500px]">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-0 border border-gray-200 rounded bg-white">
         {/* Column 1 - My Charts */}
-        <div className="border-r border-gray-200">
+        <div className="border-b lg:border-b-0 lg:border-r border-gray-200">
           <div className="border-b border-gray-200 px-4 py-2 bg-gray-100">
             <span className="text-sm font-semibold text-gray-700">
               My Charts
@@ -248,7 +250,7 @@ export default function Dashboard() {
         </div>
 
         {/* Column 2 - My Follow Ups */}
-        <div className="border-r border-gray-200">
+        <div className="border-b lg:border-b-0 lg:border-r border-gray-200">
           <div className="border-b border-gray-200 px-4 py-2 bg-gray-100">
             <span className="text-sm font-semibold text-gray-700">
               My Follow Ups

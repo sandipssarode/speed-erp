@@ -735,7 +735,7 @@ export default function PurchaseRequisition() {
           </div>
           <div className="p-4 space-y-3">
             {/* Row 1 */}
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Field label="Year" required>
                 <TInput value={form.year} disabled placeholder="24-25" />
               </Field>
@@ -763,7 +763,7 @@ export default function PurchaseRequisition() {
             </div>
 
             {/* Row 2 */}
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Field label="Unit" required error={errors.unit}>
                 <TSelect
                   value={form.unit}
@@ -802,7 +802,7 @@ export default function PurchaseRequisition() {
             </div>
 
             {/* Row 3 */}
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Field label="Budget Code">
                 <TInput
                   value={form.budgetCode}
@@ -1125,7 +1125,7 @@ export default function PurchaseRequisition() {
             Stock &amp; Pending Summary
             <span className="text-gray-400 font-normal normal-case">— Auto-fetched, Read-Only</span>
           </div>
-          <div className="p-4 grid grid-cols-5 gap-3">
+          <div className="p-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
             {STOCK_FIELDS.map((s) => (
               <div key={s.label} className="bg-gray-50 border border-gray-200 rounded p-3">
                 <div className="text-xs text-gray-400 mb-1 leading-tight">{s.label}</div>

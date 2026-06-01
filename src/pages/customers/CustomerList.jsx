@@ -257,7 +257,7 @@ export default function CustomerList() {
     <Layout>
       <div className="space-y-4">
         {/* Page Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between flex-wrap gap-3">
           <div>
             <div className="flex items-center gap-1.5 text-xs text-gray-400 mb-1">
               <span>Sales</span>
@@ -315,7 +315,8 @@ export default function CustomerList() {
         {loading && <p className="text-center text-sm text-gray-400 py-6">Loading customers...</p>}
         {/* Table */}
         <div className="bg-white border border-gray-200 rounded overflow-hidden">
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto">
+          <table className="w-full text-sm min-w-[700px]">
             <thead>
               <tr className="bg-gray-50 border-b border-gray-200">
                 <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">Code</th>
@@ -382,6 +383,7 @@ export default function CustomerList() {
               )}
             </tbody>
           </table>
+          </div>
         </div>
 
         {filtered.length > 0 && (

@@ -610,7 +610,7 @@ export default function PurchaseInquiry() {
           <div className="p-4 space-y-3">
 
             {/* Row 1 */}
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Field label="Year" required>
                 <TInput value={form.year} disabled />
               </Field>
@@ -626,7 +626,7 @@ export default function PurchaseInquiry() {
             </div>
 
             {/* Row 2 */}
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Field label="Unit" required error={errors.unit}>
                 <TSelect value={form.unit} onChange={(e) => setField("unit", e.target.value)} disabled={isReadOnly} options={UNIT_OPTIONS} placeholder="— Select Unit —" error={errors.unit} />
               </Field>
@@ -649,7 +649,7 @@ export default function PurchaseInquiry() {
             </div>
 
             {/* Row 3 */}
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Field label="Buyer Code" required error={errors.buyer}>
                 <TInput value={form.buyerCode} onChange={(e) => setField("buyerCode", e.target.value)} disabled={isReadOnly} placeholder="e.g. EDP-001" error={errors.buyer} />
               </Field>
@@ -665,7 +665,7 @@ export default function PurchaseInquiry() {
             </div>
 
             {/* Row 4 */}
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Field label="Expected Quotation Date">
                 <TInput type="date" value={form.expectedQuotationDate} onChange={(e) => setField("expectedQuotationDate", e.target.value)} disabled={isReadOnly} />
               </Field>
@@ -970,7 +970,7 @@ export default function PurchaseInquiry() {
             <BarChart2 size={13} /> Comparison Notes
           </div>
           <div className="p-4 space-y-3">
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Field label="Last Comparison By">
                 <TInput value={form.comparisonNotes?.lastBy || ""} disabled placeholder="—" />
               </Field>
@@ -986,7 +986,7 @@ export default function PurchaseInquiry() {
             </Field>
 
             {/* Summary stats */}
-            <div className="grid grid-cols-4 gap-3 pt-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-1">
               {[
                 { label: "Total Items",         value: form.items?.length      || 0 },
                 { label: "Vendors in RFQ",      value: form.vendors?.length    || 0 },
@@ -1054,7 +1054,7 @@ export default function PurchaseInquiry() {
               {/* ── Followup Details ── */}
               {fuTab === "details" && (
                 <div className="space-y-4">
-                  <div className="grid grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                     <Field label="Followup Reference">
                       <TInput value={fuForm.ref} disabled />
                     </Field>
@@ -1082,7 +1082,7 @@ export default function PurchaseInquiry() {
                     </Field>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                     <Field label="Contact Person">
                       <TInput value={fuForm.contactPerson} onChange={(e) => fuSet("contactPerson", e.target.value)} placeholder="Contact name" />
                     </Field>
@@ -1099,7 +1099,7 @@ export default function PurchaseInquiry() {
 
                   <div className="border-t border-gray-100 pt-4">
                     <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Followup Details</p>
-                    <div className="grid grid-cols-3 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                       <Field label="Followup By (Code)" required error={fuErrors.followupBy}>
                         <TInput value={fuForm.followupByCode} onChange={(e) => fuSet("followupByCode", e.target.value)} placeholder="User Code" error={fuErrors.followupBy} />
                       </Field>
@@ -1133,7 +1133,7 @@ export default function PurchaseInquiry() {
 
               {/* ── Next Followup ── */}
               {fuTab === "next" && (
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                   <Field label="Next Followup Date" error={fuErrors.nextDate}>
                     <TInput type="date" value={fuForm.nextDate} onChange={(e) => fuSet("nextDate", e.target.value)} min={todayISO()} error={fuErrors.nextDate} />
                   </Field>

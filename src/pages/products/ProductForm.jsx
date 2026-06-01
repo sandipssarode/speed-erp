@@ -577,7 +577,7 @@ export default function ProductForm() {
 
           <div className="p-5 space-y-4">
             {/* Row 1: Code, Name */}
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <Field label="Product Code" required error={errors.code}>
                 <TInput value={form.code} onChange={(e) => setField("code", e.target.value.toUpperCase())}
                   disabled={isReadOnly} placeholder="Auto / Manual e.g. P001" error={errors.code} />
@@ -797,7 +797,7 @@ export default function ProductForm() {
                 {/* Invoicing Policy */}
                 <div className="bg-gray-50 border border-gray-200 rounded p-4">
                   <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-3">Invoicing</p>
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <Field label="Invoicing Policy" required error={errors.invoicingPolicy}>
                       <TSelect value={form.invoicingPolicy} onChange={(e) => setField("invoicingPolicy", e.target.value)}
                         disabled={isReadOnly} options={INVOICING_POLICIES} placeholder="Select Policy" error={errors.invoicingPolicy} />

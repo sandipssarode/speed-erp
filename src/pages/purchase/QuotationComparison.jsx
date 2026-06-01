@@ -489,7 +489,7 @@ export default function QuotationComparison() {
           <div className="p-4 space-y-3">
 
             {/* Row 1: auto-from-PI fields */}
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Field label="Unit">
                 <TInput value={form.unit} disabled />
               </Field>
@@ -551,7 +551,7 @@ export default function QuotationComparison() {
             )}
 
             {/* Row 2: editable header fields */}
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Field label="PI Date">
                 <TInput value={form.piDate ? new Date(form.piDate).toLocaleDateString("en-IN") : ""} disabled placeholder="—" />
               </Field>
@@ -568,7 +568,7 @@ export default function QuotationComparison() {
             </div>
 
             {/* Row 3: audit + checkboxes */}
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Field label="Last Compared By">
                 <TInput value={form.lastComparedBy} disabled placeholder="—" />
               </Field>
@@ -781,7 +781,7 @@ export default function QuotationComparison() {
         )}
 
         {/* Stats */}
-        <div className="grid grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
             { label: "Items",    value: form.rows.length },
             { label: "Vendors",  value: piVendors.length },

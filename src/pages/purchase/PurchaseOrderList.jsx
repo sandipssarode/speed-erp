@@ -931,11 +931,11 @@ export default function PurchaseOrderList() {
         )}
 
         {/* ── Status Banner ── */}
-        <div className="bg-gradient-to-r from-blue-800 to-blue-600 rounded px-5 py-3 flex items-center gap-4 text-white shadow-sm">
+        <div className="bg-gradient-to-r from-blue-800 to-blue-600 rounded px-4 py-3 flex items-center gap-2 flex-wrap text-white shadow-sm">
           <FileText size={16} className="text-blue-200 shrink-0" />
           <span className="font-bold text-base tracking-wide">{form.number || "New Purchase Order"}</span>
-          {form.unit       && <span className="text-blue-200 text-sm">| {form.unit}</span>}
-          {form.vendorName && <span className="text-blue-200 text-sm">| {form.vendorName}</span>}
+          {form.unit       && <span className="text-blue-200 text-sm hidden sm:inline">| {form.unit}</span>}
+          {form.vendorName && <span className="text-blue-200 text-sm hidden sm:inline">| {form.vendorName}</span>}
           <div className="ml-auto flex items-center gap-2">
             {form.authorized && (
               <span className="bg-amber-400/30 text-amber-100 border border-amber-300/30 px-2 py-0.5 rounded text-xs font-medium flex items-center gap-1">
@@ -969,7 +969,7 @@ export default function PurchaseOrderList() {
           <div className="p-4 space-y-3">
 
             {/* Row 1 */}
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Field label="Year" required>
                 <TInput value={form.year} disabled />
               </Field>
@@ -986,7 +986,7 @@ export default function PurchaseOrderList() {
             </div>
 
             {/* Row 2 */}
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Field label="Unit" required error={errors.unit}>
                 <TSelect value={form.unit} onChange={(e) => setField("unit", e.target.value)}
                   disabled={isReadOnly} options={UNIT_OPTIONS} placeholder="— Select Unit —" error={errors.unit} />
@@ -1003,7 +1003,7 @@ export default function PurchaseOrderList() {
             </div>
 
             {/* Row 3 — Vendor */}
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Field label="Vendor" required error={errors.vendorCode}>
                 <select value={form.vendorCode} onChange={(e) => handleVendorSelect(e.target.value)}
                   disabled={isReadOnly} className={inputCls(isReadOnly, errors.vendorCode)}>
@@ -1032,7 +1032,7 @@ export default function PurchaseOrderList() {
             </div>
 
             {/* Row 4 */}
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Field label="Buyer Code">
                 <TInput value={form.buyerCode} onChange={(e) => setField("buyerCode", e.target.value)}
                   disabled={isReadOnly} placeholder="e.g. EDP-001" />
@@ -1052,7 +1052,7 @@ export default function PurchaseOrderList() {
             </div>
 
             {/* Row 5 */}
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Field label="Qtn Date">
                 <TInput type="date" value={form.qtnDate}
                   onChange={(e) => setField("qtnDate", e.target.value)} disabled={isReadOnly} />
@@ -1072,7 +1072,7 @@ export default function PurchaseOrderList() {
             </div>
 
             {/* Row 6 */}
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Field label="Budget Code">
                 <TInput value={form.budgetCode} onChange={(e) => setField("budgetCode", e.target.value)}
                   disabled={isReadOnly} placeholder="Budget code" />
@@ -1601,7 +1601,7 @@ export default function PurchaseOrderList() {
             {/* ════ TAB: TERMS & CONDITIONS ════ */}
             {activeTab === "terms" && (
               <div className="space-y-3">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <Field label="IncoTerms">
                     <TSelect value={form.incoTerms} onChange={(e) => setField("incoTerms", e.target.value)}
                       disabled={isReadOnly} options={INCOTERMS_OPTIONS} placeholder="— Select IncoTerms —" />
@@ -1806,7 +1806,7 @@ export default function PurchaseOrderList() {
         </div>
 
         {/* ── Footer: 3 columns ── */}
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
           {/* Left: Remarks */}
           <div className="bg-white border border-gray-200 rounded shadow-sm overflow-hidden">

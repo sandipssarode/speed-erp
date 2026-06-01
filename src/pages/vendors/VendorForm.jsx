@@ -683,7 +683,7 @@ export default function VendorForm() {
 
           <div className="p-5 space-y-4">
             {/* Row 1: Code, Name, Group, Currency */}
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Field label="Vendor Code" required error={errors.code}>
                 <TInput
                   value={form.code}
@@ -725,7 +725,7 @@ export default function VendorForm() {
             </div>
 
             {/* Row 2: Ledger Balance, Credit Limit, Credit Days, Reference */}
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Field label="Ledger Balance (INR)">
                 <div className={`${inputBase(true)} text-right font-mono`}>
                   {Number(form.ledgerBalance || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}
@@ -1073,7 +1073,7 @@ export default function VendorForm() {
 
             {/* ══════════ ACCOUNTS ══════════ */}
             {activeTab === "accounts" && (
-              <div className="grid grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div className="space-y-4">
                   <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide border-b border-gray-100 pb-2">Flags</p>
                   <TCheckbox checked={form.deductionOnPurchaseBill} onChange={(e) => setField("deductionOnPurchaseBill", e.target.checked)} disabled={isReadOnly} label="Deduction on Purchase Bill" />
@@ -1118,7 +1118,7 @@ export default function VendorForm() {
             {/* ══════════ BANK DETAILS ══════════ */}
             {activeTab === "banks" && (
               <div className="space-y-4">
-                <div className="bg-gray-50 border border-gray-200 rounded p-4 grid grid-cols-3 gap-4">
+                <div className="bg-gray-50 border border-gray-200 rounded p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   <p className="col-span-3 text-xs font-semibold text-gray-600 uppercase tracking-wide">Beneficiary Information</p>
                   <Field label="Beneficiary Name">
                     <TInput value={form.benfName} onChange={(e) => setField("benfName", e.target.value)} disabled={isReadOnly} placeholder="Account holder name" />
