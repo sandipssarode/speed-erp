@@ -472,6 +472,11 @@ export default function PurchaseOrderList() {
 
   const handleCopyToPO = () => {
     if (checkedItems.size === 0) { showToast("Select at least one item line to copy.", "error"); return; }
+    if (isAuthorized)            { showToast("This PO is Authorised and cannot be edited.", "error"); return; }
+
+    // Auto-switch to edit/new if currently viewing
+    if (mode === "view") setMode("edit");
+
     const prs = JSON.parse(localStorage.getItem("purchase_requisitions") || "[]");
     const newLines = [];
     prs.forEach((pr) => {
@@ -479,14 +484,22 @@ export default function PurchaseOrderList() {
       (pr.items || []).forEach((it, idx) => {
         if (!checkedItems.has(`${pr.id}|${idx}`)) return;
         newLines.push({
-          id: uid(), itemCode: it.itemCode || "", description: it.description || "",
-          pQty: it.qty || "", pUoM: it.uom || "", sQty: "", sUoM: "KGS",
-          rate: it.budgetaryRate || "", discType: "", discValue: "",
-          remark: it.remark || "", vendorItemCode: "", drawingNo: "", revNo: "0",
+          id: uid(),
+          itemCode:      it.itemCode     || "",
+          description:   it.description  || "",
+          pQty:          it.qty          || "",
+          pUoM:          it.uom          || "",
+          sQty: "", sUoM: "KGS",
+          rate:          it.budgetaryRate || "",
+          discType: "", discValue: "",
+          remark:        it.remark       || "",
+          vendorItemCode: it.preferredVendor ? "" : "",
+          drawingNo: "", revNo: "0",
           hsnSACNo: "", gstPct: "18",
         });
       });
     });
+    if (newLines.length === 0) { showToast("No matching items found. Make sure the PR is saved.", "error"); return; }
     setForm((p) => ({ ...p, items: [...p.items, ...newLines] }));
     setCheckedItems(new Set());
     showToast(`${newLines.length} item(s) copied to PO Item Details.`);
@@ -1222,7 +1235,7 @@ export default function PurchaseOrderList() {
                   <div className="flex items-center gap-3">
                     <button
                       onClick={handleCopyToPO}
-                      disabled={checkedItems.size === 0 || isReadOnly}
+                      disabled={checkedItems.size === 0 || isAuthorized}
                       className="flex items-center gap-1.5 text-xs px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium disabled:opacity-40 disabled:cursor-not-allowed"
                     >
                       <Plus size={13} /> Copy to PO Item Detail
@@ -1245,50 +1258,43 @@ export default function PurchaseOrderList() {
                 )}
 
                 <div className="border border-gray-200 rounded overflow-x-auto">
-                  <table className="w-full text-xs min-w-[1400px]">
+                  <table className="w-full text-xs min-w-[1100px]">
                     <thead>
                       <tr className="bg-gray-50 border-b border-gray-200">
-                        {[
-                          { label: "Sr",           w: "w-8"  },
-                          { label: "Item Code *",   w: "w-28" },
-                          { label: "Description *", w: ""     },
-                          { label: "PQty *",        w: "w-20" },
-                          { label: "PUoM",          w: "w-20" },
-                          { label: "Rate *",        w: "w-24" },
-                          { label: "Disc Type",     w: "w-20" },
-                          { label: "Disc Val",      w: "w-20" },
-                          { label: "Total",         w: "w-28" },
-                          { label: "HSN/SAC *",     w: "w-24" },
-                          { label: "GST% *",        w: "w-16" },
-                          { label: "Remark",        w: "w-28" },
-                          { label: "Vendor Item",   w: "w-24" },
-                          { label: "Drawing No",    w: "w-24" },
-                          { label: "",              w: "w-8"  },
-                        ].map((h) => (
-                          <th key={h.label}
-                            className={`${h.w} px-2 py-2 text-left text-gray-500 font-semibold uppercase tracking-wide whitespace-nowrap`}>
-                            {h.label}
-                          </th>
-                        ))}
+                        <th className="w-8  px-2 py-2 text-gray-500 font-semibold uppercase tracking-wide text-center">#</th>
+                        <th className="w-32 px-2 py-2 text-left text-gray-500 font-semibold uppercase tracking-wide whitespace-nowrap">Item Code *</th>
+                        <th className="     px-2 py-2 text-left text-gray-500 font-semibold uppercase tracking-wide">Description *</th>
+                        <th className="w-20 px-2 py-2 text-right text-gray-500 font-semibold uppercase tracking-wide whitespace-nowrap">Qty *</th>
+                        <th className="w-20 px-2 py-2 text-left text-gray-500 font-semibold uppercase tracking-wide">UoM</th>
+                        <th className="w-24 px-2 py-2 text-right text-gray-500 font-semibold uppercase tracking-wide whitespace-nowrap">Rate *</th>
+                        <th className="w-24 px-2 py-2 text-left text-gray-500 font-semibold uppercase tracking-wide whitespace-nowrap">Disc Type</th>
+                        <th className="w-20 px-2 py-2 text-right text-gray-500 font-semibold uppercase tracking-wide whitespace-nowrap">Disc Val</th>
+                        <th className="w-28 px-2 py-2 text-right text-gray-500 font-semibold uppercase tracking-wide">Total</th>
+                        <th className="w-24 px-2 py-2 text-left text-gray-500 font-semibold uppercase tracking-wide">HSN/SAC *</th>
+                        <th className="w-16 px-2 py-2 text-left text-gray-500 font-semibold uppercase tracking-wide">GST% *</th>
+                        <th className="w-28 px-2 py-2 text-left text-gray-500 font-semibold uppercase tracking-wide">Vendor Item</th>
+                        <th className="w-24 px-2 py-2 text-left text-gray-500 font-semibold uppercase tracking-wide">Drawing No</th>
+                        <th className="w-28 px-2 py-2 text-left text-gray-500 font-semibold uppercase tracking-wide">Remark</th>
+                        <th className="w-8  px-2 py-2"></th>
                       </tr>
                     </thead>
                     <tbody>
                       {form.items.map((row, i) => (
-                        <tr key={row.id} className="border-b border-gray-100 hover:bg-blue-50/20">
-                          <td className="px-2 py-1.5 text-center text-gray-400 font-mono">{i + 1}</td>
+                        <tr key={row.id} className="border-b border-gray-100 hover:bg-blue-50/20 align-top">
+                          <td className="px-2 py-2 text-center text-gray-400 font-mono">{i + 1}</td>
 
                           <td className="px-1 py-1">
                             <input value={row.itemCode}
                               onChange={(e) => updItem(i, "itemCode", e.target.value)}
                               disabled={isReadOnly} placeholder="Item Code"
                               className={cellCls(errors[`ic_${i}`])} />
-                            {errors[`ic_${i}`] && <p className="text-xs text-red-500">{errors[`ic_${i}`]}</p>}
+                            {errors[`ic_${i}`] && <p className="text-red-500 mt-0.5">{errors[`ic_${i}`]}</p>}
                           </td>
 
-                          <td className="px-1 py-1">
+                          <td className="px-1 py-1 min-w-[200px]">
                             <input value={row.description}
                               onChange={(e) => updItem(i, "description", e.target.value)}
-                              disabled={isReadOnly} placeholder="Description"
+                              disabled={isReadOnly} placeholder="Item description"
                               className={cellCls(false)} />
                           </td>
 
@@ -1297,13 +1303,13 @@ export default function PurchaseOrderList() {
                               onChange={(e) => updItem(i, "pQty", e.target.value)}
                               disabled={isReadOnly} placeholder="0"
                               className={`${cellCls(errors[`qty_${i}`])} text-right`} />
-                            {errors[`qty_${i}`] && <p className="text-xs text-red-500">{errors[`qty_${i}`]}</p>}
+                            {errors[`qty_${i}`] && <p className="text-red-500 mt-0.5">{errors[`qty_${i}`]}</p>}
                           </td>
 
                           <td className="px-1 py-1">
                             <select value={row.pUoM} onChange={(e) => updItem(i, "pUoM", e.target.value)}
                               disabled={isReadOnly} className={cellCls(false)}>
-                              <option value="">UOM</option>
+                              <option value="">—</option>
                               {UOM_OPTIONS.map((u) => <option key={u} value={u}>{u}</option>)}
                             </select>
                           </td>
@@ -1313,7 +1319,7 @@ export default function PurchaseOrderList() {
                               onChange={(e) => updItem(i, "rate", e.target.value)}
                               disabled={isReadOnly} placeholder="0.00"
                               className={`${cellCls(errors[`rate_${i}`])} text-right`} />
-                            {errors[`rate_${i}`] && <p className="text-xs text-red-500">{errors[`rate_${i}`]}</p>}
+                            {errors[`rate_${i}`] && <p className="text-red-500 mt-0.5">{errors[`rate_${i}`]}</p>}
                           </td>
 
                           <td className="px-1 py-1">
@@ -1330,8 +1336,8 @@ export default function PurchaseOrderList() {
                               className={`${cellCls(false)} text-right`} />
                           </td>
 
-                          <td className="px-2 py-1.5 text-right font-mono text-gray-700 bg-gray-50/60 text-xs">
-                            {fmtAmt(calcLineTotal(row))}
+                          <td className="px-2 py-2 text-right font-mono text-gray-800 bg-gray-50/60 font-medium">
+                            ₹ {fmtAmt(calcLineTotal(row))}
                           </td>
 
                           <td className="px-1 py-1">
@@ -1339,7 +1345,7 @@ export default function PurchaseOrderList() {
                               onChange={(e) => updItem(i, "hsnSACNo", e.target.value)}
                               disabled={isReadOnly} placeholder="HSN/SAC"
                               className={cellCls(errors[`hsn_${i}`])} />
-                            {errors[`hsn_${i}`] && <p className="text-xs text-red-500">{errors[`hsn_${i}`]}</p>}
+                            {errors[`hsn_${i}`] && <p className="text-red-500 mt-0.5">{errors[`hsn_${i}`]}</p>}
                           </td>
 
                           <td className="px-1 py-1">
@@ -1348,14 +1354,7 @@ export default function PurchaseOrderList() {
                               <option value="">—</option>
                               {GST_OPTIONS.map((g) => <option key={g} value={g}>{g}%</option>)}
                             </select>
-                            {errors[`gst_${i}`] && <p className="text-xs text-red-500">{errors[`gst_${i}`]}</p>}
-                          </td>
-
-                          <td className="px-1 py-1">
-                            <input value={row.remark}
-                              onChange={(e) => updItem(i, "remark", e.target.value)}
-                              disabled={isReadOnly} placeholder="Remark"
-                              className={cellCls(false)} />
+                            {errors[`gst_${i}`] && <p className="text-red-500 mt-0.5">{errors[`gst_${i}`]}</p>}
                           </td>
 
                           <td className="px-1 py-1">
@@ -1369,6 +1368,13 @@ export default function PurchaseOrderList() {
                             <input value={row.drawingNo}
                               onChange={(e) => updItem(i, "drawingNo", e.target.value)}
                               disabled={isReadOnly} placeholder="Drawing No"
+                              className={cellCls(false)} />
+                          </td>
+
+                          <td className="px-1 py-1">
+                            <input value={row.remark}
+                              onChange={(e) => updItem(i, "remark", e.target.value)}
+                              disabled={isReadOnly} placeholder="Remark"
                               className={cellCls(false)} />
                           </td>
 
