@@ -175,7 +175,7 @@ export default function Layout({ children }) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100 text-gray-800" style={{ fontFamily: "Inter, Arial, sans-serif" }}>
+    <div className="h-screen flex flex-col overflow-hidden bg-gray-100 text-gray-800" style={{ fontFamily: "Inter, Arial, sans-serif" }}>
 
       {/* ── TOP BAR ── */}
       <header className="bg-white border-b border-gray-200 flex items-center justify-between px-4 py-2 shadow-sm shrink-0">
