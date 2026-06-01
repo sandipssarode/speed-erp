@@ -922,15 +922,17 @@ export default function PurchaseQuotation() {
                   </button>
                 )}
 
-                <div className="pt-2">
-                  <Field label="Remark (internal — not printed on any external document)">
-                    <TInput value={form.remark} onChange={(e) => setField("remark", e.target.value)}
-                      disabled={isReadOnly} placeholder="Internal notes about vendor quotes and negotiation points…" rows={3} />
-                  </Field>
-                </div>
               </div>
             )}
           </div>
+        </div>
+
+        {/* ── Remark ── */}
+        <div className="bg-white border border-gray-200 rounded shadow-sm p-4">
+          <Field label="Remark (internal — not printed on any external document)">
+            <TInput value={form.remark} onChange={(e) => setField("remark", e.target.value)}
+              disabled={isReadOnly} placeholder="Internal notes about vendor quotes and negotiation points…" rows={3} />
+          </Field>
         </div>
 
         {/* ── Error Summary ── */}
