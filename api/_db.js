@@ -21,34 +21,45 @@ export async function ensureSchema(sql) {
   await sql`CREATE TABLE IF NOT EXISTS products (id TEXT PRIMARY KEY, code TEXT UNIQUE NOT NULL, name TEXT, category_code TEXT, stock_uom TEXT, sales_price NUMERIC, is_active BOOLEAN DEFAULT true, data JSONB NOT NULL, created_at TIMESTAMPTZ DEFAULT NOW(), updated_at TIMESTAMPTZ DEFAULT NOW())`;
   await sql`CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, code TEXT UNIQUE NOT NULL, name TEXT NOT NULL, email TEXT UNIQUE NOT NULL, password TEXT NOT NULL, role TEXT DEFAULT 'User', department TEXT, is_active BOOLEAN DEFAULT true, data JSONB NOT NULL, created_at TIMESTAMPTZ DEFAULT NOW(), updated_at TIMESTAMPTZ DEFAULT NOW())`;
 
-  // ── Seed all tables if empty (first-time setup) ──
-  const [{ count }] = await sql`SELECT COUNT(*) AS count FROM users`;
-  if (Number(count) === 0) {
-    // Users
+  // ── Seed each table independently so a partially-seeded DB always fills in the gaps ──
+  const [uCount] = await sql`SELECT COUNT(*) AS c FROM users`;
+  if (Number(uCount.c) === 0) {
     for (const u of SEED_USERS) {
       await sql`INSERT INTO users (id,code,name,email,password,role,department,is_active,data,created_at,updated_at)
         VALUES (${u.id},${u.code},${u.name},${u.email},${u.password},${u.role},${u.department},${u.isActive},${JSON.stringify(u)},${u.createdAt},${u.updatedAt})
         ON CONFLICT DO NOTHING`;
     }
-    // Vendors
+  }
+
+  const [vCount] = await sql`SELECT COUNT(*) AS c FROM vendors`;
+  if (Number(vCount.c) === 0) {
     for (const v of SEED_VENDORS) {
       await sql`INSERT INTO vendors (id,code,name,is_deactivated,data,created_at,updated_at)
         VALUES (${v.id},${v.code},${v.name},${v.isDeactivated},${JSON.stringify(v)},${v.createdAt},${v.updatedAt})
         ON CONFLICT DO NOTHING`;
     }
-    // Customers
+  }
+
+  const [cCount] = await sql`SELECT COUNT(*) AS c FROM customers`;
+  if (Number(cCount.c) === 0) {
     for (const c of SEED_CUSTOMERS) {
       await sql`INSERT INTO customers (id,code,name,is_deactivated,data,created_at,updated_at)
         VALUES (${c.id},${c.code},${c.name},${c.isDeactivated},${JSON.stringify(c)},${c.createdAt},${c.updatedAt})
         ON CONFLICT DO NOTHING`;
     }
-    // Product Categories
+  }
+
+  const [catCount] = await sql`SELECT COUNT(*) AS c FROM product_categories`;
+  if (Number(catCount.c) === 0) {
     for (const cat of SEED_CATEGORIES) {
       await sql`INSERT INTO product_categories (id,code,name,cost_method,expense_account,income_account)
         VALUES (${cat.id},${cat.code},${cat.name},${cat.costMethod},${cat.expenseAccount},${cat.incomeAccount})
         ON CONFLICT DO NOTHING`;
     }
-    // Products
+  }
+
+  const [pCount] = await sql`SELECT COUNT(*) AS c FROM products`;
+  if (Number(pCount.c) === 0) {
     for (const p of SEED_PRODUCTS) {
       await sql`INSERT INTO products (id,code,name,category_code,stock_uom,sales_price,is_active,data,created_at,updated_at)
         VALUES (${p.id},${p.code},${p.name},${p.categoryCode},${p.stockUOM},${Number(p.salesPrice)},${p.isActive},${JSON.stringify(p)},${p.createdAt},${p.updatedAt})
