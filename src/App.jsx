@@ -15,6 +15,7 @@ import CustomerList from "./pages/customers/CustomerList";
 import CustomerForm from "./pages/customers/CustomerForm";
 import ProductList from "./pages/products/ProductList";
 import ProductForm from "./pages/products/ProductForm";
+import WorkInProgress from "./pages/WorkInProgress";
 
 function App() {
   return (
@@ -28,31 +29,75 @@ function App() {
         {/* Dashboard */}
         <Route path="/dashboard" element={<Dashboard />} />
 
-        {/* System Setup — User Master moved here */}
+        {/* System Setup */}
         <Route path="/system/users" element={<UserList />} />
         <Route path="/system/users/new" element={<UserForm />} />
         <Route path="/system/users/:id" element={<UserForm />} />
+        <Route path="/system/states" element={<WorkInProgress />} />
+        <Route path="/system/countries" element={<WorkInProgress />} />
+        <Route path="/system/uom" element={<WorkInProgress />} />
+        <Route path="/system/document-series" element={<WorkInProgress />} />
+        <Route path="/system/financial-year" element={<WorkInProgress />} />
+        <Route path="/system/email-config" element={<WorkInProgress />} />
+        <Route path="/system/department" element={<WorkInProgress />} />
+        <Route path="/system/access-rights" element={<WorkInProgress />} />
 
         {/* Vendor Master */}
         <Route path="/vendors" element={<VendorList />} />
         <Route path="/vendors/new" element={<VendorForm />} />
         <Route path="/vendors/:id" element={<VendorForm />} />
 
-        {/* Customer Master */}
+        {/* Purchase */}
+        <Route path="/purchase/requisition" element={<PurchaseRequisition />} />
+        <Route path="/purchase/inquiry" element={<PurchaseInquiry />} />
+        <Route path="/purchase/quotation-comparison" element={<QuotationComparison />} />
+        <Route path="/purchase/order" element={<PurchaseOrderList />} />
+        <Route path="/purchase/reports/pr" element={<WorkInProgress />} />
+        <Route path="/purchase/reports/po" element={<WorkInProgress />} />
+        <Route path="/purchase/settings" element={<WorkInProgress />} />
+        <Route path="/purchase/approval-workflow" element={<WorkInProgress />} />
+
+        {/* Sales */}
         <Route path="/sales/customers" element={<CustomerList />} />
         <Route path="/sales/customers/new" element={<CustomerForm />} />
         <Route path="/sales/customers/:id" element={<CustomerForm />} />
+        <Route path="/sales/quotation" element={<WorkInProgress />} />
+        <Route path="/sales/orders" element={<WorkInProgress />} />
+        <Route path="/sales/delivery-challan" element={<WorkInProgress />} />
+        <Route path="/sales/invoice" element={<WorkInProgress />} />
+        <Route path="/sales/reports" element={<WorkInProgress />} />
+        <Route path="/sales/outstanding" element={<WorkInProgress />} />
+        <Route path="/sales/settings" element={<WorkInProgress />} />
 
         {/* Product Master */}
         <Route path="/products" element={<ProductList />} />
         <Route path="/products/new" element={<ProductForm />} />
         <Route path="/products/:id" element={<ProductForm />} />
 
-        {/* Purchase Transactions */}
-        <Route path="/purchase/order" element={<PurchaseOrderList />} />
-        <Route path="/purchase/quotation-comparison" element={<QuotationComparison />} />
-        <Route path="/purchase/inquiry" element={<PurchaseInquiry />} />
-        <Route path="/purchase/requisition" element={<PurchaseRequisition />} />
+        {/* Inventory */}
+        <Route path="/inventory/items" element={<WorkInProgress />} />
+        <Route path="/inventory/warehouses" element={<WorkInProgress />} />
+        <Route path="/inventory/item-category" element={<WorkInProgress />} />
+        <Route path="/inventory/grn" element={<WorkInProgress />} />
+        <Route path="/inventory/transfer" element={<WorkInProgress />} />
+        <Route path="/inventory/adjustment" element={<WorkInProgress />} />
+        <Route path="/inventory/reports" element={<WorkInProgress />} />
+        <Route path="/inventory/ledger" element={<WorkInProgress />} />
+        <Route path="/inventory/settings" element={<WorkInProgress />} />
+
+        {/* Finance */}
+        <Route path="/finance/ledger" element={<WorkInProgress />} />
+        <Route path="/finance/cost-centre" element={<WorkInProgress />} />
+        <Route path="/finance/journal" element={<WorkInProgress />} />
+        <Route path="/finance/payment" element={<WorkInProgress />} />
+        <Route path="/finance/receipt" element={<WorkInProgress />} />
+        <Route path="/finance/balance-sheet" element={<WorkInProgress />} />
+        <Route path="/finance/pl" element={<WorkInProgress />} />
+        <Route path="/finance/trial-balance" element={<WorkInProgress />} />
+        <Route path="/finance/settings" element={<WorkInProgress />} />
+
+        {/* Profile */}
+        <Route path="/profile" element={<WorkInProgress />} />
       </Routes>
     </BrowserRouter>
   );
