@@ -180,12 +180,19 @@ export default function Layout({ children }) {
       <header className="bg-white border-b border-gray-200 flex items-center justify-between px-4 py-2 shadow-sm shrink-0">
         {/* Logo */}
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center shrink-0">
-            <span className="text-white text-xs font-bold tracking-tight">SI</span>
-          </div>
+          <svg viewBox="0 0 48 48" className="w-8 h-8 shrink-0 rounded-lg shadow-sm">
+            <defs>
+              <linearGradient id="si-grad" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#4338ca"/>
+                <stop offset="100%" stopColor="#7c3aed"/>
+              </linearGradient>
+            </defs>
+            <rect width="48" height="48" rx="12" fill="url(#si-grad)"/>
+            <path d="M 29 4 L 13 28 L 22 28 L 19 44 L 35 20 L 26 20 Z" fill="white" fillOpacity="0.95"/>
+          </svg>
           <div>
-            <p className="text-sm font-semibold text-gray-800 leading-none">Speed ERP</p>
-            <p className="text-xs text-gray-400 leading-none mt-0.5">Speed Innovations</p>
+            <p className="text-sm font-bold text-gray-900 leading-none tracking-tight">Speed ERP</p>
+            <p className="text-[10px] text-gray-500 leading-none mt-0.5 tracking-widest uppercase">Speed Innovations</p>
           </div>
         </div>
 

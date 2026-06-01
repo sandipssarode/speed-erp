@@ -39,9 +39,22 @@ export default function Signup() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 text-gray-900 font-sans">
-      <div className="w-[360px] p-6 bg-white border border-gray-300 rounded-lg shadow-sm">
-        <div className="h-14 flex items-center justify-center bg-gray-200 border border-dashed border-gray-300 mb-4 font-semibold text-gray-800">
-          Speed Innovations
+      <div className="w-[360px] p-8 bg-white border border-gray-200 rounded-2xl shadow-lg">
+        <div className="flex flex-col items-center gap-3 mb-7">
+          <svg viewBox="0 0 48 48" className="w-14 h-14 rounded-2xl shadow-md">
+            <defs>
+              <linearGradient id="si-signup" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#4338ca"/>
+                <stop offset="100%" stopColor="#7c3aed"/>
+              </linearGradient>
+            </defs>
+            <rect width="48" height="48" rx="12" fill="url(#si-signup)"/>
+            <path d="M 29 4 L 13 28 L 22 28 L 19 44 L 35 20 L 26 20 Z" fill="white" fillOpacity="0.95"/>
+          </svg>
+          <div className="text-center">
+            <h1 className="text-xl font-bold text-gray-900 tracking-tight">Speed ERP</h1>
+            <p className="text-xs text-gray-500 tracking-widest uppercase mt-0.5">Speed Innovations</p>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit}>
