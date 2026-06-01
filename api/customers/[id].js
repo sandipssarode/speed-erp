@@ -1,4 +1,4 @@
-import { getDb, setCors } from '../_db.js';
+import { getDb, setCors, ensureSchema } from '../_db.js';
 
 export default async function handler(req, res) {
   setCors(res);
@@ -6,6 +6,7 @@ export default async function handler(req, res) {
   const sql = getDb();
   const { id } = req.query;
   try {
+    await ensureSchema(sql);
     if (req.method === 'GET') {
       const rows = await sql`SELECT data FROM customers WHERE id=${id}`;
       if (!rows.length) return res.status(404).json({ error: 'Not found' });

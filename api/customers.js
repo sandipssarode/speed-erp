@@ -1,10 +1,11 @@
-import { getDb, setCors } from './_db.js';
+import { getDb, setCors, ensureSchema } from './_db.js';
 
 export default async function handler(req, res) {
   setCors(res);
   if (req.method === 'OPTIONS') return res.status(200).end();
   const sql = getDb();
   try {
+    await ensureSchema(sql);
     if (req.method === 'GET') {
       const rows = await sql`SELECT data FROM customers ORDER BY created_at ASC`;
       return res.json(rows.map(r => r.data));

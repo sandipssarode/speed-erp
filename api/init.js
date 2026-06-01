@@ -1,4 +1,4 @@
-import { getDb, setCors } from './_db.js';
+import { getDb, setCors, ensureSchema } from './_db.js';
 
 const SEED_VENDORS = [
   { id: "1001", code: "A001", name: "Aditya Steel & Alloys Pvt Ltd", group: "Manufacturer", currency: "INR", isManufacturer: true, isAgentDealer: false, isServiceJobwork: false, ledgerBalance: 245000, creditLimit: "500000", creditDays: "45", isDeactivated: false, reference: "ASA-2021", corporateAddress: "Plot No. 14, MIDC Industrial Area, Phase II", corporateCountry: "India", corporateState: "Maharashtra", corporateCity: "Pune", corporatePinCode: "411019", phone: "9823456780", email: "accounts@adityasteel.com", website: "https://adityasteel.com", shipFromSameAsVendor: true, shipFromAddress: "Plot No. 14, MIDC Industrial Area, Phase II", shipFromCountry: "India", shipFromState: "Maharashtra", shipFromCity: "Pune", shipFromPinCode: "411019", billToSameAsShipFrom: false, billToAddress: "Office No. 301, Bund Garden Road", billToCountry: "India", billToState: "Maharashtra", billToCity: "Pune", billToPinCode: "411001", industry: "Manufacturing", segment: "Large Enterprise", buyer: "Ramesh Patil", gstRegistrationStatus: "Registered", gstRegistrationNo: "27AABCA1234A1Z5", panNo: "AABCA1234A", gstRegistrationDate: "2017-08-15", markAsRCM: false, arnNo: "", msmeCategory: "", msmeNo: "", contactPersons: [{ id: "c1", name: "Suresh Aditya", designation: "Managing Director", email: "suresh@adityasteel.com", mobile: "9823456781", landline: "020-27456780", department: "Management" }], terms: [{ id: "t1", line: 1, term: "Payment Terms", description: "Payment within 45 days from invoice date via NEFT/RTGS." }], deductionOnPurchaseBill: false, lcApplicable: false, bgApplicable: false, coaCode: "L001", accountReceivable: "A001", accountPayable: "L001", benfName: "Aditya Steel & Alloys Pvt Ltd", benfEmail: "payments@adityasteel.com", benfMobile: "9823456780", banks: [{ id: "b1", bankName: "State Bank of India", branch: "MIDC Pune", city: "Pune", accountNo: "32145678901", ifscCode: "SBIN0012345", swiftCode: "", accountType: "Current" }], remark: "Preferred vendor for structural steel.", createdAt: "2024-01-10T09:30:00.000Z", updatedAt: "2025-03-15T11:20:00.000Z", createdBy: "Admin", updatedBy: "Admin", changelog: [{ timestamp: "2024-01-10T09:30:00.000Z", user: "Admin", action: "Created", changes: "Record created" }] },
@@ -39,68 +39,7 @@ export default async function handler(req, res) {
 
   const sql = getDb();
   try {
-    // Create tables
-    await sql`
-      CREATE TABLE IF NOT EXISTS vendors (
-        id TEXT PRIMARY KEY,
-        code TEXT UNIQUE NOT NULL,
-        name TEXT,
-        is_deactivated BOOLEAN DEFAULT false,
-        data JSONB NOT NULL,
-        created_at TIMESTAMPTZ DEFAULT NOW(),
-        updated_at TIMESTAMPTZ DEFAULT NOW()
-      )`;
-
-    await sql`
-      CREATE TABLE IF NOT EXISTS customers (
-        id TEXT PRIMARY KEY,
-        code TEXT UNIQUE NOT NULL,
-        name TEXT,
-        is_deactivated BOOLEAN DEFAULT false,
-        data JSONB NOT NULL,
-        created_at TIMESTAMPTZ DEFAULT NOW(),
-        updated_at TIMESTAMPTZ DEFAULT NOW()
-      )`;
-
-    await sql`
-      CREATE TABLE IF NOT EXISTS product_categories (
-        id TEXT PRIMARY KEY,
-        code TEXT UNIQUE NOT NULL,
-        name TEXT NOT NULL,
-        cost_method TEXT,
-        expense_account TEXT,
-        income_account TEXT,
-        created_at TIMESTAMPTZ DEFAULT NOW()
-      )`;
-
-    await sql`
-      CREATE TABLE IF NOT EXISTS products (
-        id TEXT PRIMARY KEY,
-        code TEXT UNIQUE NOT NULL,
-        name TEXT,
-        category_code TEXT,
-        stock_uom TEXT,
-        sales_price NUMERIC,
-        is_active BOOLEAN DEFAULT true,
-        data JSONB NOT NULL,
-        created_at TIMESTAMPTZ DEFAULT NOW(),
-        updated_at TIMESTAMPTZ DEFAULT NOW()
-      )`;
-
-    await sql`
-      CREATE TABLE IF NOT EXISTS users (
-        id TEXT PRIMARY KEY,
-        code TEXT UNIQUE NOT NULL,
-        name TEXT NOT NULL,
-        email TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL,
-        role TEXT DEFAULT 'User',
-        department TEXT,
-        is_active BOOLEAN DEFAULT true,
-        data JSONB NOT NULL,
-        created_at TIMESTAMPTZ DEFAULT NOW(),
-        updated_at TIMESTAMPTZ DEFAULT NOW()
-      )`;
+    await ensureSchema(sql);
 
     // Seed vendors
     const vendorCount = await sql`SELECT COUNT(*) FROM vendors`;

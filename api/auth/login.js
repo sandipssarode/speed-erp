@@ -1,4 +1,4 @@
-import { getDb, setCors } from '../_db.js';
+import { getDb, setCors, ensureSchema } from '../_db.js';
 
 export default async function handler(req, res) {
   setCors(res);
@@ -11,6 +11,7 @@ export default async function handler(req, res) {
   if (!email || !password) return res.status(400).json({ error: 'Email and password are required.' });
 
   try {
+    await ensureSchema(sql);
     const rows = await sql`SELECT data, password FROM users WHERE LOWER(email)=LOWER(${email}) AND is_active=true`;
     if (!rows.length) return res.status(401).json({ error: 'Invalid email or password.' });
 

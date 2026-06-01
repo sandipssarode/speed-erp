@@ -1,10 +1,11 @@
-import { getDb, setCors } from './_db.js';
+import { getDb, setCors, ensureSchema } from './_db.js';
 
 export default async function handler(req, res) {
   setCors(res);
   if (req.method === 'OPTIONS') return res.status(200).end();
   const sql = getDb();
   try {
+    await ensureSchema(sql);
     if (req.method === 'GET') {
       const rows = await sql`SELECT * FROM product_categories ORDER BY code ASC`;
       return res.json(rows.map(r => ({ id: r.id, code: r.code, name: r.name, costMethod: r.cost_method, expenseAccount: r.expense_account, incomeAccount: r.income_account })));
