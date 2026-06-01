@@ -102,7 +102,7 @@ const emptyForm = () => ({
   industry: "", segment: "", salesperson: "",
   // GST Details
   gstRegistrationStatus: "", gstRegistrationNo: "", gstRegistrationDate: "",
-  panNo: "", arnNo: "", markAsRCM: false,
+  panNo: "", arnNo: "",
   // Sub-tables
   contactPersons: [], terms: [],
   // Accounts
@@ -941,19 +941,11 @@ export default function CustomerForm() {
                     <Field label="ARN No">
                       <TInput value={form.arnNo} onChange={(e) => setField("arnNo", e.target.value)} disabled={isReadOnly} placeholder="Provisional GST reference" />
                     </Field>
-                    <div className="flex items-end pb-1">
-                      <TCheckbox checked={form.markAsRCM} onChange={(e) => setField("markAsRCM", e.target.checked)} disabled={isReadOnly} label="Mark as RCM Customer" />
-                    </div>
                   </div>
 
                   {form.gstRegistrationStatus === "Unregistered" && (
                     <div className="bg-amber-50 border border-amber-200 rounded p-2.5">
                       <p className="text-xs text-amber-700 font-medium">Unregistered customer — GST will not be charged on invoices raised for this customer.</p>
-                    </div>
-                  )}
-                  {form.markAsRCM && (
-                    <div className="bg-blue-50 border border-blue-200 rounded p-2.5">
-                      <p className="text-xs text-blue-700 font-medium">RCM Customer — Reverse Charge Mechanism accounting entries will be triggered on all sales invoices for this customer.</p>
                     </div>
                   )}
                 </div>
