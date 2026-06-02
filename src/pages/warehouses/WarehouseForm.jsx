@@ -1,51 +1,56 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Layout from "../../components/Layout";
 import { api } from "../../lib/api.js";
 import {
-  ArrowLeft, Edit2, Save, X, Trash2, Plus,
-  ChevronDown, ChevronRight, CheckCircle, AlertCircle,
-  Folder, FolderOpen,
+  Save, X, Plus, Trash2, Edit2, FileText, CheckCircle,
+  AlertCircle, ChevronRight, ArrowLeft, ChevronDown, Folder, FolderOpen,
 } from "lucide-react";
 
-// ── Static data ───────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────
+// MASTER DATA
+// ─────────────────────────────────────────────────────────────
 const INDIAN_STATES = [
-  { code: "35", name: "Andaman & Nicobar Islands" },
-  { code: "37", name: "Andhra Pradesh" },
-  { code: "12", name: "Arunachal Pradesh" },
-  { code: "18", name: "Assam" },
-  { code: "10", name: "Bihar" },
-  { code: "04", name: "Chandigarh" },
-  { code: "22", name: "Chhattisgarh" },
-  { code: "26", name: "Dadra & Nagar Haveli and Daman & Diu" },
-  { code: "07", name: "Delhi" },
-  { code: "30", name: "Goa" },
-  { code: "24", name: "Gujarat" },
-  { code: "06", name: "Haryana" },
-  { code: "02", name: "Himachal Pradesh" },
   { code: "01", name: "Jammu & Kashmir" },
-  { code: "20", name: "Jharkhand" },
-  { code: "29", name: "Karnataka" },
-  { code: "32", name: "Kerala" },
-  { code: "38", name: "Ladakh" },
-  { code: "31", name: "Lakshadweep" },
-  { code: "23", name: "Madhya Pradesh" },
-  { code: "27", name: "Maharashtra" },
-  { code: "14", name: "Manipur" },
-  { code: "17", name: "Meghalaya" },
-  { code: "15", name: "Mizoram" },
-  { code: "13", name: "Nagaland" },
-  { code: "21", name: "Odisha" },
-  { code: "34", name: "Puducherry" },
+  { code: "02", name: "Himachal Pradesh" },
   { code: "03", name: "Punjab" },
-  { code: "08", name: "Rajasthan" },
-  { code: "11", name: "Sikkim" },
-  { code: "33", name: "Tamil Nadu" },
-  { code: "36", name: "Telangana" },
-  { code: "16", name: "Tripura" },
-  { code: "09", name: "Uttar Pradesh" },
+  { code: "04", name: "Chandigarh" },
   { code: "05", name: "Uttarakhand" },
+  { code: "06", name: "Haryana" },
+  { code: "07", name: "Delhi" },
+  { code: "08", name: "Rajasthan" },
+  { code: "09", name: "Uttar Pradesh" },
+  { code: "10", name: "Bihar" },
+  { code: "11", name: "Sikkim" },
+  { code: "12", name: "Arunachal Pradesh" },
+  { code: "13", name: "Nagaland" },
+  { code: "14", name: "Manipur" },
+  { code: "15", name: "Mizoram" },
+  { code: "16", name: "Tripura" },
+  { code: "17", name: "Meghalaya" },
+  { code: "18", name: "Assam" },
   { code: "19", name: "West Bengal" },
+  { code: "20", name: "Jharkhand" },
+  { code: "21", name: "Odisha" },
+  { code: "22", name: "Chhattisgarh" },
+  { code: "23", name: "Madhya Pradesh" },
+  { code: "24", name: "Gujarat" },
+  { code: "25", name: "Daman & Diu" },
+  { code: "26", name: "Dadra & Nagar Haveli" },
+  { code: "27", name: "Maharashtra" },
+  { code: "28", name: "Andhra Pradesh (Old)" },
+  { code: "29", name: "Karnataka" },
+  { code: "30", name: "Goa" },
+  { code: "31", name: "Lakshadweep" },
+  { code: "32", name: "Kerala" },
+  { code: "33", name: "Tamil Nadu" },
+  { code: "34", name: "Puducherry" },
+  { code: "35", name: "Andaman & Nicobar" },
+  { code: "36", name: "Telangana" },
+  { code: "37", name: "Andhra Pradesh" },
+  { code: "38", name: "Ladakh" },
+  { code: "97", name: "Other Territory" },
+  { code: "99", name: "Centre Jurisdiction" },
 ];
 
 const COMPANIES = [
@@ -63,7 +68,10 @@ const BRANCHES = [
   "Hyderabad Branch",
 ];
 
-const EMPTY_FORM = {
+// ─────────────────────────────────────────────────────────────
+// EMPTY FORM
+// ─────────────────────────────────────────────────────────────
+const emptyForm = () => ({
   warehouseName: "",
   warehouseCode: "",
   companyName: "",
@@ -78,37 +86,74 @@ const EMPTY_FORM = {
   accessibleBranch: "",
   locations: [],
   isActive: true,
-};
+  remark: "",
+  createdAt: "", updatedAt: "", createdBy: "", updatedBy: "",
+  changelog: [],
+});
 
-const EMPTY_LOCATION = {
-  code: "",
-  locationName: "",
-  parentId: "",
-  isActive: true,
-  isDefault: false,
-};
+const emptyLocation = () => ({
+  code: "", locationName: "", parentId: "", isActive: true, isDefault: false,
+});
 
-// ── Helpers ───────────────────────────────────────────────────
-function inp(disabled, error) {
-  return `w-full px-2.5 py-1.5 text-sm border rounded focus:outline-none focus:ring-1 transition-colors ${
-    error
-      ? "border-red-400 bg-red-50 focus:ring-red-300"
-      : disabled
-      ? "border-gray-200 bg-gray-100 text-gray-600 cursor-not-allowed"
-      : "border-gray-300 bg-white text-gray-900 hover:border-gray-400 focus:ring-blue-300"
-  }`;
+// ─────────────────────────────────────────────────────────────
+// VALIDATION
+// ─────────────────────────────────────────────────────────────
+function validate(form, allWarehouses, editingId) {
+  const e = {};
+
+  if (!form.warehouseName.trim())
+    e.warehouseName = "Warehouse Name is a required field.";
+  else if (form.warehouseName.trim().length > 100)
+    e.warehouseName = "Warehouse Name must not exceed 100 characters.";
+  else if (allWarehouses.some(w =>
+    w.companyName === form.companyName &&
+    w.warehouseName.trim().toLowerCase() === form.warehouseName.trim().toLowerCase() &&
+    w.id !== editingId
+  ))
+    e.warehouseName = "Warehouse Name already exists for this company. Please enter a unique name.";
+
+  if (!form.companyName)
+    e.companyName = "Company Name is a required field.";
+
+  if (!form.state)
+    e.state = "State is a required field.";
+
+  if (!form.contactNumber.trim())
+    e.contactNumber = "Contact Number is a required field.";
+  else if (!/^\d{10,15}$/.test(form.contactNumber.trim()))
+    e.contactNumber = "Contact Number should be 10 digits (India).";
+
+  if (!form.accessibleBranch)
+    e.accessibleBranch = "Accessible Branch is a required field.";
+
+  if (form.gstNo.trim()) {
+    if (!/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(form.gstNo.trim()))
+      e.gstNo = "GST No. must be 15 characters in valid format (e.g. 27AABCT1234A1Z5).";
+    else {
+      const st = INDIAN_STATES.find(s => s.name === form.state);
+      if (st && form.gstNo.trim().substring(0, 2) !== st.code)
+        e.gstNo = "GST No. state code does not match the selected State.";
+    }
+  }
+
+  if (form.zipcode.trim() && !/^\d{6}$/.test(form.zipcode.trim()))
+    e.zipcode = "Zipcode must be a 6-digit PIN code.";
+
+  return e;
 }
 
+// ─────────────────────────────────────────────────────────────
+// UI PRIMITIVES  (mirrors VendorForm exactly)
+// ─────────────────────────────────────────────────────────────
 function Field({ label, required, error, children, className = "" }) {
   return (
-    <div className={`space-y-1 ${className}`}>
-      <label className="text-xs font-medium text-gray-600 block">
-        {label}
-        {required && <span className="text-red-500 ml-0.5">*</span>}
+    <div className={className}>
+      <label className="block text-xs font-medium text-gray-600 mb-1">
+        {label}{required && <span className="text-red-500 ml-0.5">*</span>}
       </label>
       {children}
       {error && (
-        <p className="text-xs text-red-500 flex items-center gap-1">
+        <p className="text-xs text-red-500 mt-0.5 flex items-center gap-1">
           <AlertCircle size={11} className="shrink-0" />{error}
         </p>
       )}
@@ -116,7 +161,60 @@ function Field({ label, required, error, children, className = "" }) {
   );
 }
 
-// ── Location tree node (recursive) ───────────────────────────
+const inputBase = (disabled, error) =>
+  `w-full px-2.5 py-1.5 text-sm border rounded focus:outline-none focus:ring-1 transition-colors
+  ${error ? "border-red-300 focus:ring-red-300 bg-red-50/20" : "focus:ring-blue-400"}
+  ${disabled ? "bg-gray-100 text-gray-500 cursor-not-allowed border-gray-200" : "bg-white border-gray-300 hover:border-gray-400"}`;
+
+function TInput({ value, onChange, disabled, placeholder, maxLength, error, type = "text" }) {
+  return (
+    <input
+      type={type} value={value ?? ""} onChange={onChange}
+      disabled={disabled} placeholder={placeholder} maxLength={maxLength}
+      className={inputBase(disabled, error)}
+    />
+  );
+}
+
+function TSelect({ value, onChange, disabled, options, placeholder, error }) {
+  return (
+    <select value={value ?? ""} onChange={onChange} disabled={disabled}
+      className={inputBase(disabled, error)}>
+      <option value="">{placeholder || "Select..."}</option>
+      {options.map(o =>
+        typeof o === "string"
+          ? <option key={o} value={o}>{o}</option>
+          : <option key={o.value ?? o.code} value={o.value ?? o.name}>{o.label ?? o.name}</option>
+      )}
+    </select>
+  );
+}
+
+function TTextarea({ value, onChange, disabled, rows = 3, placeholder }) {
+  return (
+    <textarea
+      value={value ?? ""} onChange={onChange} disabled={disabled}
+      rows={rows} placeholder={placeholder}
+      className={`${inputBase(disabled)} resize-none`}
+    />
+  );
+}
+
+function TCheckbox({ checked, onChange, disabled, label }) {
+  return (
+    <label className={`flex items-center gap-2 text-sm select-none ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"}`}>
+      <input
+        type="checkbox" checked={!!checked} onChange={onChange} disabled={disabled}
+        className="w-3.5 h-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-400 focus:ring-1"
+      />
+      <span className="text-gray-700">{label}</span>
+    </label>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// LOCATION TREE NODE
+// ─────────────────────────────────────────────────────────────
 function LocationNode({ loc, allLocations, depth }) {
   const [expanded, setExpanded] = useState(true);
   const children = allLocations.filter(l => l.parentId === loc.id);
@@ -125,15 +223,12 @@ function LocationNode({ loc, allLocations, depth }) {
   return (
     <div>
       <div
-        className="flex items-center gap-1.5 py-1 px-2 rounded hover:bg-gray-50 text-sm group"
-        style={{ paddingLeft: `${depth * 18 + 8}px` }}
+        className="flex items-center gap-1.5 py-1.5 px-2 rounded hover:bg-gray-50 text-sm"
+        style={{ paddingLeft: `${depth * 20 + 8}px` }}
       >
         {hasChildren ? (
-          <button
-            type="button"
-            onClick={() => setExpanded(v => !v)}
-            className="text-gray-400 hover:text-gray-700 shrink-0"
-          >
+          <button type="button" onClick={() => setExpanded(v => !v)}
+            className="text-gray-400 hover:text-gray-600 shrink-0">
             {expanded ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
           </button>
         ) : (
@@ -143,13 +238,13 @@ function LocationNode({ loc, allLocations, depth }) {
           ? <FolderOpen size={13} className="text-yellow-500 shrink-0" />
           : <Folder size={13} className="text-gray-400 shrink-0" />
         }
-        <span className="font-mono text-xs text-blue-700 font-semibold">{loc.code}</span>
-        <span className="text-gray-800 flex-1 truncate">{loc.locationName}</span>
+        <span className="font-mono text-xs text-blue-600 font-semibold">{loc.code}</span>
+        <span className="text-gray-700 flex-1 truncate">{loc.locationName}</span>
         {loc.isDefault && (
-          <span className="text-[10px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded shrink-0">Default</span>
+          <span className="text-[10px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded border border-blue-100 shrink-0">Default</span>
         )}
         {!loc.isActive && (
-          <span className="text-[10px] bg-red-50 text-red-500 px-1.5 py-0.5 rounded shrink-0">Inactive</span>
+          <span className="text-[10px] bg-red-50 text-red-500 px-1.5 py-0.5 rounded border border-red-100 shrink-0">Inactive</span>
         )}
       </div>
       {expanded && hasChildren && children.map(child => (
@@ -159,600 +254,609 @@ function LocationNode({ loc, allLocations, depth }) {
   );
 }
 
-// ── Toast ─────────────────────────────────────────────────────
-function Toast({ toast }) {
-  if (!toast) return null;
-  const isOk = toast.type === "success";
-  return (
-    <div className={`fixed top-4 right-4 z-[100] flex items-center gap-2 px-4 py-3 rounded-lg shadow-lg text-sm font-medium transition-all
-      ${isOk ? "bg-green-600 text-white" : "bg-red-600 text-white"}`}>
-      {isOk ? <CheckCircle size={16} /> : <AlertCircle size={16} />}
-      {toast.msg}
-    </div>
-  );
-}
-
-// ── Main Component ────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────
+// MAIN COMPONENT
+// ─────────────────────────────────────────────────────────────
 export default function WarehouseForm() {
   const navigate = useNavigate();
   const { id } = useParams();
   const isNew = !id;
 
-  const [loading, setLoading]     = useState(!isNew);
-  const [saving, setSaving]       = useState(false);
-  const [isReadOnly, setIsReadOnly] = useState(!isNew);
-  const [form, setForm]           = useState(EMPTY_FORM);
-  const [errors, setErrors]       = useState({});
-  const [toast, setToast]         = useState(null);
-  const [showLocModal, setShowLocModal] = useState(false);
-  const [locForm, setLocForm]     = useState(EMPTY_LOCATION);
-  const [locErrors, setLocErrors] = useState({});
+  const [mode, setMode]             = useState(isNew ? "new" : "view");
+  const [form, setForm]             = useState(emptyForm());
+  const [errors, setErrors]         = useState({});
+  const [activeTab, setActiveTab]   = useState("general");
+  const [toast, setToast]           = useState(null);
+  const [showChangelog, setShowChangelog] = useState(false);
   const [allWarehouses, setAllWarehouses] = useState([]);
+  const [showLocModal, setShowLocModal]   = useState(false);
+  const [locForm, setLocForm]       = useState(emptyLocation());
+  const [locErrors, setLocErrors]   = useState({});
+
+  const user = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
+  const isReadOnly = mode === "view";
+
+  useEffect(() => {
+    api.get("/api/warehouses").then(list => {
+      setAllWarehouses(list);
+      if (!isNew && id) {
+        const found = list.find(w => w.id === id);
+        if (found) setForm(found);
+        else navigate("/system/warehouses");
+      }
+    }).catch(console.error);
+  }, [id, isNew]);
 
   const showToast = (msg, type = "success") => {
     setToast({ msg, type });
     setTimeout(() => setToast(null), 3500);
   };
 
-  useEffect(() => {
-    api.get("/api/warehouses").then(setAllWarehouses).catch(() => {});
-    if (!isNew) {
-      api.get(`/api/warehouses/${id}`)
-        .then(w => { setForm(w); setLoading(false); })
-        .catch(() => navigate("/system/warehouses"));
-    }
-  }, [id, isNew]);
-
-  const setField = (key, val) => setForm(f => ({ ...f, [key]: val }));
-
-  // ── Validation ───────────────────────────────────────────
-  const validate = () => {
-    const e = {};
-    if (!form.warehouseName.trim()) {
-      e.warehouseName = "Warehouse Name is a required field.";
-    } else if (form.warehouseName.trim().length > 100) {
-      e.warehouseName = "Warehouse Name must not exceed 100 characters.";
-    } else {
-      const dup = allWarehouses.find(
-        w => w.companyName === form.companyName &&
-             w.warehouseName.trim().toLowerCase() === form.warehouseName.trim().toLowerCase() &&
-             w.id !== id
-      );
-      if (dup) e.warehouseName = "Warehouse Name already exists for this company. Please enter a unique name.";
-    }
-    if (!form.companyName) e.companyName = "Company Name is a required field.";
-    if (!form.state) e.state = "State is a required field.";
-    if (!form.contactNumber.trim()) {
-      e.contactNumber = "Contact Number is a required field.";
-    } else if (!/^\d{10,15}$/.test(form.contactNumber.trim())) {
-      e.contactNumber = "Contact Number should be 10 digits (India).";
-    }
-    if (!form.accessibleBranch) e.accessibleBranch = "Accessible Branch is a required field.";
-    if (form.gstNo.trim()) {
-      if (form.gstNo.trim().length !== 15 || !/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(form.gstNo.trim())) {
-        e.gstNo = "GST No. must be 15 characters in valid format (e.g. 27AABCT1234A1Z5).";
-      } else {
-        const selectedState = INDIAN_STATES.find(s => s.name === form.state);
-        if (selectedState && form.gstNo.trim().substring(0, 2) !== selectedState.code) {
-          e.gstNo = "GST No. state code does not match the selected State.";
-        }
-      }
-    }
-    if (form.zipcode.trim() && !/^\d{6}$/.test(form.zipcode.trim())) {
-      e.zipcode = "Zipcode must be a 6-digit PIN code.";
-    }
-    return e;
+  const setField = (key, value) => {
+    setForm(prev => ({ ...prev, [key]: value }));
+    if (errors[key]) setErrors(prev => { const e = { ...prev }; delete e[key]; return e; });
   };
 
-  // ── Save ─────────────────────────────────────────────────
+  // ── Save ──
   const handleSave = async () => {
-    const errs = validate();
-    if (Object.keys(errs).length) {
+    const errs = validate(form, allWarehouses, isNew ? null : id);
+    if (Object.keys(errs).length > 0) {
       setErrors(errs);
+      const keys = Object.keys(errs);
+      if (keys.some(k => ["state", "city", "address1", "address2", "zipcode", "contactName", "contactNumber", "accessibleBranch"].includes(k)))
+        setActiveTab("general");
       showToast("Please correct the highlighted fields and try again.", "error");
       return;
     }
-    setSaving(true);
+
+    const now = new Date().toISOString();
+    const userName = user.name || user.fullName || "System";
+    const changeEntry = { timestamp: now, user: userName, action: isNew ? "Created" : "Updated", changes: isNew ? "Record created" : "Record updated" };
+
     try {
-      const now = new Date().toISOString();
-      const user = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
-      const userName = user.name || "System";
-      const payload = {
-        ...form,
-        id: isNew ? Date.now().toString() : id,
-        createdAt: isNew ? now : (form.createdAt || now),
-        updatedAt: now,
-        createdBy: isNew ? userName : (form.createdBy || userName),
-        updatedBy: userName,
-      };
+      let saved;
       if (isNew) {
-        await api.post("/api/warehouses", payload);
-        showToast("Warehouse created successfully.");
-        navigate("/system/warehouses");
+        const payload = { ...form, id: Date.now().toString(), createdAt: now, updatedAt: now, createdBy: userName, updatedBy: userName, changelog: [changeEntry] };
+        saved = await api.post("/api/warehouses", payload);
       } else {
-        await api.put(`/api/warehouses/${id}`, payload);
-        setForm(payload);
-        setIsReadOnly(true);
-        setAllWarehouses(prev => prev.map(w => w.id === id ? payload : w));
-        showToast("Warehouse saved successfully.");
+        const payload = { ...form, updatedAt: now, updatedBy: userName, changelog: [...(form.changelog || []), changeEntry] };
+        saved = await api.put(`/api/warehouses/${id}`, payload);
       }
-    } catch (err) {
-      showToast(err.message || "Failed to save. Please try again.", "error");
-    } finally {
-      setSaving(false);
+      setForm(saved);
+      setAllWarehouses(prev => isNew ? [...prev, saved] : prev.map(w => w.id === saved.id ? saved : w));
+      setMode("view");
       setErrors({});
+      showToast("Warehouse saved successfully.");
+      if (isNew) navigate(`/system/warehouses/${saved.id}`, { replace: true });
+    } catch (err) {
+      showToast(err.message || "Failed to save warehouse.", "error");
     }
   };
 
-  // ── Delete ────────────────────────────────────────────────
+  const handleDiscard = async () => {
+    if (isNew) { navigate("/system/warehouses"); return; }
+    try {
+      const found = await api.get(`/api/warehouses/${id}`);
+      setForm(found);
+    } catch { /* keep current */ }
+    setMode("view");
+    setErrors({});
+  };
+
   const handleDelete = async () => {
     if (!window.confirm(`Delete warehouse "${form.warehouseName}"? This cannot be undone.`)) return;
     try {
       await api.del(`/api/warehouses/${id}`);
       navigate("/system/warehouses");
     } catch (err) {
-      showToast(err.message || "Failed to delete.", "error");
+      showToast(err.message || "Failed to delete warehouse.", "error");
     }
   };
 
-  // ── Add Location popup ────────────────────────────────────
-  const openAddLocation = () => {
-    setLocForm(EMPTY_LOCATION);
+  // ── Add Location ──
+  const openLocModal = () => {
+    setLocForm(emptyLocation());
     setLocErrors({});
     setShowLocModal(true);
   };
 
-  const validateLocation = () => {
-    const e = {};
-    if (!locForm.code.trim()) {
-      e.code = "Location Code is a required field.";
-    } else if (form.locations.some(l => l.code.trim().toLowerCase() === locForm.code.trim().toLowerCase())) {
-      e.code = "Location Code already exists in this warehouse. Please enter a unique code.";
-    }
-    if (!locForm.locationName.trim()) e.locationName = "Location Name is a required field.";
-    return e;
-  };
-
   const handleSaveLocation = () => {
-    const errs = validateLocation();
-    if (Object.keys(errs).length) { setLocErrors(errs); return; }
-    const newLoc = {
-      ...locForm,
-      id: Date.now().toString(),
-      parentId: locForm.parentId || null,
-    };
-    setField("locations", [...form.locations, newLoc]);
+    const e = {};
+    if (!locForm.code.trim())
+      e.code = "Location Code is a required field.";
+    else if (form.locations.some(l => l.code.trim().toLowerCase() === locForm.code.trim().toLowerCase()))
+      e.code = "Location Code already exists in this warehouse. Please enter a unique code.";
+    if (!locForm.locationName.trim())
+      e.locationName = "Location Name is a required field.";
+    if (Object.keys(e).length) { setLocErrors(e); return; }
+
+    setField("locations", [
+      ...form.locations,
+      { ...locForm, id: Date.now().toString(), parentId: locForm.parentId || null },
+    ]);
     setShowLocModal(false);
-    setLocForm(EMPTY_LOCATION);
-    setLocErrors({});
   };
 
-  // ── Top-level locations (no parent) ──────────────────────
+  const TABS = [
+    { id: "general",   label: "General Information" },
+    { id: "locations", label: "Storage Locations" },
+    { id: "remark",    label: "Remark" },
+  ];
+
+  const tabHasError = (tabId) => {
+    const keys = Object.keys(errors);
+    if (tabId === "general") return keys.some(k => ["warehouseName","companyName","gstNo","state","city","zipcode","contactNumber","accessibleBranch"].includes(k));
+    return false;
+  };
+
   const topLevelLocs = form.locations.filter(l => !l.parentId);
 
-  if (loading) {
-    return <Layout><div className="text-center py-16 text-gray-400 text-sm">Loading...</div></Layout>;
-  }
-
+  // ─────────────────────────────────────────────────────────────
+  // RENDER
+  // ─────────────────────────────────────────────────────────────
   return (
     <Layout>
-      <Toast toast={toast} />
+      <div className="space-y-3 max-w-7xl mx-auto">
 
-      <div className="space-y-5 max-w-5xl">
-
-        {/* ── Breadcrumb ── */}
-        <div className="flex items-center gap-1.5 text-xs text-gray-500">
-          <Link to="/system/warehouses" className="hover:text-gray-700">System Setup</Link>
-          <ChevronRight size={12} />
-          <Link to="/system/warehouses" className="hover:text-gray-700">Warehouse Master</Link>
-          {!isNew && (
-            <>
-              <ChevronRight size={12} />
-              <span className="text-gray-700 font-medium">{form.warehouseName || id}</span>
-            </>
-          )}
+        {/* Breadcrumb */}
+        <div className="flex items-center gap-1.5 text-xs text-gray-400">
+          <span>System Setup</span><ChevronRight size={12} />
+          <button onClick={() => navigate("/system/warehouses")} className="hover:text-blue-500 transition-colors">Warehouse Master</button>
+          {form.warehouseCode && <><ChevronRight size={12} /><span className="text-blue-600 font-medium">{form.warehouseCode}</span></>}
         </div>
 
-        {/* ── Action toolbar ── */}
-        <div className="flex flex-wrap items-center gap-2">
+        {/* Toast */}
+        {toast && (
+          <div className={`flex items-center gap-2 px-4 py-2.5 rounded text-sm border ${
+            toast.type === "error"
+              ? "bg-red-50 border-red-200 text-red-700"
+              : "bg-green-50 border-green-200 text-green-700"
+          }`}>
+            {toast.type === "error" ? <AlertCircle size={15} /> : <CheckCircle size={15} />}
+            {toast.msg}
+          </div>
+        )}
+
+        {/* ── ACTION TOOLBAR ── */}
+        <div className="bg-white border border-gray-200 rounded px-4 py-2.5 flex items-center gap-2 flex-wrap shadow-sm">
           <button
-            type="button"
             onClick={() => navigate("/system/warehouses")}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-gray-300 rounded text-gray-700 hover:bg-gray-100 transition-colors"
+            className="flex items-center gap-1.5 text-xs px-3 py-1.5 border border-gray-300 text-gray-600 hover:bg-gray-50 rounded font-medium"
           >
-            <ArrowLeft size={14} /> Back
+            <ArrowLeft size={13} /> Back
           </button>
 
-          {isReadOnly && !isNew && (
+          {mode === "view" && (
             <button
-              type="button"
-              onClick={() => setIsReadOnly(false)}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-gray-300 rounded text-gray-700 hover:bg-gray-100 transition-colors"
+              onClick={() => setMode("edit")}
+              className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded font-medium"
             >
-              <Edit2 size={14} /> Edit
+              <Edit2 size={13} /> Edit
             </button>
           )}
 
-          {(!isReadOnly) && (
+          {(mode === "new" || mode === "edit") && (
             <>
               <button
-                type="button"
                 onClick={handleSave}
-                disabled={saving}
-                className="flex items-center gap-1.5 px-4 py-1.5 text-sm rounded bg-gray-900 text-white hover:bg-gray-800 disabled:opacity-60 transition-colors"
+                className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded font-medium"
               >
-                <Save size={14} /> {saving ? "Saving..." : "Save"}
+                <Save size={13} /> Save
               </button>
-              {!isNew && (
-                <button
-                  type="button"
-                  onClick={() => { setIsReadOnly(true); setErrors({}); }}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-gray-300 rounded text-gray-700 hover:bg-gray-100 transition-colors"
-                >
-                  <X size={14} /> Discard
-                </button>
-              )}
+              <button
+                onClick={handleDiscard}
+                className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-gray-500 hover:bg-gray-600 text-white rounded font-medium"
+              >
+                <X size={13} /> Discard
+              </button>
             </>
           )}
 
-          {isNew && (
+          {mode === "view" && !isNew && (
             <button
-              type="button"
-              onClick={handleSave}
-              disabled={saving}
-              className="flex items-center gap-1.5 px-4 py-1.5 text-sm rounded bg-gray-900 text-white hover:bg-gray-800 disabled:opacity-60 transition-colors"
+              onClick={handleDelete}
+              className="flex items-center gap-1.5 text-xs px-3 py-1.5 border border-red-300 text-red-500 hover:bg-red-50 rounded font-medium"
             >
-              <Save size={14} /> {saving ? "Saving..." : "Save"}
+              <Trash2 size={13} /> Delete
             </button>
           )}
 
-          {!isNew && (
-            <button
-              type="button"
-              onClick={handleDelete}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-red-300 rounded text-red-600 hover:bg-red-50 transition-colors ml-auto"
-            >
-              <Trash2 size={14} /> Delete
-            </button>
+          <div className="w-px h-5 bg-gray-200 mx-1" />
+
+          <button
+            onClick={() => setShowChangelog(!showChangelog)}
+            className={`flex items-center gap-1.5 text-xs px-3 py-1.5 border rounded font-medium transition-colors ${
+              showChangelog ? "border-blue-300 bg-blue-50 text-blue-600" : "border-gray-300 text-gray-600 hover:bg-gray-50"
+            }`}
+          >
+            <FileText size={13} /> Changelog
+          </button>
+
+          {form.updatedAt && (
+            <div className="ml-auto text-xs text-gray-400 text-right">
+              <span>Updated: {new Date(form.updatedAt).toLocaleString()}</span>
+              <span className="ml-2">by {form.updatedBy}</span>
+            </div>
           )}
         </div>
 
-        {/* ── Blue header card ── */}
-        <div className="rounded-lg overflow-hidden border border-gray-200 shadow-sm">
-          <div className="bg-gradient-to-r from-gray-900 to-gray-700 px-5 py-4 flex items-start justify-between gap-4">
-            <div className="min-w-0">
-              <p className="text-white font-semibold text-base truncate">
-                {form.warehouseName || (isNew ? "New Warehouse" : "—")}
-              </p>
-              <p className="text-gray-300 text-xs mt-0.5">
-                {form.warehouseCode ? `Code: ${form.warehouseCode}` : "Warehouse Master"}
-                {form.companyName ? ` · ${form.companyName}` : ""}
-              </p>
-            </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${form.isActive !== false ? "bg-green-400/20 text-green-200" : "bg-red-400/20 text-red-300"}`}>
+        {/* ── CHANGELOG PANEL ── */}
+        {showChangelog && (
+          <div className="bg-white border border-gray-200 rounded p-4">
+            <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+              <FileText size={14} /> Audit Log — {form.warehouseName || "New Warehouse"}
+            </h3>
+            {!form.changelog?.length ? (
+              <p className="text-xs text-gray-400 py-4 text-center">No changes recorded yet.</p>
+            ) : (
+              <table className="w-full text-xs">
+                <thead>
+                  <tr className="border-b border-gray-200">
+                    <th className="text-left pb-2 text-gray-500 font-medium">Date & Time</th>
+                    <th className="text-left pb-2 text-gray-500 font-medium">User</th>
+                    <th className="text-left pb-2 text-gray-500 font-medium">Action</th>
+                    <th className="text-left pb-2 text-gray-500 font-medium">Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {form.changelog.map((c, i) => (
+                    <tr key={i} className="border-b border-gray-50">
+                      <td className="py-1.5 text-gray-600">{new Date(c.timestamp).toLocaleString()}</td>
+                      <td className="py-1.5 text-gray-600">{c.user}</td>
+                      <td className="py-1.5">
+                        <span className={`px-1.5 py-0.5 rounded text-xs ${c.action === "Created" ? "bg-green-50 text-green-600" : "bg-blue-50 text-blue-600"}`}>
+                          {c.action}
+                        </span>
+                      </td>
+                      <td className="py-1.5 text-gray-600">{c.changes}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        )}
+
+        {/* ── HEADER SECTION ── */}
+        <div className="bg-white border border-gray-200 rounded shadow-sm">
+          {/* Status Bar */}
+          <div className="bg-gradient-to-r from-blue-800 to-blue-600 px-5 py-2.5 rounded-t flex items-center gap-4 text-white">
+            <span className="font-bold text-base tracking-wide">{form.warehouseCode || "NEW WAREHOUSE"}</span>
+            <span className="text-blue-200 text-sm">{form.warehouseName || "—"}</span>
+            <div className="ml-auto flex items-center gap-2">
+              {(mode === "new" || mode === "edit") && (
+                <span className="bg-amber-400/30 text-amber-100 border border-amber-300/30 px-2 py-0.5 rounded text-xs font-medium">
+                  {mode === "new" ? "New Record" : "Editing"}
+                </span>
+              )}
+              <span className={`px-2 py-0.5 rounded text-xs font-medium border ${
+                form.isActive !== false
+                  ? "bg-green-400/20 text-green-100 border-green-300/30"
+                  : "bg-red-400/20 text-red-100 border-red-300/30"
+              }`}>
                 {form.isActive !== false ? "Active" : "Inactive"}
               </span>
-              {!isReadOnly && (
-                <label className="flex items-center gap-1.5 text-xs text-gray-300 cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    checked={form.isActive !== false}
-                    onChange={e => setField("isActive", e.target.checked)}
-                    className="h-3.5 w-3.5 rounded border-gray-400"
-                  />
-                  Active
-                </label>
-              )}
             </div>
           </div>
 
-          {/* ── Basic Details section ── */}
-          <div className="bg-white p-5">
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Basic Details</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-4">
-
-              <Field label="Warehouse Name" required error={errors.warehouseName} className="lg:col-span-2">
-                <input
-                  type="text"
+          <div className="p-5 space-y-4">
+            {/* Row 1: Warehouse Name, Code, Company, GST No. */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <Field label="Warehouse Name" required error={errors.warehouseName}>
+                <TInput
                   value={form.warehouseName}
                   onChange={e => setField("warehouseName", e.target.value)}
                   disabled={isReadOnly}
-                  maxLength={100}
                   placeholder="e.g. Main Warehouse"
-                  className={inp(isReadOnly, errors.warehouseName)}
+                  maxLength={100}
+                  error={errors.warehouseName}
                 />
               </Field>
-
               <Field label="Warehouse Code" error={errors.warehouseCode}>
-                <input
-                  type="text"
+                <TInput
                   value={form.warehouseCode}
-                  onChange={e => setField("warehouseCode", e.target.value)}
+                  onChange={e => setField("warehouseCode", e.target.value.toUpperCase())}
                   disabled={isReadOnly}
                   placeholder="e.g. WH-01"
-                  className={inp(isReadOnly, errors.warehouseCode)}
+                  error={errors.warehouseCode}
                 />
               </Field>
-
               <Field label="Company Name" required error={errors.companyName}>
-                <select
+                <TSelect
                   value={form.companyName}
                   onChange={e => setField("companyName", e.target.value)}
                   disabled={isReadOnly}
-                  className={inp(isReadOnly, errors.companyName)}
-                >
-                  <option value="">Select Company</option>
-                  {COMPANIES.map(c => <option key={c} value={c}>{c}</option>)}
-                </select>
+                  options={COMPANIES}
+                  placeholder="Select Company"
+                  error={errors.companyName}
+                />
               </Field>
-
               <Field label="GST No." error={errors.gstNo}>
-                <input
-                  type="text"
+                <TInput
                   value={form.gstNo}
                   onChange={e => setField("gstNo", e.target.value.toUpperCase())}
                   disabled={isReadOnly}
-                  maxLength={15}
                   placeholder="e.g. 27AABCT1234A1Z5"
-                  className={inp(isReadOnly, errors.gstNo)}
-                />
-              </Field>
-
-              <Field label="State" required error={errors.state}>
-                <select
-                  value={form.state}
-                  onChange={e => setField("state", e.target.value)}
-                  disabled={isReadOnly}
-                  className={inp(isReadOnly, errors.state)}
-                >
-                  <option value="">Select State</option>
-                  {INDIAN_STATES.map(s => (
-                    <option key={s.code} value={s.name}>{s.code} — {s.name}</option>
-                  ))}
-                </select>
-              </Field>
-
-              <Field label="City" error={errors.city}>
-                <input
-                  type="text"
-                  value={form.city}
-                  onChange={e => setField("city", e.target.value)}
-                  disabled={isReadOnly}
-                  placeholder="e.g. Mumbai"
-                  className={inp(isReadOnly, errors.city)}
-                />
-              </Field>
-
-              <Field label="Zipcode" error={errors.zipcode}>
-                <input
-                  type="text"
-                  value={form.zipcode}
-                  onChange={e => setField("zipcode", e.target.value)}
-                  disabled={isReadOnly}
-                  maxLength={6}
-                  placeholder="6-digit PIN"
-                  className={inp(isReadOnly, errors.zipcode)}
-                />
-              </Field>
-
-              <Field label="Address Line 1" error={errors.address1} className="lg:col-span-2">
-                <input
-                  type="text"
-                  value={form.address1}
-                  onChange={e => setField("address1", e.target.value)}
-                  disabled={isReadOnly}
-                  placeholder="Plot / Building / Door No."
-                  className={inp(isReadOnly, errors.address1)}
-                />
-              </Field>
-
-              <Field label="Address Line 2" error={errors.address2} className="lg:col-span-2">
-                <input
-                  type="text"
-                  value={form.address2}
-                  onChange={e => setField("address2", e.target.value)}
-                  disabled={isReadOnly}
-                  placeholder="Area / Locality"
-                  className={inp(isReadOnly, errors.address2)}
-                />
-              </Field>
-
-              <Field label="Contact Name" error={errors.contactName}>
-                <input
-                  type="text"
-                  value={form.contactName}
-                  onChange={e => setField("contactName", e.target.value)}
-                  disabled={isReadOnly}
-                  placeholder="Warehouse Manager"
-                  className={inp(isReadOnly, errors.contactName)}
-                />
-              </Field>
-
-              <Field label="Contact Number" required error={errors.contactNumber}>
-                <input
-                  type="text"
-                  value={form.contactNumber}
-                  onChange={e => setField("contactNumber", e.target.value.replace(/\D/g, ""))}
-                  disabled={isReadOnly}
                   maxLength={15}
-                  placeholder="10-digit mobile"
-                  className={inp(isReadOnly, errors.contactNumber)}
+                  error={errors.gstNo}
                 />
               </Field>
+            </div>
 
-              <Field label="Accessible Branch" required error={errors.accessibleBranch} className="lg:col-span-2">
-                <select
-                  value={form.accessibleBranch}
-                  onChange={e => setField("accessibleBranch", e.target.value)}
+            {/* Row 2: Deactivate checkbox */}
+            <div className="flex items-center gap-8 pt-1 border-t border-gray-100">
+              <div className="ml-auto">
+                <TCheckbox
+                  checked={form.isActive === false}
+                  onChange={e => setField("isActive", !e.target.checked)}
                   disabled={isReadOnly}
-                  className={inp(isReadOnly, errors.accessibleBranch)}
-                >
-                  <option value="">Select Branch</option>
-                  {BRANCHES.map(b => <option key={b} value={b}>{b}</option>)}
-                </select>
-              </Field>
-
+                  label="Deactivate Warehouse"
+                />
+              </div>
             </div>
           </div>
         </div>
 
-        {/* ── Storage Locations section ── */}
-        <div className="rounded-lg border border-gray-200 bg-white shadow-sm overflow-hidden">
-          <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100">
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Storage Locations</p>
-            {!isReadOnly && (
+        {/* ── TABS ── */}
+        <div className="bg-white border border-gray-200 rounded shadow-sm">
+          {/* Tab Headers */}
+          <div className="flex border-b border-gray-200 overflow-x-auto">
+            {TABS.map(tab => (
               <button
-                type="button"
-                onClick={openAddLocation}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors"
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-1.5 px-5 py-3 text-xs font-medium whitespace-nowrap border-b-2 transition-colors
+                  ${activeTab === tab.id
+                    ? "border-blue-600 text-blue-600 bg-blue-50/50"
+                    : "border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+                  }`}
               >
-                <Plus size={13} /> Add Location
+                {tab.label}
+                {tabHasError(tab.id) && <AlertCircle size={12} className="text-red-400" />}
               </button>
-            )}
+            ))}
           </div>
 
-          <div className="p-4">
-            {form.locations.length === 0 ? (
-              <div className="border-2 border-dashed border-gray-200 rounded-lg py-10 text-center">
-                <Folder size={28} className="text-gray-300 mx-auto mb-2" />
-                <p className="text-sm text-gray-400">No storage locations added yet.</p>
-                <p className="text-xs text-gray-400 mt-1">Build a hierarchy: Warehouse → Zone → Rack → Shelf → Bin</p>
-                {!isReadOnly && (
-                  <button
-                    type="button"
-                    onClick={openAddLocation}
-                    className="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded border border-gray-300 text-gray-700 hover:bg-gray-50"
-                  >
-                    <Plus size={12} /> Add First Location
-                  </button>
-                )}
-              </div>
-            ) : (
-              <div className="border border-gray-100 rounded-lg overflow-hidden">
-                <div className="bg-gray-50 px-3 py-2 border-b border-gray-100 flex items-center gap-3 text-xs font-medium text-gray-500">
-                  <span className="flex-1">Location</span>
-                  <span>Status</span>
+          {/* Tab Body */}
+          <div className="p-5">
+
+            {/* ══════════ GENERAL INFORMATION ══════════ */}
+            {activeTab === "general" && (
+              <div className="space-y-5">
+
+                {/* Address + Contact block */}
+                <div className="bg-gray-50 border border-gray-200 rounded p-4 space-y-4">
+                  <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Warehouse Address & Contact</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <Field label="State" required error={errors.state}>
+                      <TSelect
+                        value={form.state}
+                        onChange={e => setField("state", e.target.value)}
+                        disabled={isReadOnly}
+                        options={INDIAN_STATES.map(s => ({ value: s.name, label: `${s.code} — ${s.name}` }))}
+                        placeholder="Select State"
+                        error={errors.state}
+                      />
+                    </Field>
+                    <Field label="City" error={errors.city}>
+                      <TInput
+                        value={form.city}
+                        onChange={e => setField("city", e.target.value)}
+                        disabled={isReadOnly}
+                        placeholder="e.g. Mumbai"
+                      />
+                    </Field>
+                    <Field label="Zipcode" error={errors.zipcode}>
+                      <TInput
+                        value={form.zipcode}
+                        onChange={e => setField("zipcode", e.target.value.replace(/\D/g, ""))}
+                        disabled={isReadOnly}
+                        placeholder="6-digit PIN"
+                        maxLength={6}
+                        error={errors.zipcode}
+                      />
+                    </Field>
+                    <Field label="Accessible Branch" required error={errors.accessibleBranch}>
+                      <TSelect
+                        value={form.accessibleBranch}
+                        onChange={e => setField("accessibleBranch", e.target.value)}
+                        disabled={isReadOnly}
+                        options={BRANCHES}
+                        placeholder="Select Branch"
+                        error={errors.accessibleBranch}
+                      />
+                    </Field>
+                    <div className="col-span-1 sm:col-span-2">
+                      <Field label="Address Line 1" error={errors.address1}>
+                        <TInput
+                          value={form.address1}
+                          onChange={e => setField("address1", e.target.value)}
+                          disabled={isReadOnly}
+                          placeholder="Plot / Building / Door No."
+                        />
+                      </Field>
+                    </div>
+                    <div className="col-span-1 sm:col-span-2">
+                      <Field label="Address Line 2" error={errors.address2}>
+                        <TInput
+                          value={form.address2}
+                          onChange={e => setField("address2", e.target.value)}
+                          disabled={isReadOnly}
+                          placeholder="Area / Locality"
+                        />
+                      </Field>
+                    </div>
+                    <div className="col-span-1 sm:col-span-2">
+                      <Field label="Contact Name" error={errors.contactName}>
+                        <TInput
+                          value={form.contactName}
+                          onChange={e => setField("contactName", e.target.value)}
+                          disabled={isReadOnly}
+                          placeholder="Warehouse Manager / Storekeeper"
+                        />
+                      </Field>
+                    </div>
+                    <div className="col-span-1 sm:col-span-2">
+                      <Field label="Contact Number" required error={errors.contactNumber}>
+                        <TInput
+                          value={form.contactNumber}
+                          onChange={e => setField("contactNumber", e.target.value.replace(/\D/g, ""))}
+                          disabled={isReadOnly}
+                          placeholder="10-digit mobile"
+                          maxLength={15}
+                          error={errors.contactNumber}
+                        />
+                      </Field>
+                    </div>
+                  </div>
                 </div>
-                <div className="py-1">
-                  {topLevelLocs.map(loc => (
-                    <LocationNode
-                      key={loc.id}
-                      loc={loc}
-                      allLocations={form.locations}
-                      depth={0}
-                    />
-                  ))}
-                </div>
+
               </div>
             )}
+
+            {/* ══════════ STORAGE LOCATIONS ══════════ */}
+            {activeTab === "locations" && (
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs text-gray-500">{form.locations.length} location(s)</p>
+                  {!isReadOnly && (
+                    <button
+                      type="button"
+                      onClick={openLocModal}
+                      className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded"
+                    >
+                      <Plus size={13} /> Add Location
+                    </button>
+                  )}
+                </div>
+
+                {form.locations.length === 0 ? (
+                  <div className="text-center py-12 text-gray-400 text-sm border-2 border-dashed border-gray-200 rounded-lg">
+                    No storage locations added.
+                    {!isReadOnly && ' Click "Add Location" to build the hierarchy.'}
+                    <p className="text-xs mt-1 text-gray-300">Warehouse → Zone → Rack → Shelf → Bin</p>
+                  </div>
+                ) : (
+                  <div className="border border-gray-200 rounded overflow-hidden">
+                    <div className="bg-gray-50 border-b border-gray-200 px-3 py-2 flex items-center text-xs font-semibold text-gray-500 uppercase tracking-wide gap-2">
+                      <span className="flex-1">Location</span>
+                      <span>Flags</span>
+                    </div>
+                    <div className="py-1">
+                      {topLevelLocs.map(loc => (
+                        <LocationNode key={loc.id} loc={loc} allLocations={form.locations} depth={0} />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* ══════════ REMARK ══════════ */}
+            {activeTab === "remark" && (
+              <div className="max-w-2xl">
+                <Field label="Internal Remarks">
+                  <TTextarea
+                    value={form.remark}
+                    onChange={e => setField("remark", e.target.value)}
+                    disabled={isReadOnly}
+                    rows={6}
+                    placeholder="Internal notes — not printed on any document."
+                  />
+                </Field>
+                <p className="text-xs text-gray-400 mt-1">This field is for internal reference only and will not appear on any printed document.</p>
+              </div>
+            )}
+
           </div>
         </div>
 
-        {/* ── Error summary ── */}
+        {/* Form-level error summary */}
         {Object.keys(errors).length > 0 && (
-          <div className="rounded border border-red-200 bg-red-50 px-4 py-3">
-            <p className="text-xs font-semibold text-red-700 mb-1">Please correct the highlighted fields and try again.</p>
-            <ul className="list-disc list-inside space-y-0.5">
-              {Object.values(errors).map((e, i) => (
-                <li key={i} className="text-xs text-red-600">{e}</li>
-              ))}
-            </ul>
+          <div className="bg-red-50 border border-red-200 rounded p-3 flex items-start gap-2">
+            <AlertCircle size={15} className="text-red-500 mt-0.5 shrink-0" />
+            <div>
+              <p className="text-sm font-medium text-red-700 mb-1">Please correct the highlighted fields and try again.</p>
+              <ul className="text-xs text-red-600 space-y-0.5 list-disc list-inside">
+                {Object.values(errors).slice(0, 6).map((e, i) => <li key={i}>{e}</li>)}
+                {Object.keys(errors).length > 6 && <li>...and {Object.keys(errors).length - 6} more error(s)</li>}
+              </ul>
+            </div>
+          </div>
+        )}
+
+        {/* Metadata */}
+        {form.createdAt && (
+          <div className="text-xs text-gray-400 flex items-center gap-4 px-1 pb-2">
+            <span>Created: {new Date(form.createdAt).toLocaleString()} by {form.createdBy}</span>
+            <span>|</span>
+            <span>Last Updated: {new Date(form.updatedAt).toLocaleString()} by {form.updatedBy}</span>
           </div>
         )}
 
       </div>
 
-      {/* ── Add Location Modal ── */}
+      {/* ── ADD LOCATION MODAL ── */}
       {showLocModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="bg-white rounded-xl shadow-2xl w-full max-w-md">
+          <div className="bg-white rounded-lg shadow-2xl w-full max-w-md">
 
             <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-              <h3 className="text-sm font-semibold text-gray-900">Add Storage Location</h3>
-              <button
-                type="button"
-                onClick={() => setShowLocModal(false)}
-                className="text-gray-400 hover:text-gray-700 p-1 rounded hover:bg-gray-100"
-              >
+              <h3 className="text-sm font-semibold text-gray-800">Add Storage Location</h3>
+              <button type="button" onClick={() => setShowLocModal(false)}
+                className="text-gray-400 hover:text-gray-700 p-1 rounded hover:bg-gray-100">
                 <X size={16} />
               </button>
             </div>
 
             <div className="p-5 space-y-4">
-
               <Field label="Code" required error={locErrors.code}>
-                <input
-                  type="text"
+                <TInput
                   value={locForm.code}
                   onChange={e => setLocForm(f => ({ ...f, code: e.target.value }))}
                   placeholder="e.g. LOC-01, RACK-A1, BIN-003"
-                  className={inp(false, locErrors.code)}
-                  autoFocus
+                  error={locErrors.code}
                 />
               </Field>
-
               <Field label="Location Name" required error={locErrors.locationName}>
-                <input
-                  type="text"
+                <TInput
                   value={locForm.locationName}
                   onChange={e => setLocForm(f => ({ ...f, locationName: e.target.value }))}
                   placeholder="e.g. Zone A, Rack A1, Bin 01"
-                  className={inp(false, locErrors.locationName)}
+                  error={locErrors.locationName}
                 />
               </Field>
-
-              <Field label="Parent Location" error={locErrors.parentId}>
-                <select
+              <Field label="Parent Location">
+                <TSelect
                   value={locForm.parentId}
                   onChange={e => setLocForm(f => ({ ...f, parentId: e.target.value }))}
-                  className={inp(false, locErrors.parentId)}
-                >
-                  <option value="">— Top Level (no parent) —</option>
-                  {form.locations.map(l => (
-                    <option key={l.id} value={l.id}>{l.code} — {l.locationName}</option>
-                  ))}
-                </select>
-                <p className="text-xs text-gray-400">Leave blank to create a top-level location under this warehouse.</p>
+                  options={form.locations.map(l => ({ value: l.id, label: `${l.code} — ${l.locationName}` }))}
+                  placeholder="— Top Level (no parent) —"
+                />
+                <p className="text-xs text-gray-400 mt-1">Leave blank to create a top-level location under this warehouse.</p>
               </Field>
-
-              <div className="flex items-center gap-6 pt-1">
-                <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    checked={locForm.isActive}
-                    onChange={e => setLocForm(f => ({ ...f, isActive: e.target.checked }))}
-                    className="h-4 w-4 rounded border-gray-400"
-                  />
-                  Active
-                </label>
-                <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    checked={locForm.isDefault}
-                    onChange={e => setLocForm(f => ({ ...f, isDefault: e.target.checked }))}
-                    className="h-4 w-4 rounded border-gray-400"
-                  />
-                  Default Location
-                </label>
+              <div className="flex items-center gap-8 pt-1">
+                <TCheckbox
+                  checked={locForm.isActive}
+                  onChange={e => setLocForm(f => ({ ...f, isActive: e.target.checked }))}
+                  label="Active"
+                />
+                <TCheckbox
+                  checked={locForm.isDefault}
+                  onChange={e => setLocForm(f => ({ ...f, isDefault: e.target.checked }))}
+                  label="Default Location"
+                />
               </div>
-
             </div>
 
-            <div className="flex items-center justify-end gap-2 px-5 py-4 border-t border-gray-100 bg-gray-50 rounded-b-xl">
-              <button
-                type="button"
-                onClick={() => setShowLocModal(false)}
-                className="px-4 py-2 text-sm border border-gray-300 rounded text-gray-700 hover:bg-gray-100 transition-colors"
-              >
-                Close
+            <div className="flex items-center justify-end gap-2 px-5 py-3.5 border-t border-gray-100 bg-gray-50 rounded-b-lg">
+              <button type="button" onClick={() => setShowLocModal(false)}
+                className="flex items-center gap-1.5 text-xs px-3 py-1.5 border border-gray-300 text-gray-600 hover:bg-gray-100 rounded font-medium">
+                <X size={12} /> Close
               </button>
-              <button
-                type="button"
-                onClick={handleSaveLocation}
-                className="px-4 py-2 text-sm rounded bg-gray-900 text-white hover:bg-gray-800 transition-colors"
-              >
-                Save Location
+              <button type="button" onClick={handleSaveLocation}
+                className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded font-medium">
+                <Save size={12} /> Save Location
               </button>
             </div>
 
