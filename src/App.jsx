@@ -16,6 +16,8 @@ import CustomerList from "./pages/customers/CustomerList";
 import CustomerForm from "./pages/customers/CustomerForm";
 import ProductList from "./pages/products/ProductList";
 import ProductForm from "./pages/products/ProductForm";
+import WarehouseList from "./pages/warehouses/WarehouseList";
+import WarehouseForm from "./pages/warehouses/WarehouseForm";
 import WorkInProgress from "./pages/WorkInProgress";
 
 function App() {
@@ -34,6 +36,9 @@ function App() {
         <Route path="/system/users" element={<UserList />} />
         <Route path="/system/users/new" element={<UserForm />} />
         <Route path="/system/users/:id" element={<UserForm />} />
+        <Route path="/system/warehouses" element={<WarehouseList />} />
+        <Route path="/system/warehouses/new" element={<WarehouseForm />} />
+        <Route path="/system/warehouses/:id" element={<WarehouseForm />} />
         <Route path="/system/states" element={<WorkInProgress />} />
         <Route path="/system/countries" element={<WorkInProgress />} />
         <Route path="/system/uom" element={<WorkInProgress />} />
@@ -78,7 +83,7 @@ function App() {
 
         {/* Inventory */}
         <Route path="/inventory/items" element={<WorkInProgress />} />
-        <Route path="/inventory/warehouses" element={<WorkInProgress />} />
+        <Route path="/inventory/warehouses" element={<WarehouseList />} />
         <Route path="/inventory/item-category" element={<WorkInProgress />} />
         <Route path="/inventory/grn" element={<WorkInProgress />} />
         <Route path="/inventory/transfer" element={<WorkInProgress />} />

@@ -25,6 +25,7 @@ const menu = [
     flat: true,
     links: [
       { label: "User Master",                   path: "/system/users" },
+      { label: "Warehouse Master",              path: "/system/warehouses" },
       { label: "State Master",                  path: "/system/states" },
       { label: "Country Master",                path: "/system/countries" },
       { label: "UoM",                           path: "/system/uom" },
