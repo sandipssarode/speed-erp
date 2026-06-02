@@ -1,5 +1,5 @@
 import { neon } from '@neondatabase/serverless';
-import { SEED_USERS, SEED_VENDORS, SEED_CUSTOMERS, SEED_CATEGORIES, SEED_PRODUCTS } from './_seed.js';
+import { SEED_USERS, SEED_VENDORS, SEED_CUSTOMERS, SEED_CATEGORIES, SEED_PRODUCTS, SEED_WAREHOUSES } from './_seed.js';
 
 // Reused across requests within the same serverless instance lifetime
 let _sql = null;
@@ -31,12 +31,13 @@ export async function ensureSchema(sql) {
   ]);
 
   // Check all seed counts in parallel
-  const [[uCount], [vCount], [cCount], [catCount], [pCount]] = await Promise.all([
+  const [[uCount], [vCount], [cCount], [catCount], [pCount], [whCount]] = await Promise.all([
     sql`SELECT COUNT(*) AS c FROM users`,
     sql`SELECT COUNT(*) AS c FROM vendors`,
     sql`SELECT COUNT(*) AS c FROM customers`,
     sql`SELECT COUNT(*) AS c FROM product_categories`,
     sql`SELECT COUNT(*) AS c FROM products`,
+    sql`SELECT COUNT(*) AS c FROM warehouses`,
   ]);
 
   // Seed empty tables in parallel; each table's rows are also inserted in parallel
@@ -64,6 +65,11 @@ export async function ensureSchema(sql) {
     Number(pCount.c) === 0 && Promise.all(SEED_PRODUCTS.map(p =>
       sql`INSERT INTO products (id,code,name,category_code,stock_uom,sales_price,is_active,data,created_at,updated_at)
         VALUES (${p.id},${p.code},${p.name},${p.categoryCode},${p.stockUOM},${Number(p.salesPrice)},${p.isActive},${JSON.stringify(p)},${p.createdAt},${p.updatedAt})
+        ON CONFLICT DO NOTHING`
+    )),
+    Number(whCount.c) === 0 && Promise.all(SEED_WAREHOUSES.map(w =>
+      sql`INSERT INTO warehouses (id,code,name,company_name,state,is_active,data,created_at,updated_at)
+        VALUES (${w.id},${w.warehouseCode||null},${w.warehouseName},${w.companyName||null},${w.state||null},${w.isActive!==false},${JSON.stringify(w)},${w.createdAt},${w.updatedAt})
         ON CONFLICT DO NOTHING`
     )),
   ].filter(Boolean));
