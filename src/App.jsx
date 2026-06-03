@@ -18,6 +18,8 @@ import ProductList from "./pages/products/ProductList";
 import ProductForm from "./pages/products/ProductForm";
 import WarehouseList from "./pages/warehouses/WarehouseList";
 import WarehouseForm from "./pages/warehouses/WarehouseForm";
+import BusinessUnitList from "./pages/business-units/BusinessUnitList";
+import BusinessUnitForm from "./pages/business-units/BusinessUnitForm";
 import WorkInProgress from "./pages/WorkInProgress";
 
 function App() {
@@ -39,6 +41,9 @@ function App() {
         <Route path="/system/warehouses" element={<WarehouseList />} />
         <Route path="/system/warehouses/new" element={<WarehouseForm />} />
         <Route path="/system/warehouses/:id" element={<WarehouseForm />} />
+        <Route path="/system/business-units" element={<BusinessUnitList />} />
+        <Route path="/system/business-units/new" element={<BusinessUnitForm />} />
+        <Route path="/system/business-units/:id" element={<BusinessUnitForm />} />
         <Route path="/system/states" element={<WorkInProgress />} />
         <Route path="/system/countries" element={<WorkInProgress />} />
         <Route path="/system/uom" element={<WorkInProgress />} />

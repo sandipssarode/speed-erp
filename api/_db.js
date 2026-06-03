@@ -1,5 +1,5 @@
 import { neon } from '@neondatabase/serverless';
-import { SEED_USERS, SEED_VENDORS, SEED_CUSTOMERS, SEED_CATEGORIES, SEED_PRODUCTS, SEED_WAREHOUSES } from './_seed.js';
+import { SEED_USERS, SEED_VENDORS, SEED_CUSTOMERS, SEED_CATEGORIES, SEED_PRODUCTS, SEED_WAREHOUSES, SEED_BUSINESS_UNITS } from './_seed.js';
 
 // Reused across requests within the same serverless instance lifetime
 let _sql = null;
@@ -28,16 +28,18 @@ export async function ensureSchema(sql) {
     sql`CREATE TABLE IF NOT EXISTS products (id TEXT PRIMARY KEY, code TEXT UNIQUE NOT NULL, name TEXT, category_code TEXT, stock_uom TEXT, sales_price NUMERIC, is_active BOOLEAN DEFAULT true, data JSONB NOT NULL, created_at TIMESTAMPTZ DEFAULT NOW(), updated_at TIMESTAMPTZ DEFAULT NOW())`,
     sql`CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, code TEXT UNIQUE NOT NULL, name TEXT NOT NULL, email TEXT UNIQUE NOT NULL, password TEXT NOT NULL, role TEXT DEFAULT 'User', department TEXT, is_active BOOLEAN DEFAULT true, data JSONB NOT NULL, created_at TIMESTAMPTZ DEFAULT NOW(), updated_at TIMESTAMPTZ DEFAULT NOW())`,
     sql`CREATE TABLE IF NOT EXISTS warehouses (id TEXT PRIMARY KEY, code TEXT, name TEXT NOT NULL, company_name TEXT, state TEXT, is_active BOOLEAN DEFAULT true, data JSONB NOT NULL, created_at TIMESTAMPTZ DEFAULT NOW(), updated_at TIMESTAMPTZ DEFAULT NOW())`,
+    sql`CREATE TABLE IF NOT EXISTS business_units (id TEXT PRIMARY KEY, code TEXT UNIQUE NOT NULL, contact_name TEXT, state TEXT, is_active BOOLEAN DEFAULT true, data JSONB NOT NULL, created_at TIMESTAMPTZ DEFAULT NOW(), updated_at TIMESTAMPTZ DEFAULT NOW())`,
   ]);
 
   // Check all seed counts in parallel
-  const [[uCount], [vCount], [cCount], [catCount], [pCount], [whCount]] = await Promise.all([
+  const [[uCount], [vCount], [cCount], [catCount], [pCount], [whCount], [buCount]] = await Promise.all([
     sql`SELECT COUNT(*) AS c FROM users`,
     sql`SELECT COUNT(*) AS c FROM vendors`,
     sql`SELECT COUNT(*) AS c FROM customers`,
     sql`SELECT COUNT(*) AS c FROM product_categories`,
     sql`SELECT COUNT(*) AS c FROM products`,
     sql`SELECT COUNT(*) AS c FROM warehouses`,
+    sql`SELECT COUNT(*) AS c FROM business_units`,
   ]);
 
   // Seed empty tables in parallel; each table's rows are also inserted in parallel
@@ -70,6 +72,11 @@ export async function ensureSchema(sql) {
     Number(whCount.c) === 0 && Promise.all(SEED_WAREHOUSES.map(w =>
       sql`INSERT INTO warehouses (id,code,name,company_name,state,is_active,data,created_at,updated_at)
         VALUES (${w.id},${w.warehouseCode||null},${w.warehouseName},${w.companyName||null},${w.state||null},${w.isActive!==false},${JSON.stringify(w)},${w.createdAt},${w.updatedAt})
+        ON CONFLICT DO NOTHING`
+    )),
+    Number(buCount.c) === 0 && Promise.all(SEED_BUSINESS_UNITS.map(b =>
+      sql`INSERT INTO business_units (id,code,contact_name,state,is_active,data,created_at,updated_at)
+        VALUES (${b.id},${b.locationCode},${b.contactName||null},${b.state||null},${b.isActive!==false},${JSON.stringify(b)},${b.createdAt},${b.updatedAt})
         ON CONFLICT DO NOTHING`
     )),
   ].filter(Boolean));
