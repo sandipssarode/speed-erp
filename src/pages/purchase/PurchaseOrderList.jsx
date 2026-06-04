@@ -18,6 +18,27 @@ const TERM_TYPE_OPTIONS    = ["Payment", "Delivery", "Legal", "Other"];
 const DISC_TYPE_OPTIONS    = ["", "%", "Flat"];
 const MILESTONE_TYPE_OPTIONS = ["%", "Flat", "Date"];
 const GST_OPTIONS          = ["0", "5", "12", "18", "28"];
+const TAX_GROUP_OPTIONS    = ["GST Standard", "GST Exempt", "GST Zero Rated", "RCM"];
+const TERMS_TEMPLATE_OPTIONS = ["Standard Purchase", "Import Purchase", "Service Contract"];
+const TERMS_TEMPLATES = {
+  "Standard Purchase": [
+    { term: "Payment",  description: "Payment within 30 days from invoice date via NEFT/RTGS.", termType: "Payment" },
+    { term: "Delivery", description: "Delivery at our works. Transportation charges on vendor account.", termType: "Delivery" },
+    { term: "Quality",  description: "Material to conform to applicable IS/BS standards. Test certificates mandatory.", termType: "Other" },
+    { term: "Warranty", description: "Vendor warrants material against defects for 12 months from date of receipt.", termType: "Legal" },
+  ],
+  "Import Purchase": [
+    { term: "Payment",    description: "Payment via LC at sight or TT within 60 days of BL date.", termType: "Payment" },
+    { term: "Delivery",   description: "CIF destination port as per agreed Incoterms.", termType: "Delivery" },
+    { term: "Inspection", description: "Pre-shipment inspection by third party at seller's cost.", termType: "Other" },
+    { term: "Documents",  description: "Shipping documents: BL, Invoice, Packing List, COO, Test Certificate.", termType: "Legal" },
+  ],
+  "Service Contract": [
+    { term: "Payment",     description: "Payment within 15 days from receipt of service completion certificate.", termType: "Payment" },
+    { term: "SLA",         description: "Services to be delivered as per agreed SLA. Penalty applicable for delays.", termType: "Other" },
+    { term: "Termination", description: "Either party may terminate with 30 days written notice.", termType: "Legal" },
+  ],
+};
 
 const UNIT_STATE = {
   "VATVA PLANT": "Gujarat",
@@ -59,7 +80,7 @@ function emptyMilestone() { return { id: uid(), milestone: "", type: "%", typeVa
 function emptyForm() {
   return {
     id: "", year: getFinancialYear(), series: "PO", number: "",
-    date: todayISO(), unit: "", status: "Open",
+    date: todayISO(), unit: "", poType: "Regular", status: "Open",
     highPriority: false, authorized: false, openPOIfReject: false,
     revNo: "0", revDate: "",
     vendorCode: "", vendorName: "", vendorGSTStatus: "", vendorState: "", vendorGSTNo: "", vendorARNNo: "",
@@ -139,7 +160,7 @@ const SEED_POS = [
   {
     id: "po1001",
     year: "25-26", series: "PO", number: "PO/25-26/0001",
-    date: "2026-02-10", unit: "VATVA PLANT", status: "Open",
+    date: "2026-02-10", unit: "VATVA PLANT", poType: "Regular", status: "Open",
     highPriority: false, authorized: false, openPOIfReject: false,
     revNo: "0", revDate: "",
     vendorCode: "VND-0014", vendorName: "STAR INDUSTRIES",
@@ -185,8 +206,9 @@ const SEED_POS = [
 function validate(form) {
   const e = {};
   if (!form.series)            e.series    = "Series is required";
-  if (!form.vendorCode)        e.vendorCode = "Vendor is required";
   if (!form.unit)              e.unit      = "Unit is required";
+  if (!form.poType)            e.poType    = "PO Type is required";
+  if (!form.vendorCode)        e.vendorCode = "Vendor is required";
   if (!form.buyer)             e.buyer     = "Buyer is required";
   if (form.items.length === 0) e.items     = "At least one item line must be added before saving.";
 
@@ -286,6 +308,12 @@ export default function PurchaseOrderList() {
   const [poLevelDisc,   setPoLevelDisc]   = useState("");
   const [selectedPRNos, setSelectedPRNos] = useState([]);   // PR numbers added to the lookup
   const [checkedItems,  setCheckedItems]  = useState(new Set()); // "prId|itemIdx" keys
+  const [prItemQtys,    setPrItemQtys]    = useState({});        // "prId|itemIdx" -> PO qty override
+  const [taxGroup,      setTaxGroup]      = useState("");
+  const [termsTemplate, setTermsTemplate] = useState("");
+  const [searchYear,    setSearchYear]    = useState("all");
+  const [searchSeries,  setSearchSeries]  = useState("all");
+  const [searchCat,     setSearchCat]     = useState("all");
 
   const fileRef = useRef(null);
   const isReadOnly   = mode === "view";
@@ -487,7 +515,7 @@ export default function PurchaseOrderList() {
           id: uid(),
           itemCode:      it.itemCode     || "",
           description:   it.description  || "",
-          pQty:          it.qty          || "",
+          pQty:          prItemQtys[`${pr.id}|${idx}`] || it.qty || "",
           pUoM:          it.uom          || "",
           sQty: "", sUoM: "KGS",
           rate:          it.budgetaryRate || "",
@@ -624,15 +652,18 @@ export default function PurchaseOrderList() {
 
   // ── Search filter ──
   const filteredPOs = allPOs.filter((po) => {
-    if (!searchQ.trim()) return true;
-    const q = searchQ.toLowerCase();
-    return (
+    const q = searchQ.toLowerCase().trim();
+    const matchText = !q || (
       po.number?.toLowerCase().includes(q) ||
       po.vendorName?.toLowerCase().includes(q) ||
       po.status?.toLowerCase().includes(q) ||
       po.buyer?.toLowerCase().includes(q) ||
       po.unit?.toLowerCase().includes(q)
     );
+    const matchYear   = searchYear   === "all" || po.year        === searchYear;
+    const matchSeries = searchSeries === "all" || po.series      === searchSeries;
+    const matchCat    = searchCat    === "all" || po.poCategory   === searchCat;
+    return matchText && matchYear && matchSeries && matchCat;
   });
 
   // ── Error badge helpers ──
@@ -760,6 +791,22 @@ export default function PurchaseOrderList() {
             )}
           </button>
 
+          <button onClick={() => showToast("Format — select print template before printing.")}
+            className="flex items-center gap-1.5 text-xs px-3 py-1.5 border border-gray-300 text-gray-600 hover:bg-gray-50 rounded font-medium">
+            <FileText size={13} /> Format
+          </button>
+
+          <button
+            onClick={() => {
+              if (mode !== "view" && (form.items.length > 0 || form.vendorCode)) {
+                if (!window.confirm("Exit without saving? Unsaved changes will be lost.")) return;
+              }
+              window.history.back();
+            }}
+            className="flex items-center gap-1.5 text-xs px-3 py-1.5 border border-gray-300 text-gray-600 hover:bg-gray-50 rounded font-medium">
+            <X size={13} /> Exit
+          </button>
+
           <div className="w-px h-5 bg-gray-200" />
 
           <div className="flex items-center gap-1">
@@ -842,16 +889,35 @@ export default function PurchaseOrderList() {
                 <X size={14} />
               </button>
             </div>
-            <div className="p-3 border-b border-gray-100">
+            <div className="p-3 border-b border-gray-100 space-y-2">
               <input value={searchQ} onChange={(e) => setSearchQ(e.target.value)}
                 placeholder="Search by PO number, vendor, status, buyer, unit…"
                 className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-400" />
+              <div className="flex items-center gap-2 flex-wrap">
+                <select value={searchYear} onChange={(e) => setSearchYear(e.target.value)}
+                  className="text-xs border border-gray-300 rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-400">
+                  <option value="all">All Years</option>
+                  {[...new Set(allPOs.map(p => p.year).filter(Boolean))].sort().map(y => <option key={y} value={y}>{y}</option>)}
+                </select>
+                <select value={searchSeries} onChange={(e) => setSearchSeries(e.target.value)}
+                  className="text-xs border border-gray-300 rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-400">
+                  <option value="all">All Series</option>
+                  {SERIES_OPTIONS.map(s => <option key={s} value={s}>{s}</option>)}
+                </select>
+                <select value={searchCat} onChange={(e) => setSearchCat(e.target.value)}
+                  className="text-xs border border-gray-300 rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-400">
+                  <option value="all">All Categories</option>
+                  {CATEGORY_OPTIONS.map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
+                <button onClick={() => { setSearchQ(""); setSearchYear("all"); setSearchSeries("all"); setSearchCat("all"); }}
+                  className="text-xs text-gray-400 hover:text-gray-600 underline">Clear</button>
+              </div>
             </div>
             <div className="overflow-x-auto max-h-64">
               <table className="w-full text-xs">
                 <thead>
                   <tr className="bg-gray-50 border-b border-gray-200">
-                    {["PO Number","Date","Vendor","Unit","Buyer","Items","Status",""].map((h) => (
+                    {["PO Number","Date","Vendor","Unit","Buyer","Total Value","Status",""].map((h) => (
                       <th key={h} className="px-3 py-2 text-left text-gray-500 font-semibold uppercase tracking-wide whitespace-nowrap">{h}</th>
                     ))}
                   </tr>
@@ -867,7 +933,7 @@ export default function PurchaseOrderList() {
                         <td className="px-3 py-2 text-gray-600">{po.vendorName || "—"}</td>
                         <td className="px-3 py-2 text-gray-600">{po.unit || "—"}</td>
                         <td className="px-3 py-2 text-gray-600">{po.buyer || "—"}</td>
-                        <td className="px-3 py-2 text-center">{po.items?.length || 0}</td>
+                        <td className="px-3 py-2 text-right font-mono text-gray-700">{fmtAmt(po.history?.[po.history.length-1]?.totalValue || 0)}</td>
                         <td className="px-3 py-2">
                           <span className="px-2 py-0.5 bg-green-50 text-green-600 border border-green-200 rounded-full">{po.status}</span>
                         </td>
@@ -900,7 +966,7 @@ export default function PurchaseOrderList() {
               <table className="w-full text-xs">
                 <thead>
                   <tr className="bg-gray-50 border-b border-gray-200">
-                    {["PO Number","Date","Vendor","Unit","Buyer","Series","Items","Status",""].map((h) => (
+                    {["PO Number","Date","Vendor","Unit","Buyer","Series","Total Value","Status",""].map((h) => (
                       <th key={h} className="px-3 py-2 text-left text-gray-500 font-semibold uppercase tracking-wide whitespace-nowrap">{h}</th>
                     ))}
                   </tr>
@@ -917,7 +983,7 @@ export default function PurchaseOrderList() {
                       <td className="px-3 py-2">
                         <span className="px-1.5 py-0.5 bg-gray-100 text-gray-600 rounded">{po.series}</span>
                       </td>
-                      <td className="px-3 py-2 text-center">{po.items?.length || 0}</td>
+                      <td className="px-3 py-2 text-right font-mono text-gray-700">{fmtAmt(po.history?.[po.history.length-1]?.totalValue || 0)}</td>
                       <td className="px-3 py-2">
                         <span className="px-2 py-0.5 bg-green-50 text-green-600 border border-green-200 rounded-full">{po.status}</span>
                       </td>
@@ -986,10 +1052,14 @@ export default function PurchaseOrderList() {
             </div>
 
             {/* Row 2 */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
               <Field label="Unit" required error={errors.unit}>
                 <TSelect value={form.unit} onChange={(e) => setField("unit", e.target.value)}
                   disabled={isReadOnly} options={UNIT_OPTIONS} placeholder="— Select Unit —" error={errors.unit} />
+              </Field>
+              <Field label="PO Type" required error={errors.poType}>
+                <TSelect value={form.poType} onChange={(e) => setField("poType", e.target.value)}
+                  disabled={isReadOnly} options={PO_TYPE_OPTIONS} placeholder="— Select Type —" error={errors.poType} />
               </Field>
               <Field label="Status">
                 <TInput value={form.status} disabled />
@@ -1194,7 +1264,7 @@ export default function PurchaseOrderList() {
                                 className="rounded" />
                             )}
                           </th>
-                          {["PR No","Year","Item Code","Item Description","Req Qty","UoM","Pending Qty"].map((h) => (
+                          {["PR No","Doc","Year","Item Code","Item Description","Req Qty","UoM","Pending Qty","PO Qty"].map((h) => (
                             <th key={h} className="px-3 py-2 text-left text-gray-500 font-semibold uppercase tracking-wide whitespace-nowrap">{h}</th>
                           ))}
                         </tr>
@@ -1202,7 +1272,7 @@ export default function PurchaseOrderList() {
                       <tbody>
                         {rows.length === 0 ? (
                           <tr>
-                            <td colSpan={8} className="py-10 text-center text-gray-400 text-sm">
+                            <td colSpan={10} className="py-10 text-center text-gray-400 text-sm">
                               {selectedPRNos.length === 0
                                 ? "Select a Purchase Requisition number above to view its items."
                                 : "No items found in the selected PR(s)."}
@@ -1218,12 +1288,20 @@ export default function PurchaseOrderList() {
                                   onChange={() => toggleItem(key)} className="rounded" />
                               </td>
                               <td className="px-3 py-2 text-blue-600 font-mono font-semibold whitespace-nowrap">{pr.number}</td>
+                              <td className="px-3 py-2 text-gray-500 font-mono">{pr.series || pr.number?.split('/')[0] || '—'}</td>
                               <td className="px-3 py-2 text-gray-500">{pr.year}</td>
                               <td className="px-3 py-2 text-gray-700 font-mono">{it.itemCode}</td>
                               <td className="px-3 py-2 text-gray-600 max-w-xs truncate">{it.description}</td>
                               <td className="px-3 py-2 text-right text-gray-700 font-mono">{it.qty}</td>
                               <td className="px-3 py-2 text-gray-500">{it.uom}</td>
                               <td className="px-3 py-2 text-right text-gray-500 font-mono">{it.qty}</td>
+                              <td className="px-2 py-1" onClick={(e) => e.stopPropagation()}>
+                                <input type="number" min="0" max={it.qty}
+                                  value={prItemQtys[key] ?? ""}
+                                  onChange={(e) => setPrItemQtys(prev => ({ ...prev, [key]: e.target.value }))}
+                                  placeholder={it.qty}
+                                  className="w-20 px-1.5 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-400 text-right" />
+                              </td>
                             </tr>
                           ))
                         )}
@@ -1264,8 +1342,10 @@ export default function PurchaseOrderList() {
                         <th className="w-8  px-2 py-2 text-gray-500 font-semibold uppercase tracking-wide text-center">#</th>
                         <th className="w-32 px-2 py-2 text-left text-gray-500 font-semibold uppercase tracking-wide whitespace-nowrap">Item Code *</th>
                         <th className="     px-2 py-2 text-left text-gray-500 font-semibold uppercase tracking-wide">Description *</th>
-                        <th className="w-20 px-2 py-2 text-right text-gray-500 font-semibold uppercase tracking-wide whitespace-nowrap">Qty *</th>
-                        <th className="w-20 px-2 py-2 text-left text-gray-500 font-semibold uppercase tracking-wide">UoM</th>
+                        <th className="w-20 px-2 py-2 text-right text-gray-500 font-semibold uppercase tracking-wide whitespace-nowrap">PQty *</th>
+                        <th className="w-20 px-2 py-2 text-left text-gray-500 font-semibold uppercase tracking-wide">PUoM *</th>
+                        <th className="w-20 px-2 py-2 text-right text-gray-500 font-semibold uppercase tracking-wide whitespace-nowrap">SQty</th>
+                        <th className="w-20 px-2 py-2 text-left text-gray-500 font-semibold uppercase tracking-wide">SUoM</th>
                         <th className="w-24 px-2 py-2 text-right text-gray-500 font-semibold uppercase tracking-wide whitespace-nowrap">Rate *</th>
                         <th className="w-24 px-2 py-2 text-left text-gray-500 font-semibold uppercase tracking-wide whitespace-nowrap">Disc Type</th>
                         <th className="w-20 px-2 py-2 text-right text-gray-500 font-semibold uppercase tracking-wide whitespace-nowrap">Disc Val</th>
@@ -1274,6 +1354,7 @@ export default function PurchaseOrderList() {
                         <th className="w-16 px-2 py-2 text-left text-gray-500 font-semibold uppercase tracking-wide">GST% *</th>
                         <th className="w-28 px-2 py-2 text-left text-gray-500 font-semibold uppercase tracking-wide">Vendor Item</th>
                         <th className="w-24 px-2 py-2 text-left text-gray-500 font-semibold uppercase tracking-wide">Drawing No</th>
+                        <th className="w-16 px-2 py-2 text-left text-gray-500 font-semibold uppercase tracking-wide">Rev No</th>
                         <th className="w-28 px-2 py-2 text-left text-gray-500 font-semibold uppercase tracking-wide">Remark</th>
                         <th className="w-8  px-2 py-2"></th>
                       </tr>
@@ -1309,6 +1390,19 @@ export default function PurchaseOrderList() {
                           <td className="px-1 py-1">
                             <select value={row.pUoM} onChange={(e) => updItem(i, "pUoM", e.target.value)}
                               disabled={isReadOnly} className={cellCls(false)}>
+                              <option value="">—</option>
+                              {UOM_OPTIONS.map((u) => <option key={u} value={u}>{u}</option>)}
+                            </select>
+                          </td>
+
+                          <td className="px-1 py-1">
+                            <input value={row.sQty || "—"} disabled placeholder="—"
+                              className={`${cellCls(false)} text-right bg-gray-50 text-gray-400`} />
+                          </td>
+
+                          <td className="px-1 py-1">
+                            <select value={row.sUoM} onChange={(e) => updItem(i, "sUoM", e.target.value)}
+                              disabled={isReadOnly} className={`${cellCls(false)} bg-gray-50`}>
                               <option value="">—</option>
                               {UOM_OPTIONS.map((u) => <option key={u} value={u}>{u}</option>)}
                             </select>
@@ -1372,6 +1466,13 @@ export default function PurchaseOrderList() {
                           </td>
 
                           <td className="px-1 py-1">
+                            <input value={row.revNo}
+                              onChange={(e) => updItem(i, "revNo", e.target.value)}
+                              disabled={isReadOnly} placeholder="Rev"
+                              className={cellCls(false)} />
+                          </td>
+
+                          <td className="px-1 py-1">
                             <input value={row.remark}
                               onChange={(e) => updItem(i, "remark", e.target.value)}
                               disabled={isReadOnly} placeholder="Remark"
@@ -1392,14 +1493,14 @@ export default function PurchaseOrderList() {
                       {!isReadOnly && (
                         <tr>
                           <td className="px-2 py-1.5 text-center text-gray-300">{form.items.length + 1}</td>
-                          <td colSpan={14} className="px-2 py-1.5 text-xs text-gray-300 italic">
+                          <td colSpan={17} className="px-2 py-1.5 text-xs text-gray-300 italic">
                             Click + Add Item to insert a new line
                           </td>
                         </tr>
                       )}
                       {form.items.length === 0 && isReadOnly && (
                         <tr>
-                          <td colSpan={15} className="py-8 text-center text-gray-400 text-sm">No items added.</td>
+                          <td colSpan={18} className="py-8 text-center text-gray-400 text-sm">No items added.</td>
                         </tr>
                       )}
                     </tbody>
@@ -1483,7 +1584,7 @@ export default function PurchaseOrderList() {
                   <table className="w-full text-xs min-w-[800px]">
                     <thead>
                       <tr className="bg-gray-50 border-b border-gray-200">
-                        {["Sr","Item Code","Name","PQty","PUoM","Delivery PQty *","Delivery Date *","Last Committed Date"].map((h) => (
+                        {["Sr","Item Code","Name","PQty","PUoM","Delivery PQty *","Delivery SQty","Delivery Date *","Last Committed Date"].map((h) => (
                           <th key={h} className="px-2 py-2 text-left text-gray-500 font-semibold uppercase tracking-wide whitespace-nowrap">{h}</th>
                         ))}
                       </tr>
@@ -1491,7 +1592,7 @@ export default function PurchaseOrderList() {
                     <tbody>
                       {(form.delivery || []).length === 0 ? (
                         <tr>
-                          <td colSpan={8} className="py-8 text-center text-gray-400 text-sm">
+                          <td colSpan={9} className="py-8 text-center text-gray-400 text-sm">
                             {form.items.length === 0
                               ? "Add items in the PO Item Details tab first."
                               : "Click \"Sync from Items\" to populate delivery schedule."}
@@ -1511,6 +1612,9 @@ export default function PurchaseOrderList() {
                                 disabled={isReadOnly} placeholder="0"
                                 className={`${cellCls(errors[`dlqty_${i}`])} text-right`} />
                               {errors[`dlqty_${i}`] && <p className="text-xs text-red-500">{errors[`dlqty_${i}`]}</p>}
+                            </td>
+                            <td className="px-2 py-1.5 text-right text-gray-400 bg-gray-50/60 font-mono text-xs">
+                              {dl.deliveryPQty || "—"}
                             </td>
                             <td className="px-1 py-1">
                               <input type="date" value={dl.deliveryDate} min={form.date}
@@ -1532,7 +1636,15 @@ export default function PurchaseOrderList() {
             {/* ════ TAB: TAX & OTHER CHARGES ════ */}
             {activeTab === "tax" && (
               <div className="space-y-3">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 flex-wrap">
+                  <div className="flex items-center gap-2">
+                    <label className="text-xs font-medium text-gray-600 whitespace-nowrap">Tax Group:</label>
+                    <select value={taxGroup} onChange={(e) => setTaxGroup(e.target.value)}
+                      className="text-sm border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-400 min-w-[160px]">
+                      <option value="">— Select Tax Group —</option>
+                      {TAX_GROUP_OPTIONS.map(g => <option key={g} value={g}>{g}</option>)}
+                    </select>
+                  </div>
                   <button
                     onClick={() => {
                       const vState = form.vendorState || "";
@@ -1602,6 +1714,30 @@ export default function PurchaseOrderList() {
             {activeTab === "terms" && (
               <div className="space-y-3">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <Field label="Terms Template">
+                    <div className="flex gap-2">
+                      <select value={termsTemplate}
+                        onChange={(e) => setTermsTemplate(e.target.value)}
+                        disabled={isReadOnly}
+                        className="flex-1 px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-400">
+                        <option value="">— Select Template —</option>
+                        {TERMS_TEMPLATE_OPTIONS.map(t => <option key={t} value={t}>{t}</option>)}
+                      </select>
+                      {!isReadOnly && termsTemplate && (
+                        <button
+                          onClick={() => {
+                            const tpl = TERMS_TEMPLATES[termsTemplate] || [];
+                            const newTerms = tpl.map(t => ({ ...t, id: uid() }));
+                            setForm(p => ({ ...p, terms: newTerms }));
+                            showToast(`Applied "${termsTemplate}" template — ${newTerms.length} terms loaded.`);
+                          }}
+                          className="flex items-center gap-1 text-xs px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium whitespace-nowrap">
+                          <Plus size={12} /> Apply
+                        </button>
+                      )}
+                    </div>
+                    <p className="text-xs text-gray-400 mt-0.5">Loads predefined terms — replaces existing rows.</p>
+                  </Field>
                   <Field label="IncoTerms">
                     <TSelect value={form.incoTerms} onChange={(e) => setField("incoTerms", e.target.value)}
                       disabled={isReadOnly} options={INCOTERMS_OPTIONS} placeholder="— Select IncoTerms —" />
