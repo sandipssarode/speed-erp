@@ -20,6 +20,8 @@ import WarehouseList from "./pages/warehouses/WarehouseList";
 import WarehouseForm from "./pages/warehouses/WarehouseForm";
 import BusinessUnitList from "./pages/business-units/BusinessUnitList";
 import BusinessUnitForm from "./pages/business-units/BusinessUnitForm";
+import OrganisationList from "./pages/organisations/OrganisationList";
+import OrganisationForm from "./pages/organisations/OrganisationForm";
 import WorkInProgress from "./pages/WorkInProgress";
 
 function App() {
@@ -35,6 +37,9 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
 
         {/* System Setup */}
+        <Route path="/system/organisations" element={<OrganisationList />} />
+        <Route path="/system/organisations/new" element={<OrganisationForm />} />
+        <Route path="/system/organisations/:id" element={<OrganisationForm />} />
         <Route path="/system/users" element={<UserList />} />
         <Route path="/system/users/new" element={<UserForm />} />
         <Route path="/system/users/:id" element={<UserForm />} />

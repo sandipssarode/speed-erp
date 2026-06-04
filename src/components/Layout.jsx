@@ -24,6 +24,7 @@ const menu = [
     icon: <Settings size={15} className="shrink-0" />,
     flat: true,
     links: [
+      { label: "Organisation Master",            path: "/system/organisations" },
       { label: "User Master",                   path: "/system/users" },
       { label: "Warehouse Master",              path: "/system/warehouses" },
       { label: "Business Unit Master",          path: "/system/business-units" },
