@@ -84,12 +84,12 @@ function validate(form, allUnits, editingId) {
   const e = {};
 
   if (!form.locationCode.trim())
-    e.locationCode = "Location Code is a required field.";
+    e.locationCode = "BU Code is a required field.";
   else if (allUnits.some(u =>
     u.locationCode.trim().toLowerCase() === form.locationCode.trim().toLowerCase() &&
     u.id !== editingId
   ))
-    e.locationCode = "Location Code already exists. Please enter a unique code.";
+    e.locationCode = "BU Code already exists. Please enter a unique code.";
 
   if (!form.contactNumber.trim())
     e.contactNumber = "Contact Number is a required field.";
@@ -466,7 +466,7 @@ export default function BusinessUnitForm() {
 
           <div className="p-5 space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <Field label="Location Code" required error={errors.locationCode}>
+              <Field label="BU Code" required error={errors.locationCode}>
                 <TInput
                   value={form.locationCode}
                   onChange={e => setField("locationCode", e.target.value.toUpperCase())}
