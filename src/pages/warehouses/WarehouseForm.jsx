@@ -826,15 +826,6 @@ export default function WarehouseForm() {
                   error={locErrors.locationName}
                 />
               </Field>
-              <Field label="Parent Location">
-                <TSelect
-                  value={locForm.parentId}
-                  onChange={e => setLocForm(f => ({ ...f, parentId: e.target.value }))}
-                  options={form.locations.map(l => ({ value: l.id, label: `${l.code} — ${l.locationName}` }))}
-                  placeholder="— Top Level (no parent) —"
-                />
-                <p className="text-xs text-gray-400 mt-1">Leave blank to create a top-level location under this warehouse.</p>
-              </Field>
               <div className="flex items-center gap-8 pt-1">
                 <TCheckbox
                   checked={locForm.isActive}
