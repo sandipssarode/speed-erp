@@ -1726,10 +1726,7 @@ export default function PurchaseOrderList() {
                   </Field>
                 </div>
 
-                <Field label="Special PO Terms">
-                  <TInput value={form.specialTerms} onChange={(e) => setField("specialTerms", e.target.value)}
-                    disabled={isReadOnly} placeholder="Special terms applicable for this PO…" rows={3} />
-                </Field>
+
 
                 <div className="border border-gray-200 rounded overflow-x-auto">
                   <table className="w-full text-xs min-w-[700px]">
