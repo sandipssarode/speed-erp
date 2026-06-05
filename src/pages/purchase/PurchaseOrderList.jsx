@@ -1559,24 +1559,6 @@ export default function PurchaseOrderList() {
                       <button onClick={applyCommonDate}
                         className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium">Apply</button>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <label className="text-gray-500 font-medium whitespace-nowrap">Days from PO Date:</label>
-                      <input type="number" min="0" value={commonDelDays}
-                        onChange={(e) => setCommonDelDays(e.target.value)}
-                        className="w-20 border border-gray-300 rounded px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-blue-400" />
-                      <button onClick={applyDaysFromPO}
-                        className="px-3 py-1.5 bg-gray-600 hover:bg-gray-700 text-white rounded font-medium">Compute</button>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <label className="text-gray-500 font-medium whitespace-nowrap">Delivery Address:</label>
-                      <input value={deliveryAddr} onChange={(e) => setDeliveryAddr(e.target.value)}
-                        placeholder="Delivery location"
-                        className="w-52 border border-gray-300 rounded px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-blue-400" />
-                    </div>
-                    <button onClick={syncDelivery}
-                      className="flex items-center gap-1.5 px-3 py-1.5 border border-gray-300 text-gray-600 hover:bg-gray-100 rounded font-medium">
-                      <RefreshCw size={12} /> Sync from Items
-                    </button>
                   </div>
                 )}
 
@@ -1595,7 +1577,7 @@ export default function PurchaseOrderList() {
                           <td colSpan={9} className="py-8 text-center text-gray-400 text-sm">
                             {form.items.length === 0
                               ? "Add items in the PO Item Details tab first."
-                              : "Click \"Sync from Items\" to populate delivery schedule."}
+                              : "Delivery schedule will populate automatically from items."}
                           </td>
                         </tr>
                       ) : (
