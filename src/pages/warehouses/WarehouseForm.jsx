@@ -4,7 +4,7 @@ import Layout from "../../components/Layout";
 import { api } from "../../lib/api.js";
 import {
   Save, X, Plus, Trash2, Edit2, FileText, CheckCircle,
-  AlertCircle, ChevronRight, ArrowLeft, ChevronDown, Folder, FolderOpen,
+  AlertCircle, ChevronRight, ArrowLeft,
 } from "lucide-react";
 
 // ─────────────────────────────────────────────────────────────
@@ -212,47 +212,6 @@ function TCheckbox({ checked, onChange, disabled, label }) {
   );
 }
 
-// ─────────────────────────────────────────────────────────────
-// LOCATION TREE NODE
-// ─────────────────────────────────────────────────────────────
-function LocationNode({ loc, allLocations, depth }) {
-  const [expanded, setExpanded] = useState(true);
-  const children = allLocations.filter(l => l.parentId === loc.id);
-  const hasChildren = children.length > 0;
-
-  return (
-    <div>
-      <div
-        className="flex items-center gap-1.5 py-1.5 px-2 rounded hover:bg-gray-50 text-sm"
-        style={{ paddingLeft: `${depth * 20 + 8}px` }}
-      >
-        {hasChildren ? (
-          <button type="button" onClick={() => setExpanded(v => !v)}
-            className="text-gray-400 hover:text-gray-600 shrink-0">
-            {expanded ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
-          </button>
-        ) : (
-          <span className="w-[13px] shrink-0" />
-        )}
-        {hasChildren
-          ? <FolderOpen size={13} className="text-yellow-500 shrink-0" />
-          : <Folder size={13} className="text-gray-400 shrink-0" />
-        }
-        <span className="font-mono text-xs text-blue-600 font-semibold">{loc.code}</span>
-        <span className="text-gray-700 flex-1 truncate">{loc.locationName}</span>
-        {loc.isDefault && (
-          <span className="text-[10px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded border border-blue-100 shrink-0">Default</span>
-        )}
-        {!loc.isActive && (
-          <span className="text-[10px] bg-red-50 text-red-500 px-1.5 py-0.5 rounded border border-red-100 shrink-0">Inactive</span>
-        )}
-      </div>
-      {expanded && hasChildren && children.map(child => (
-        <LocationNode key={child.id} loc={child} allLocations={allLocations} depth={depth + 1} />
-      ))}
-    </div>
-  );
-}
 
 // ─────────────────────────────────────────────────────────────
 // MAIN COMPONENT
@@ -272,6 +231,8 @@ export default function WarehouseForm() {
   const [showLocModal, setShowLocModal]   = useState(false);
   const [locForm, setLocForm]       = useState(emptyLocation());
   const [locErrors, setLocErrors]   = useState({});
+  const [editingLocId, setEditingLocId]   = useState(null);
+  const [editingLocDraft, setEditingLocDraft] = useState({ code: "", locationName: "" });
 
   const user = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
   const isReadOnly = mode === "view";
@@ -372,9 +333,32 @@ export default function WarehouseForm() {
 
     setField("locations", [
       ...form.locations,
-      { ...locForm, id: Date.now().toString(), parentId: locForm.parentId || null },
+      { ...locForm, id: Date.now().toString() },
     ]);
     setShowLocModal(false);
+  };
+
+  const handleDeleteLocation = (locId) => {
+    setField("locations", form.locations.filter(l => l.id !== locId));
+    if (editingLocId === locId) setEditingLocId(null);
+  };
+
+  const handleStartEditLocation = (loc) => {
+    setEditingLocId(loc.id);
+    setEditingLocDraft({ code: loc.code, locationName: loc.locationName });
+  };
+
+  const handleSaveEditLocation = (locId) => {
+    const draft = editingLocDraft;
+    if (!draft.code.trim() || !draft.locationName.trim()) return;
+    const duplicate = form.locations.some(
+      l => l.id !== locId && l.code.trim().toLowerCase() === draft.code.trim().toLowerCase()
+    );
+    if (duplicate) return;
+    setField("locations", form.locations.map(l =>
+      l.id === locId ? { ...l, code: draft.code.trim().toUpperCase(), locationName: draft.locationName.trim() } : l
+    ));
+    setEditingLocId(null);
   };
 
   const TABS = [
@@ -388,8 +372,6 @@ export default function WarehouseForm() {
     if (tabId === "general") return keys.some(k => ["warehouseName","companyName","gstNo","state","city","zipcode","contactNumber","accessibleBranch"].includes(k));
     return false;
   };
-
-  const topLevelLocs = form.locations.filter(l => !l.parentId);
 
   // ─────────────────────────────────────────────────────────────
   // RENDER
@@ -733,20 +715,90 @@ export default function WarehouseForm() {
                 {form.locations.length === 0 ? (
                   <div className="text-center py-12 text-gray-400 text-sm border-2 border-dashed border-gray-200 rounded-lg">
                     No storage locations added.
-                    {!isReadOnly && ' Click "Add Location" to build the hierarchy.'}
-                    <p className="text-xs mt-1 text-gray-300">Warehouse → Zone → Rack → Shelf → Bin</p>
+                    {!isReadOnly && ' Click "Add Location" to get started.'}
                   </div>
                 ) : (
                   <div className="border border-gray-200 rounded overflow-hidden">
-                    <div className="bg-gray-50 border-b border-gray-200 px-3 py-2 flex items-center text-xs font-semibold text-gray-500 uppercase tracking-wide gap-2">
-                      <span className="flex-1">Location</span>
-                      <span>Flags</span>
-                    </div>
-                    <div className="py-1">
-                      {topLevelLocs.map(loc => (
-                        <LocationNode key={loc.id} loc={loc} allLocations={form.locations} depth={0} />
-                      ))}
-                    </div>
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="bg-gray-50 border-b border-gray-200">
+                          <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide w-40">Code</th>
+                          <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">Location Name</th>
+                          {!isReadOnly && <th className="px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide text-right w-28">Actions</th>}
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-100">
+                        {form.locations.map((loc, idx) => (
+                          <tr key={loc.id} className={idx % 2 === 0 ? "bg-white" : "bg-gray-50/50"}>
+                            <td className="px-4 py-2">
+                              {editingLocId === loc.id ? (
+                                <input
+                                  className="w-full px-2 py-1 text-xs border border-blue-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-400 font-mono"
+                                  value={editingLocDraft.code}
+                                  onChange={e => setEditingLocDraft(d => ({ ...d, code: e.target.value.toUpperCase() }))}
+                                  maxLength={20}
+                                />
+                              ) : (
+                                <span className="font-mono text-xs font-semibold text-blue-600">{loc.code}</span>
+                              )}
+                            </td>
+                            <td className="px-4 py-2">
+                              {editingLocId === loc.id ? (
+                                <input
+                                  className="w-full px-2 py-1 text-xs border border-blue-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-400"
+                                  value={editingLocDraft.locationName}
+                                  onChange={e => setEditingLocDraft(d => ({ ...d, locationName: e.target.value }))}
+                                  maxLength={100}
+                                />
+                              ) : (
+                                <span className="text-gray-700 text-xs">{loc.locationName}</span>
+                              )}
+                            </td>
+                            {!isReadOnly && (
+                              <td className="px-4 py-2 text-right">
+                                <div className="flex items-center justify-end gap-1.5">
+                                  {editingLocId === loc.id ? (
+                                    <>
+                                      <button
+                                        type="button"
+                                        onClick={() => handleSaveEditLocation(loc.id)}
+                                        className="flex items-center gap-1 text-xs px-2 py-1 bg-green-600 hover:bg-green-700 text-white rounded"
+                                      >
+                                        <Save size={11} /> Save
+                                      </button>
+                                      <button
+                                        type="button"
+                                        onClick={() => setEditingLocId(null)}
+                                        className="flex items-center gap-1 text-xs px-2 py-1 border border-gray-300 text-gray-600 hover:bg-gray-100 rounded"
+                                      >
+                                        <X size={11} /> Cancel
+                                      </button>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <button
+                                        type="button"
+                                        onClick={() => handleStartEditLocation(loc)}
+                                        className="flex items-center gap-1 text-xs px-2 py-1 border border-amber-300 text-amber-600 hover:bg-amber-50 rounded"
+                                      >
+                                        <Edit2 size={11} /> Edit
+                                      </button>
+                                      <button
+                                        type="button"
+                                        onClick={() => handleDeleteLocation(loc.id)}
+                                        className="flex items-center gap-1 text-xs px-2 py-1 border border-red-300 text-red-500 hover:bg-red-50 rounded"
+                                      >
+                                        <Trash2 size={11} /> Delete
+                                      </button>
+                                    </>
+                                  )}
+                                </div>
+                              </td>
+                            )}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
                 )}
               </div>
@@ -826,18 +878,6 @@ export default function WarehouseForm() {
                   error={locErrors.locationName}
                 />
               </Field>
-              <div className="flex items-center gap-8 pt-1">
-                <TCheckbox
-                  checked={locForm.isActive}
-                  onChange={e => setLocForm(f => ({ ...f, isActive: e.target.checked }))}
-                  label="Active"
-                />
-                <TCheckbox
-                  checked={locForm.isDefault}
-                  onChange={e => setLocForm(f => ({ ...f, isDefault: e.target.checked }))}
-                  label="Default Location"
-                />
-              </div>
             </div>
 
             <div className="flex items-center justify-end gap-2 px-5 py-3.5 border-t border-gray-100 bg-gray-50 rounded-b-lg">
