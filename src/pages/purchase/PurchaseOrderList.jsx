@@ -1695,6 +1695,42 @@ export default function PurchaseOrderList() {
             {/* ════ TAB: TERMS & CONDITIONS ════ */}
             {activeTab === "terms" && (
               <div className="space-y-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <Field label="Terms Template">
+                    <div className="flex gap-2">
+                      <select value={termsTemplate}
+                        onChange={(e) => setTermsTemplate(e.target.value)}
+                        disabled={isReadOnly}
+                        className="flex-1 px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-400">
+                        <option value="">— Select Template —</option>
+                        {TERMS_TEMPLATE_OPTIONS.map(t => <option key={t} value={t}>{t}</option>)}
+                      </select>
+                      {!isReadOnly && termsTemplate && (
+                        <button
+                          onClick={() => {
+                            const tpl = TERMS_TEMPLATES[termsTemplate] || [];
+                            const newTerms = tpl.map(t => ({ ...t, id: uid() }));
+                            setForm(p => ({ ...p, terms: newTerms }));
+                            showToast(`Applied "${termsTemplate}" template — ${newTerms.length} terms loaded.`);
+                          }}
+                          className="flex items-center gap-1 text-xs px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium whitespace-nowrap">
+                          <Plus size={12} /> Apply
+                        </button>
+                      )}
+                    </div>
+                    <p className="text-xs text-gray-400 mt-0.5">Loads predefined terms — replaces existing rows.</p>
+                  </Field>
+                  <Field label="IncoTerms">
+                    <TSelect value={form.incoTerms} onChange={(e) => setField("incoTerms", e.target.value)}
+                      disabled={isReadOnly} options={INCOTERMS_OPTIONS} placeholder="— Select IncoTerms —" />
+                  </Field>
+                </div>
+
+                <Field label="Special PO Terms">
+                  <TInput value={form.specialTerms} onChange={(e) => setField("specialTerms", e.target.value)}
+                    disabled={isReadOnly} placeholder="Special terms applicable for this PO…" rows={3} />
+                </Field>
+
                 <div className="border border-gray-200 rounded overflow-x-auto">
                   <table className="w-full text-xs min-w-[700px]">
                     <thead>
