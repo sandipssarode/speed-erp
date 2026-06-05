@@ -124,7 +124,7 @@ function validate(form, allWarehouses, editingId) {
     e.contactNumber = "Contact Number should be 10 digits (India).";
 
   if (!form.accessibleBranch)
-    e.accessibleBranch = "Accessible Branch is a required field.";
+    e.accessibleBranch = "Business Unit is a required field.";
 
   if (form.gstNo.trim()) {
     if (!/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(form.gstNo.trim()))
@@ -571,14 +571,14 @@ export default function WarehouseForm() {
                   error={errors.companyName}
                 />
               </Field>
-              <Field label="GST No." error={errors.gstNo}>
-                <TInput
-                  value={form.gstNo}
-                  onChange={e => setField("gstNo", e.target.value.toUpperCase())}
+              <Field label="Business Unit" required error={errors.accessibleBranch}>
+                <TSelect
+                  value={form.accessibleBranch}
+                  onChange={e => setField("accessibleBranch", e.target.value)}
                   disabled={isReadOnly}
-                  placeholder="e.g. 27AABCT1234A1Z5"
-                  maxLength={15}
-                  error={errors.gstNo}
+                  options={BRANCHES}
+                  placeholder="Select Business Unit"
+                  error={errors.accessibleBranch}
                 />
               </Field>
             </div>
@@ -656,14 +656,14 @@ export default function WarehouseForm() {
                         error={errors.zipcode}
                       />
                     </Field>
-                    <Field label="Accessible Branch" required error={errors.accessibleBranch}>
-                      <TSelect
-                        value={form.accessibleBranch}
-                        onChange={e => setField("accessibleBranch", e.target.value)}
+                    <Field label="GST No." error={errors.gstNo}>
+                      <TInput
+                        value={form.gstNo}
+                        onChange={e => setField("gstNo", e.target.value.toUpperCase())}
                         disabled={isReadOnly}
-                        options={BRANCHES}
-                        placeholder="Select Branch"
-                        error={errors.accessibleBranch}
+                        placeholder="e.g. 27AABCT1234A1Z5"
+                        maxLength={15}
+                        error={errors.gstNo}
                       />
                     </Field>
                     <div className="col-span-1 sm:col-span-2">
