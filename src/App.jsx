@@ -23,6 +23,14 @@ import BusinessUnitForm from "./pages/business-units/BusinessUnitForm";
 import OrganisationList from "./pages/organisations/OrganisationList";
 import OrganisationForm from "./pages/organisations/OrganisationForm";
 import WorkInProgress from "./pages/WorkInProgress";
+import AssetStructureList from "./pages/masters/asset-structure/AssetStructureList";
+import AssetStructureForm from "./pages/masters/asset-structure/AssetStructureForm";
+import AssetTypeList from "./pages/masters/asset-type/AssetTypeList";
+import AssetTypeForm from "./pages/masters/asset-type/AssetTypeForm";
+import AssetMasterList from "./pages/masters/asset-master/AssetMasterList";
+import AssetMasterForm from "./pages/masters/asset-master/AssetMasterForm";
+import MaintenanceTypeList from "./pages/masters/maintenance-type/MaintenanceTypeList";
+import MaintenanceTypeForm from "./pages/masters/maintenance-type/MaintenanceTypeForm";
 
 function App() {
   return (
@@ -101,6 +109,20 @@ function App() {
         <Route path="/inventory/reports" element={<WorkInProgress />} />
         <Route path="/inventory/ledger" element={<WorkInProgress />} />
         <Route path="/inventory/settings" element={<WorkInProgress />} />
+
+        {/* Masters — Asset Management */}
+        <Route path="/masters/asset-structure"      element={<AssetStructureList />} />
+        <Route path="/masters/asset-structure/new"  element={<AssetStructureForm />} />
+        <Route path="/masters/asset-structure/:id"  element={<AssetStructureForm />} />
+        <Route path="/masters/asset-type"           element={<AssetTypeList />} />
+        <Route path="/masters/asset-type/new"       element={<AssetTypeForm />} />
+        <Route path="/masters/asset-type/:id"       element={<AssetTypeForm />} />
+        <Route path="/masters/asset-master"         element={<AssetMasterList />} />
+        <Route path="/masters/asset-master/new"     element={<AssetMasterForm />} />
+        <Route path="/masters/asset-master/:id"     element={<AssetMasterForm />} />
+        <Route path="/masters/maintenance-type"     element={<MaintenanceTypeList />} />
+        <Route path="/masters/maintenance-type/new" element={<MaintenanceTypeForm />} />
+        <Route path="/masters/maintenance-type/:id" element={<MaintenanceTypeForm />} />
 
         {/* Finance */}
         <Route path="/finance/ledger" element={<WorkInProgress />} />

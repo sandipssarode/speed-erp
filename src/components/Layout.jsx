@@ -12,6 +12,7 @@ import {
   LayoutDashboard,
   Menu,
   X,
+  Database,
 } from "lucide-react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 
@@ -105,6 +106,18 @@ const menu = [
       ],
       Configuration: [
         { label: "Inventory Settings",    path: "/inventory/settings" },
+      ],
+    },
+  },
+  {
+    label: "Masters",
+    icon: <Database size={15} className="shrink-0" />,
+    children: {
+      Master: [
+        { label: "Asset Structure",  path: "/masters/asset-structure" },
+        { label: "Asset Type",       path: "/masters/asset-type" },
+        { label: "Asset Master",     path: "/masters/asset-master" },
+        { label: "Maintenance Type", path: "/masters/maintenance-type" },
       ],
     },
   },
