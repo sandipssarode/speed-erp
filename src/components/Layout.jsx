@@ -21,16 +21,45 @@ import { useNavigate, useLocation, Link } from "react-router-dom";
 // ─────────────────────────────────────────────────────────────
 const menu = [
   {
+    label: "Masters",
+    icon: <Database size={15} className="shrink-0" />,
+    children: {
+      System: [
+        { label: "User Master",          path: "/system/users" },
+        { label: "Organisation Master",  path: "/system/organisations" },
+        { label: "Business Unit Master", path: "/system/business-units" },
+        { label: "Warehouse Master",     path: "/system/warehouses" },
+        { label: "State Master",         path: "/system/states" },
+        { label: "Country Master",       path: "/system/countries" },
+      ],
+      Purchase: [
+        { label: "Vendor Master",        path: "/vendors" },
+      ],
+      Sales: [
+        { label: "Customer Master",      path: "/sales/customers" },
+        { label: "Product Master",       path: "/products" },
+      ],
+      Inventory: [
+        { label: "Item Master",          path: "/inventory/items" },
+        { label: "Item Category",        path: "/inventory/item-category" },
+      ],
+      Finance: [
+        { label: "Ledger Master",        path: "/finance/ledger" },
+        { label: "Cost Centre",          path: "/finance/cost-centre" },
+      ],
+      Asset: [
+        { label: "Asset Structure",      path: "/masters/asset-structure" },
+        { label: "Asset Type",           path: "/masters/asset-type" },
+        { label: "Asset Master",         path: "/masters/asset-master" },
+        { label: "Maintenance Type",     path: "/masters/maintenance-type" },
+      ],
+    },
+  },
+  {
     label: "System Setup",
     icon: <Settings size={15} className="shrink-0" />,
     flat: true,
     links: [
-      { label: "User Master",                   path: "/system/users" },
-      { label: "Organisation Master",            path: "/system/organisations" },
-      { label: "Business Unit Master",          path: "/system/business-units" },
-      { label: "Warehouse Master",              path: "/system/warehouses" },
-      { label: "State Master",                  path: "/system/states" },
-      { label: "Country Master",                path: "/system/countries" },
       { label: "UoM",                           path: "/system/uom" },
       { label: "Document Series",               path: "/system/document-series" },
       { label: "Financial Year",                path: "/system/financial-year" },
@@ -43,9 +72,6 @@ const menu = [
     label: "Purchase",
     icon: <ShoppingCart size={15} className="shrink-0" />,
     children: {
-      Master: [
-        { label: "Vendor Master",         path: "/vendors" },
-      ],
       Transaction: [
         { label: "Purchase Requisition",   path: "/purchase/requisition" },
         { label: "Purchase Inquiry",       path: "/purchase/inquiry" },
@@ -67,10 +93,6 @@ const menu = [
     label: "Sales",
     icon: <BarChart2 size={15} className="shrink-0" />,
     children: {
-      Master: [
-        { label: "Customer Master",       path: "/sales/customers" },
-        { label: "Product Master",        path: "/products" },
-      ],
       Transaction: [
         { label: "Sales Quotation",       path: "/sales/quotation" },
         { label: "Sales Order",           path: "/sales/orders" },
@@ -90,34 +112,17 @@ const menu = [
     label: "Inventory",
     icon: <Package size={15} className="shrink-0" />,
     children: {
-      Master: [
-        { label: "Item Master",           path: "/inventory/items" },
-        { label: "Warehouse Master",      path: "/inventory/warehouses" },
-        { label: "Item Category",         path: "/inventory/item-category" },
-      ],
       Transaction: [
-        { label: "Material Receipt (GRN)",path: "/inventory/grn" },
-        { label: "Stock Transfer",        path: "/inventory/transfer" },
-        { label: "Stock Adjustment",      path: "/inventory/adjustment" },
+        { label: "Material Receipt (GRN)", path: "/inventory/grn" },
+        { label: "Stock Transfer",         path: "/inventory/transfer" },
+        { label: "Stock Adjustment",       path: "/inventory/adjustment" },
       ],
       Reports: [
-        { label: "Stock Report",          path: "/inventory/reports" },
-        { label: "Stock Ledger",          path: "/inventory/ledger" },
+        { label: "Stock Report",           path: "/inventory/reports" },
+        { label: "Stock Ledger",           path: "/inventory/ledger" },
       ],
       Configuration: [
-        { label: "Inventory Settings",    path: "/inventory/settings" },
-      ],
-    },
-  },
-  {
-    label: "Masters",
-    icon: <Database size={15} className="shrink-0" />,
-    children: {
-      Master: [
-        { label: "Asset Structure",  path: "/masters/asset-structure" },
-        { label: "Asset Type",       path: "/masters/asset-type" },
-        { label: "Asset Master",     path: "/masters/asset-master" },
-        { label: "Maintenance Type", path: "/masters/maintenance-type" },
+        { label: "Inventory Settings",     path: "/inventory/settings" },
       ],
     },
   },
@@ -125,10 +130,6 @@ const menu = [
     label: "Finance",
     icon: <DollarSign size={15} className="shrink-0" />,
     children: {
-      Master: [
-        { label: "Ledger Master",         path: "/finance/ledger" },
-        { label: "Cost Centre",           path: "/finance/cost-centre" },
-      ],
       Transaction: [
         { label: "Journal Entry",         path: "/finance/journal" },
         { label: "Payment Voucher",       path: "/finance/payment" },
