@@ -23,37 +23,26 @@ const menu = [
   {
     label: "Masters",
     icon: <Database size={15} className="shrink-0" />,
-    children: {
-      System: [
-        { label: "User Master",          path: "/system/users" },
-        { label: "Organisation Master",  path: "/system/organisations" },
-        { label: "Business Unit Master", path: "/system/business-units" },
-        { label: "Warehouse Master",     path: "/system/warehouses" },
-        { label: "State Master",         path: "/system/states" },
-        { label: "Country Master",       path: "/system/countries" },
-      ],
-      Purchase: [
-        { label: "Vendor Master",        path: "/vendors" },
-      ],
-      Sales: [
-        { label: "Customer Master",      path: "/sales/customers" },
-        { label: "Product Master",       path: "/products" },
-      ],
-      Inventory: [
-        { label: "Item Master",          path: "/inventory/items" },
-        { label: "Item Category",        path: "/inventory/item-category" },
-      ],
-      Finance: [
-        { label: "Ledger Master",        path: "/finance/ledger" },
-        { label: "Cost Centre",          path: "/finance/cost-centre" },
-      ],
-      Asset: [
-        { label: "Asset Structure",      path: "/masters/asset-structure" },
-        { label: "Asset Type",           path: "/masters/asset-type" },
-        { label: "Asset Master",         path: "/masters/asset-master" },
-        { label: "Maintenance Type",     path: "/masters/maintenance-type" },
-      ],
-    },
+    flat: true,
+    links: [
+      { label: "User Master",           path: "/system/users" },
+      { label: "Organisation Master",   path: "/system/organisations" },
+      { label: "Business Unit Master",  path: "/system/business-units" },
+      { label: "Warehouse Master",      path: "/system/warehouses" },
+      { label: "State Master",          path: "/system/states" },
+      { label: "Country Master",        path: "/system/countries" },
+      { label: "Vendor Master",         path: "/vendors" },
+      { label: "Customer Master",       path: "/sales/customers" },
+      { label: "Product Master",        path: "/products" },
+      { label: "Item Master",           path: "/inventory/items" },
+      { label: "Item Category",         path: "/inventory/item-category" },
+      { label: "Ledger Master",         path: "/finance/ledger" },
+      { label: "Cost Centre",           path: "/finance/cost-centre" },
+      { label: "Asset Structure",       path: "/masters/asset-structure" },
+      { label: "Asset Type",            path: "/masters/asset-type" },
+      { label: "Asset Master",          path: "/masters/asset-master" },
+      { label: "Maintenance Type",      path: "/masters/maintenance-type" },
+    ],
   },
   {
     label: "System Setup",
