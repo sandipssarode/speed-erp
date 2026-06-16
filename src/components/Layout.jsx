@@ -25,10 +25,6 @@ const menu = [
     icon: <Database size={15} className="shrink-0" />,
     flat: true,
     links: [
-      { label: "User Master",           path: "/system/users" },
-      { label: "Organisation Master",   path: "/system/organisations" },
-      { label: "Business Unit Master",  path: "/system/business-units" },
-      { label: "Warehouse Master",      path: "/system/warehouses" },
       { label: "State Master",          path: "/system/states" },
       { label: "Country Master",        path: "/system/countries" },
       { label: "Vendor Master",         path: "/vendors" },
@@ -49,7 +45,11 @@ const menu = [
     icon: <Settings size={15} className="shrink-0" />,
     flat: true,
     links: [
-      { label: "UoM",                           path: "/system/uom" },
+      { label: "User Master",                    path: "/system/users" },
+      { label: "Organisation Master",            path: "/system/organisations" },
+      { label: "Business Unit Master",           path: "/system/business-units" },
+      { label: "Warehouse Master",               path: "/system/warehouses" },
+      { label: "UoM",                            path: "/system/uom" },
       { label: "Document Series",               path: "/system/document-series" },
       { label: "Financial Year",                path: "/system/financial-year" },
       { label: "Email Configuration",           path: "/system/email-config" },
