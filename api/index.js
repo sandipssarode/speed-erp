@@ -240,6 +240,72 @@ export default async function handler(req, res) {
         break;
       }
 
+      // ── COUNTRIES ─────────────────────────────────────────────
+      case 'countries': {
+        if (id) {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM countries WHERE id=${id}`;
+            if (!rows.length) return res.status(404).json({ error: 'Not found' });
+            return res.json(rows[0].data);
+          }
+          if (req.method === 'PUT') {
+            const c = req.body;
+            await sql`UPDATE countries SET code=${c.countryCode}, name=${c.countryName}, dial_code=${c.dialCode||null}, currency=${c.currency||null}, is_active=${!c.isDeactivated}, data=${JSON.stringify(c)}, updated_at=${c.updatedAt} WHERE id=${id}`;
+            return res.json(c);
+          }
+          if (req.method === 'DELETE') {
+            await sql`DELETE FROM countries WHERE id=${id}`;
+            return res.json({ success: true });
+          }
+        } else {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM countries ORDER BY name ASC`;
+            return res.json(rows.map(r => r.data));
+          }
+          if (req.method === 'POST') {
+            const c = req.body;
+            const existing = await sql`SELECT id FROM countries WHERE code=${c.countryCode}`;
+            if (existing.length) return res.status(409).json({ error: 'Country Code already exists.' });
+            await sql`INSERT INTO countries (id, code, name, dial_code, currency, is_active, data, created_at, updated_at) VALUES (${c.id}, ${c.countryCode}, ${c.countryName}, ${c.dialCode||null}, ${c.currency||null}, ${!c.isDeactivated}, ${JSON.stringify(c)}, ${c.createdAt}, ${c.updatedAt})`;
+            return res.status(201).json(c);
+          }
+        }
+        break;
+      }
+
+      // ── STATES ────────────────────────────────────────────────
+      case 'states': {
+        if (id) {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM states WHERE id=${id}`;
+            if (!rows.length) return res.status(404).json({ error: 'Not found' });
+            return res.json(rows[0].data);
+          }
+          if (req.method === 'PUT') {
+            const s = req.body;
+            await sql`UPDATE states SET code=${s.stateCode}, name=${s.stateName}, country_id=${s.countryId||null}, country_name=${s.countryName||null}, gst_state_code=${s.gstStateCode||null}, is_active=${!s.isDeactivated}, data=${JSON.stringify(s)}, updated_at=${s.updatedAt} WHERE id=${id}`;
+            return res.json(s);
+          }
+          if (req.method === 'DELETE') {
+            await sql`DELETE FROM states WHERE id=${id}`;
+            return res.json({ success: true });
+          }
+        } else {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM states ORDER BY name ASC`;
+            return res.json(rows.map(r => r.data));
+          }
+          if (req.method === 'POST') {
+            const s = req.body;
+            const existing = await sql`SELECT id FROM states WHERE code=${s.stateCode}`;
+            if (existing.length) return res.status(409).json({ error: 'State Code already exists.' });
+            await sql`INSERT INTO states (id, code, name, country_id, country_name, gst_state_code, is_active, data, created_at, updated_at) VALUES (${s.id}, ${s.stateCode}, ${s.stateName}, ${s.countryId||null}, ${s.countryName||null}, ${s.gstStateCode||null}, ${!s.isDeactivated}, ${JSON.stringify(s)}, ${s.createdAt}, ${s.updatedAt})`;
+            return res.status(201).json(s);
+          }
+        }
+        break;
+      }
+
       // ── DISTRICTS ─────────────────────────────────────────────
       case 'districts': {
         if (id) {

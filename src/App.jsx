@@ -35,6 +35,10 @@ import DistrictList from "./pages/masters/district/DistrictList";
 import DistrictForm from "./pages/masters/district/DistrictForm";
 import VillageTalukaList from "./pages/masters/village-taluka/VillageTalukaList";
 import VillageTalukaForm from "./pages/masters/village-taluka/VillageTalukaForm";
+import CountryList from "./pages/masters/country/CountryList";
+import CountryForm from "./pages/masters/country/CountryForm";
+import StateList from "./pages/masters/state/StateList";
+import StateForm from "./pages/masters/state/StateForm";
 
 function App() {
   return (
@@ -61,8 +65,12 @@ function App() {
         <Route path="/system/business-units" element={<BusinessUnitList />} />
         <Route path="/system/business-units/new" element={<BusinessUnitForm />} />
         <Route path="/system/business-units/:id" element={<BusinessUnitForm />} />
-        <Route path="/system/states" element={<WorkInProgress />} />
-        <Route path="/system/countries" element={<WorkInProgress />} />
+        <Route path="/system/states"         element={<StateList />} />
+        <Route path="/system/states/new"     element={<StateForm />} />
+        <Route path="/system/states/:id"     element={<StateForm />} />
+        <Route path="/system/countries"      element={<CountryList />} />
+        <Route path="/system/countries/new"  element={<CountryForm />} />
+        <Route path="/system/countries/:id"  element={<CountryForm />} />
         <Route path="/system/uom" element={<WorkInProgress />} />
         <Route path="/system/document-series" element={<WorkInProgress />} />
         <Route path="/system/financial-year" element={<WorkInProgress />} />
