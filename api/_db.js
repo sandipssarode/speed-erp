@@ -1,5 +1,5 @@
 import { neon } from '@neondatabase/serverless';
-import { SEED_USERS, SEED_VENDORS, SEED_CUSTOMERS, SEED_CATEGORIES, SEED_PRODUCTS, SEED_WAREHOUSES, SEED_BUSINESS_UNITS, SEED_ORGANISATIONS } from './_seed.js';
+import { SEED_USERS, SEED_VENDORS, SEED_CUSTOMERS, SEED_CATEGORIES, SEED_PRODUCTS, SEED_WAREHOUSES, SEED_BUSINESS_UNITS, SEED_ORGANISATIONS, SEED_COUNTRIES, SEED_STATES, SEED_DISTRICTS, SEED_VILLAGE_TALUKAS } from './_seed.js';
 
 // Reused across requests within the same serverless instance lifetime
 let _sql = null;
@@ -37,7 +37,7 @@ export async function ensureSchema(sql) {
   ]);
 
   // Check all seed counts in parallel
-  const [[uCount], [vCount], [cCount], [catCount], [pCount], [whCount], [buCount], [orgCount]] = await Promise.all([
+  const [[uCount], [vCount], [cCount], [catCount], [pCount], [whCount], [buCount], [orgCount], [ctryCount], [stCount], [distCount], [vlgCount]] = await Promise.all([
     sql`SELECT COUNT(*) AS c FROM users`,
     sql`SELECT COUNT(*) AS c FROM vendors`,
     sql`SELECT COUNT(*) AS c FROM customers`,
@@ -46,6 +46,10 @@ export async function ensureSchema(sql) {
     sql`SELECT COUNT(*) AS c FROM warehouses`,
     sql`SELECT COUNT(*) AS c FROM business_units`,
     sql`SELECT COUNT(*) AS c FROM organisations`,
+    sql`SELECT COUNT(*) AS c FROM countries`,
+    sql`SELECT COUNT(*) AS c FROM states`,
+    sql`SELECT COUNT(*) AS c FROM districts`,
+    sql`SELECT COUNT(*) AS c FROM village_talukas`,
   ]);
 
   // Seed empty tables in parallel; each table's rows are also inserted in parallel
@@ -88,6 +92,26 @@ export async function ensureSchema(sql) {
     Number(orgCount.c) === 0 && Promise.all(SEED_ORGANISATIONS.map(o =>
       sql`INSERT INTO organisations (id,code,name,type,state,data,created_at,updated_at)
         VALUES (${o.id},${o.companyCode},${o.companyName},${o.type||null},${o.state||null},${JSON.stringify(o)},${o.createdAt},${o.updatedAt})
+        ON CONFLICT DO NOTHING`
+    )),
+    Number(ctryCount.c) === 0 && Promise.all(SEED_COUNTRIES.map(c =>
+      sql`INSERT INTO countries (id,code,name,dial_code,currency,is_active,data,created_at,updated_at)
+        VALUES (${c.id},${c.countryCode},${c.countryName},${c.dialCode||null},${c.currency||null},${!c.isDeactivated},${JSON.stringify(c)},${c.createdAt},${c.updatedAt})
+        ON CONFLICT DO NOTHING`
+    )),
+    Number(stCount.c) === 0 && Promise.all(SEED_STATES.map(s =>
+      sql`INSERT INTO states (id,code,name,country_id,country_name,gst_state_code,is_active,data,created_at,updated_at)
+        VALUES (${s.id},${s.stateCode},${s.stateName},${s.countryId},${s.countryName},${s.gstStateCode||null},${!s.isDeactivated},${JSON.stringify(s)},${s.createdAt},${s.updatedAt})
+        ON CONFLICT DO NOTHING`
+    )),
+    Number(distCount.c) === 0 && Promise.all(SEED_DISTRICTS.map(d =>
+      sql`INSERT INTO districts (id,code,name,state,is_active,data,created_at,updated_at)
+        VALUES (${d.id},${d.districtCode},${d.districtName},${d.state||null},${!d.isDeactivated},${JSON.stringify(d)},${d.createdAt},${d.updatedAt})
+        ON CONFLICT DO NOTHING`
+    )),
+    Number(vlgCount.c) === 0 && Promise.all(SEED_VILLAGE_TALUKAS.map(v =>
+      sql`INSERT INTO village_talukas (id,code,name,district_id,district_name,is_active,data,created_at,updated_at)
+        VALUES (${v.id},${v.villageCode},${v.villageName},${v.districtId||null},${v.districtName||null},${!v.isDeactivated},${JSON.stringify(v)},${v.createdAt},${v.updatedAt})
         ON CONFLICT DO NOTHING`
     )),
   ].filter(Boolean));
