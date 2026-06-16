@@ -27,6 +27,8 @@ const menu = [
     links: [
       { label: "State Master",          path: "/system/states" },
       { label: "Country Master",        path: "/system/countries" },
+      { label: "District Master",       path: "/masters/district" },
+      { label: "Village / Taluka",      path: "/masters/village-taluka" },
       { label: "Vendor Master",         path: "/vendors" },
       { label: "Customer Master",       path: "/sales/customers" },
       { label: "Product Master",        path: "/products" },

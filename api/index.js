@@ -240,6 +240,72 @@ export default async function handler(req, res) {
         break;
       }
 
+      // ── DISTRICTS ─────────────────────────────────────────────
+      case 'districts': {
+        if (id) {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM districts WHERE id=${id}`;
+            if (!rows.length) return res.status(404).json({ error: 'Not found' });
+            return res.json(rows[0].data);
+          }
+          if (req.method === 'PUT') {
+            const d = req.body;
+            await sql`UPDATE districts SET code=${d.districtCode}, name=${d.districtName}, state=${d.state||null}, is_active=${!d.isDeactivated}, data=${JSON.stringify(d)}, updated_at=${d.updatedAt} WHERE id=${id}`;
+            return res.json(d);
+          }
+          if (req.method === 'DELETE') {
+            await sql`DELETE FROM districts WHERE id=${id}`;
+            return res.json({ success: true });
+          }
+        } else {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM districts ORDER BY created_at ASC`;
+            return res.json(rows.map(r => r.data));
+          }
+          if (req.method === 'POST') {
+            const d = req.body;
+            const existing = await sql`SELECT id FROM districts WHERE code=${d.districtCode}`;
+            if (existing.length) return res.status(409).json({ error: 'District Code already exists.' });
+            await sql`INSERT INTO districts (id, code, name, state, is_active, data, created_at, updated_at) VALUES (${d.id}, ${d.districtCode}, ${d.districtName}, ${d.state||null}, ${!d.isDeactivated}, ${JSON.stringify(d)}, ${d.createdAt}, ${d.updatedAt})`;
+            return res.status(201).json(d);
+          }
+        }
+        break;
+      }
+
+      // ── VILLAGE / TALUKAS ──────────────────────────────────────
+      case 'village-talukas': {
+        if (id) {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM village_talukas WHERE id=${id}`;
+            if (!rows.length) return res.status(404).json({ error: 'Not found' });
+            return res.json(rows[0].data);
+          }
+          if (req.method === 'PUT') {
+            const v = req.body;
+            await sql`UPDATE village_talukas SET code=${v.villageCode}, name=${v.villageName}, district_id=${v.districtId||null}, district_name=${v.districtName||null}, is_active=${!v.isDeactivated}, data=${JSON.stringify(v)}, updated_at=${v.updatedAt} WHERE id=${id}`;
+            return res.json(v);
+          }
+          if (req.method === 'DELETE') {
+            await sql`DELETE FROM village_talukas WHERE id=${id}`;
+            return res.json({ success: true });
+          }
+        } else {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM village_talukas ORDER BY created_at ASC`;
+            return res.json(rows.map(r => r.data));
+          }
+          if (req.method === 'POST') {
+            const v = req.body;
+            const existing = await sql`SELECT id FROM village_talukas WHERE code=${v.villageCode}`;
+            if (existing.length) return res.status(409).json({ error: 'Village / Taluka Code already exists.' });
+            await sql`INSERT INTO village_talukas (id, code, name, district_id, district_name, is_active, data, created_at, updated_at) VALUES (${v.id}, ${v.villageCode}, ${v.villageName}, ${v.districtId||null}, ${v.districtName||null}, ${!v.isDeactivated}, ${JSON.stringify(v)}, ${v.createdAt}, ${v.updatedAt})`;
+            return res.status(201).json(v);
+          }
+        }
+        break;
+      }
+
       default:
         return res.status(404).json({ error: `Unknown resource: ${resource}` });
     }

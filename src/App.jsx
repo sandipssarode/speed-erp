@@ -31,6 +31,10 @@ import AssetMasterList from "./pages/masters/asset-master/AssetMasterList";
 import AssetMasterForm from "./pages/masters/asset-master/AssetMasterForm";
 import MaintenanceTypeList from "./pages/masters/maintenance-type/MaintenanceTypeList";
 import MaintenanceTypeForm from "./pages/masters/maintenance-type/MaintenanceTypeForm";
+import DistrictList from "./pages/masters/district/DistrictList";
+import DistrictForm from "./pages/masters/district/DistrictForm";
+import VillageTalukaList from "./pages/masters/village-taluka/VillageTalukaList";
+import VillageTalukaForm from "./pages/masters/village-taluka/VillageTalukaForm";
 
 function App() {
   return (
@@ -123,6 +127,12 @@ function App() {
         <Route path="/masters/maintenance-type"     element={<MaintenanceTypeList />} />
         <Route path="/masters/maintenance-type/new" element={<MaintenanceTypeForm />} />
         <Route path="/masters/maintenance-type/:id" element={<MaintenanceTypeForm />} />
+        <Route path="/masters/district"             element={<DistrictList />} />
+        <Route path="/masters/district/new"         element={<DistrictForm />} />
+        <Route path="/masters/district/:id"         element={<DistrictForm />} />
+        <Route path="/masters/village-taluka"       element={<VillageTalukaList />} />
+        <Route path="/masters/village-taluka/new"   element={<VillageTalukaForm />} />
+        <Route path="/masters/village-taluka/:id"   element={<VillageTalukaForm />} />
 
         {/* Finance */}
         <Route path="/finance/ledger" element={<WorkInProgress />} />
