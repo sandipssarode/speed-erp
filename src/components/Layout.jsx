@@ -25,8 +25,8 @@ const menu = [
     icon: <Database size={15} className="shrink-0" />,
     flat: true,
     links: [
-      { label: "State Master",          path: "/system/states" },
       { label: "Country Master",        path: "/system/countries" },
+      { label: "State Master",          path: "/system/states" },
       { label: "District Master",       path: "/masters/district" },
       { label: "Village / Taluka",      path: "/masters/village-taluka" },
       { label: "Vendor Master",         path: "/vendors" },
