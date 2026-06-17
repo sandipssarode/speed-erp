@@ -53,7 +53,7 @@ function TSelect({ value, onChange, disabled, options, placeholder, error }) {
 }
 
 const emptyForm = () => ({
-  villageCode:   `VLG-${Date.now().toString().slice(-5)}`,
+  villageCode:   "",
   villageName:   "",
   districtId:    "",
   districtName:  "",
@@ -63,15 +63,8 @@ const emptyForm = () => ({
   changelog: [],
 });
 
-function validate(form, allRecords, editingId) {
+function validate(form) {
   const e = {};
-  if (!form.villageCode.trim())
-    e.villageCode = "Village / Taluka Code is required.";
-  else if (allRecords.some(r =>
-    r.villageCode?.trim().toLowerCase() === form.villageCode.trim().toLowerCase() &&
-    r.id !== editingId
-  ))
-    e.villageCode = "Village / Taluka Code already exists.";
   if (!form.villageName.trim()) e.villageName = "Village / Taluka Name is required.";
   if (!form.districtId) e.districtId = "District is required.";
   if (form.pinCode.trim() && !/^\d{6}$/.test(form.pinCode.trim()))
@@ -131,7 +124,7 @@ export default function VillageTalukaForm() {
   };
 
   const handleSave = async () => {
-    const errs = validate(form, allRecords, isNew ? null : id);
+    const errs = validate(form);
     if (Object.keys(errs).length > 0) {
       setErrors(errs);
       showToast("Please correct the highlighted fields and try again.", "error");
@@ -143,7 +136,8 @@ export default function VillageTalukaForm() {
     try {
       let saved;
       if (isNew) {
-        const payload = { ...form, id: Date.now().toString(), createdAt: now, updatedAt: now, createdBy: userName, updatedBy: userName, changelog: [changeEntry] };
+        const autoCode = `VLG-${String(allRecords.length + 1).padStart(3, "0")}`;
+        const payload = { ...form, villageCode: autoCode, id: Date.now().toString(), createdAt: now, updatedAt: now, createdBy: userName, updatedBy: userName, changelog: [changeEntry] };
         saved = await api.post("/api/village-talukas", payload);
       } else {
         const payload = { ...form, updatedAt: now, updatedBy: userName, changelog: [...(form.changelog || []), changeEntry] };
@@ -304,14 +298,11 @@ export default function VillageTalukaForm() {
             <div className="bg-gray-50 border border-gray-200 rounded p-4 space-y-4">
               <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Village / Taluka Details</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                <Field label="Village / Taluka Code" required error={errors.villageCode}>
+                <Field label="Village / Taluka Code">
                   <TInput
                     value={form.villageCode}
-                    onChange={e => setField("villageCode", e.target.value.toUpperCase())}
-                    disabled={isReadOnly || !isNew}
-                    placeholder="e.g. VLG-001"
-                    maxLength={20}
-                    error={errors.villageCode}
+                    disabled={true}
+                    placeholder="Auto-generated on save"
                   />
                 </Field>
                 <Field label="Village / Taluka Name" required error={errors.villageName}>

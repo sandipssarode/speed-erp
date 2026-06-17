@@ -96,7 +96,7 @@ function TSelect({ value, onChange, disabled, options, placeholder, error }) {
 }
 
 const emptyForm = () => ({
-  districtCode:  `DIST-${Date.now().toString().slice(-5)}`,
+  districtCode:  "",
   districtName:  "",
   state:         "",
   districtHQ:    "",
@@ -105,15 +105,8 @@ const emptyForm = () => ({
   changelog: [],
 });
 
-function validate(form, allRecords, editingId) {
+function validate(form) {
   const e = {};
-  if (!form.districtCode.trim())
-    e.districtCode = "District Code is required.";
-  else if (allRecords.some(r =>
-    r.districtCode?.trim().toLowerCase() === form.districtCode.trim().toLowerCase() &&
-    r.id !== editingId
-  ))
-    e.districtCode = "District Code already exists.";
   if (!form.districtName.trim()) e.districtName = "District Name is required.";
   if (!form.state) e.state = "State is required.";
   return e;
@@ -156,7 +149,7 @@ export default function DistrictForm() {
   };
 
   const handleSave = async () => {
-    const errs = validate(form, allRecords, isNew ? null : id);
+    const errs = validate(form);
     if (Object.keys(errs).length > 0) {
       setErrors(errs);
       showToast("Please correct the highlighted fields and try again.", "error");
@@ -168,7 +161,8 @@ export default function DistrictForm() {
     try {
       let saved;
       if (isNew) {
-        const payload = { ...form, id: Date.now().toString(), createdAt: now, updatedAt: now, createdBy: userName, updatedBy: userName, changelog: [changeEntry] };
+        const autoCode = `DIST-${String(allRecords.length + 1).padStart(3, "0")}`;
+        const payload = { ...form, districtCode: autoCode, id: Date.now().toString(), createdAt: now, updatedAt: now, createdBy: userName, updatedBy: userName, changelog: [changeEntry] };
         saved = await api.post("/api/districts", payload);
       } else {
         const payload = { ...form, updatedAt: now, updatedBy: userName, changelog: [...(form.changelog || []), changeEntry] };
@@ -329,14 +323,11 @@ export default function DistrictForm() {
             <div className="bg-gray-50 border border-gray-200 rounded p-4 space-y-4">
               <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">District Details</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                <Field label="District Code" required error={errors.districtCode}>
+                <Field label="District Code">
                   <TInput
                     value={form.districtCode}
-                    onChange={e => setField("districtCode", e.target.value.toUpperCase())}
-                    disabled={isReadOnly || !isNew}
-                    placeholder="e.g. DIST-001"
-                    maxLength={20}
-                    error={errors.districtCode}
+                    disabled={true}
+                    placeholder="Auto-generated on save"
                   />
                 </Field>
                 <Field label="District Name" required error={errors.districtName}>
