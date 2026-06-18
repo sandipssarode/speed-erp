@@ -10,7 +10,7 @@ import {
 function Field({ label, required, error, children, className = "" }) {
   return (
     <div className={className}>
-      <label className="block text-xs font-medium text-gray-600 mb-1">
+      <label className={`block text-xs mb-1 ${required ? "font-semibold text-gray-800" : "font-medium text-gray-500"}`}>
         {label}{required && <span className="text-red-500 ml-0.5">*</span>}
       </label>
       {children}
@@ -179,7 +179,6 @@ export default function VillageTalukaForm() {
       <div className="space-y-3 max-w-3xl mx-auto">
 
         <div className="flex items-center gap-1.5 text-xs text-gray-400">
-          <span>Masters</span><ChevronRight size={12} />
           <button onClick={() => navigate("/masters/village-taluka")} className="hover:text-blue-500 transition-colors">Village / Taluka Master</button>
           {form.villageCode && <><ChevronRight size={12} /><span className="text-blue-600 font-medium">{form.villageCode}</span></>}
         </div>

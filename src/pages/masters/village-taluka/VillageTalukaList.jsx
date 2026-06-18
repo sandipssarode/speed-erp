@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../../../components/Layout";
-import { Plus, Search, Edit2, Trash2, ChevronRight } from "lucide-react";
+import { Plus, Search, Edit2, Trash2 } from "lucide-react";
 import { api } from "../../../lib/api.js";
+
+const PAGE_SIZE = 25;
 
 export default function VillageTalukaList() {
   const navigate = useNavigate();
@@ -10,6 +12,7 @@ export default function VillageTalukaList() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [filterDistrict, setFilterDistrict] = useState("all");
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     api.get("/api/village-talukas")
@@ -17,6 +20,8 @@ export default function VillageTalukaList() {
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => { setPage(1); }, [search, filterDistrict]);
 
   const districts = [...new Set(records.map((r) => r.districtName).filter(Boolean))].sort();
 
@@ -32,6 +37,9 @@ export default function VillageTalukaList() {
     return matchSearch && matchDistrict;
   });
 
+  const pageCount = Math.ceil(filtered.length / PAGE_SIZE);
+  const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
   const handleDelete = async (id, name) => {
     if (!window.confirm(`Delete village/taluka "${name}"? This cannot be undone.`)) return;
     try {
@@ -46,14 +54,7 @@ export default function VillageTalukaList() {
     <Layout>
       <div className="space-y-4">
         <div className="flex items-center justify-between flex-wrap gap-3">
-          <div>
-            <div className="flex items-center gap-1.5 text-xs text-gray-400 mb-1">
-              <span>Masters</span>
-              <ChevronRight size={12} />
-              <span className="text-gray-600 font-medium">Village / Taluka Master</span>
-            </div>
-            <h1 className="text-lg font-semibold text-gray-800">Village / Taluka Master</h1>
-          </div>
+          <h1 className="text-lg font-semibold text-gray-800">Village / Taluka Master</h1>
           <button
             onClick={() => navigate("/masters/village-taluka/new")}
             className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded shadow-sm"
@@ -94,16 +95,16 @@ export default function VillageTalukaList() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm min-w-[600px]">
               <thead>
-                <tr className="bg-gray-50 border-b border-gray-200">
-                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">Code</th>
-                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">Village / Taluka Name</th>
-                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">District</th>
-                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">PIN Code</th>
-                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">Actions</th>
+                <tr className="bg-blue-600">
+                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">Code</th>
+                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">Village / Taluka Name</th>
+                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">District</th>
+                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">PIN Code</th>
+                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {filtered.length === 0 ? (
+                {paginated.length === 0 ? (
                   <tr>
                     <td colSpan={5} className="text-center py-16 text-gray-400 text-sm">
                       {records.length === 0
@@ -112,10 +113,10 @@ export default function VillageTalukaList() {
                     </td>
                   </tr>
                 ) : (
-                  filtered.map((r, i) => (
+                  paginated.map((r, i) => (
                     <tr
                       key={r.id}
-                      className={`border-b border-gray-100 hover:bg-blue-50/30 cursor-pointer transition-colors ${i % 2 !== 0 ? "bg-gray-50/40" : ""}`}
+                      className={`border-b border-gray-200 hover:bg-blue-50/40 cursor-pointer transition-colors ${i % 2 !== 0 ? "bg-gray-50/50" : ""}`}
                       onClick={() => navigate(`/masters/village-taluka/${r.id}`)}
                     >
                       <td className="px-4 py-2.5 font-mono text-xs font-semibold text-blue-600">{r.villageCode}</td>
@@ -146,12 +147,33 @@ export default function VillageTalukaList() {
               </tbody>
             </table>
           </div>
+          {pageCount > 1 && (
+            <div className="flex items-center justify-between px-4 py-2.5 border-t border-gray-200 bg-gray-50 text-xs">
+              <span className="text-gray-500">
+                Showing {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filtered.length)} of {filtered.length} records
+              </span>
+              <div className="flex items-center gap-1">
+                <button onClick={() => setPage(p => p - 1)} disabled={page === 1}
+                  className="px-2.5 py-1 border border-gray-300 rounded text-gray-600 hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed">
+                  ‹ Prev
+                </button>
+                {Array.from({ length: pageCount }, (_, i) => i + 1).map(p => (
+                  <button key={p} onClick={() => setPage(p)}
+                    className={`px-2.5 py-1 border rounded ${p === page ? "bg-blue-600 text-white border-blue-600" : "border-gray-300 text-gray-600 hover:bg-white"}`}>
+                    {p}
+                  </button>
+                ))}
+                <button onClick={() => setPage(p => p + 1)} disabled={page === pageCount}
+                  className="px-2.5 py-1 border border-gray-300 rounded text-gray-600 hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed">
+                  Next ›
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
-        {filtered.length > 0 && (
-          <p className="text-xs text-gray-400 text-right px-1">
-            Showing {filtered.length} record(s)
-          </p>
+        {pageCount <= 1 && filtered.length > 0 && (
+          <p className="text-xs text-gray-400 text-right px-1">Showing {filtered.length} record(s)</p>
         )}
       </div>
     </Layout>
