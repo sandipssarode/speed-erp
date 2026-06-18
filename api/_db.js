@@ -1,5 +1,5 @@
 import { neon } from '@neondatabase/serverless';
-import { SEED_USERS, SEED_VENDORS, SEED_CUSTOMERS, SEED_CATEGORIES, SEED_PRODUCTS, SEED_WAREHOUSES, SEED_BUSINESS_UNITS, SEED_ORGANISATIONS, SEED_COUNTRIES, SEED_STATES, SEED_DISTRICTS, SEED_VILLAGE_TALUKAS } from './_seed.js';
+import { SEED_USERS, SEED_VENDORS, SEED_CUSTOMERS, SEED_CATEGORIES, SEED_PRODUCTS, SEED_WAREHOUSES, SEED_BUSINESS_UNITS, SEED_ORGANISATIONS, SEED_COUNTRIES, SEED_STATES, SEED_DISTRICTS, SEED_VILLAGE_TALUKAS, SEED_PRODUCT_TYPES, SEED_PRODUCT_SUBTYPES, SEED_PRODUCT_MASTERS, SEED_DEPARTMENTS, SEED_DESIGNATIONS, SEED_EMPLOYEES } from './_seed.js';
 
 // Reused across requests within the same serverless instance lifetime
 let _sql = null;
@@ -34,10 +34,16 @@ export async function ensureSchema(sql) {
     sql`CREATE TABLE IF NOT EXISTS states (id TEXT PRIMARY KEY, code TEXT UNIQUE NOT NULL, name TEXT NOT NULL, country_id TEXT, country_name TEXT, gst_state_code TEXT, is_active BOOLEAN DEFAULT true, data JSONB NOT NULL, created_at TIMESTAMPTZ DEFAULT NOW(), updated_at TIMESTAMPTZ DEFAULT NOW())`,
     sql`CREATE TABLE IF NOT EXISTS districts (id TEXT PRIMARY KEY, code TEXT UNIQUE NOT NULL, name TEXT NOT NULL, state TEXT, is_active BOOLEAN DEFAULT true, data JSONB NOT NULL, created_at TIMESTAMPTZ DEFAULT NOW(), updated_at TIMESTAMPTZ DEFAULT NOW())`,
     sql`CREATE TABLE IF NOT EXISTS village_talukas (id TEXT PRIMARY KEY, code TEXT UNIQUE NOT NULL, name TEXT NOT NULL, district_id TEXT, district_name TEXT, is_active BOOLEAN DEFAULT true, data JSONB NOT NULL, created_at TIMESTAMPTZ DEFAULT NOW(), updated_at TIMESTAMPTZ DEFAULT NOW())`,
+    sql`CREATE TABLE IF NOT EXISTS product_types (id TEXT PRIMARY KEY, code TEXT UNIQUE NOT NULL, name TEXT NOT NULL, is_active BOOLEAN DEFAULT true, data JSONB NOT NULL, created_at TIMESTAMPTZ DEFAULT NOW(), updated_at TIMESTAMPTZ DEFAULT NOW())`,
+    sql`CREATE TABLE IF NOT EXISTS product_subtypes (id TEXT PRIMARY KEY, code TEXT UNIQUE NOT NULL, name TEXT NOT NULL, product_type_id TEXT, is_active BOOLEAN DEFAULT true, data JSONB NOT NULL, created_at TIMESTAMPTZ DEFAULT NOW(), updated_at TIMESTAMPTZ DEFAULT NOW())`,
+    sql`CREATE TABLE IF NOT EXISTS product_masters (id TEXT PRIMARY KEY, code TEXT UNIQUE NOT NULL, name TEXT NOT NULL, product_type_id TEXT, subtype_id TEXT, is_active BOOLEAN DEFAULT true, data JSONB NOT NULL, created_at TIMESTAMPTZ DEFAULT NOW(), updated_at TIMESTAMPTZ DEFAULT NOW())`,
+    sql`CREATE TABLE IF NOT EXISTS departments (id TEXT PRIMARY KEY, code TEXT UNIQUE NOT NULL, name TEXT NOT NULL, is_active BOOLEAN DEFAULT true, data JSONB NOT NULL, created_at TIMESTAMPTZ DEFAULT NOW(), updated_at TIMESTAMPTZ DEFAULT NOW())`,
+    sql`CREATE TABLE IF NOT EXISTS designations (id TEXT PRIMARY KEY, code TEXT UNIQUE NOT NULL, name TEXT NOT NULL, level TEXT, is_active BOOLEAN DEFAULT true, data JSONB NOT NULL, created_at TIMESTAMPTZ DEFAULT NOW(), updated_at TIMESTAMPTZ DEFAULT NOW())`,
+    sql`CREATE TABLE IF NOT EXISTS employees (id TEXT PRIMARY KEY, code TEXT UNIQUE NOT NULL, name TEXT NOT NULL, department_id TEXT, designation_id TEXT, status TEXT DEFAULT 'Active', is_active BOOLEAN DEFAULT true, data JSONB NOT NULL, created_at TIMESTAMPTZ DEFAULT NOW(), updated_at TIMESTAMPTZ DEFAULT NOW())`,
   ]);
 
   // Check all seed counts in parallel
-  const [[uCount], [vCount], [cCount], [catCount], [pCount], [whCount], [buCount], [orgCount], [ctryCount], [stCount], [distCount], [vlgCount]] = await Promise.all([
+  const [[uCount], [vCount], [cCount], [catCount], [pCount], [whCount], [buCount], [orgCount], [ctryCount], [stCount], [distCount], [vlgCount], [ptCount], [pstCount], [pmCount], [deptCount], [desgCount], [empCount]] = await Promise.all([
     sql`SELECT COUNT(*) AS c FROM users`,
     sql`SELECT COUNT(*) AS c FROM vendors`,
     sql`SELECT COUNT(*) AS c FROM customers`,
@@ -50,6 +56,12 @@ export async function ensureSchema(sql) {
     sql`SELECT COUNT(*) AS c FROM states`,
     sql`SELECT COUNT(*) AS c FROM districts`,
     sql`SELECT COUNT(*) AS c FROM village_talukas`,
+    sql`SELECT COUNT(*) AS c FROM product_types`,
+    sql`SELECT COUNT(*) AS c FROM product_subtypes`,
+    sql`SELECT COUNT(*) AS c FROM product_masters`,
+    sql`SELECT COUNT(*) AS c FROM departments`,
+    sql`SELECT COUNT(*) AS c FROM designations`,
+    sql`SELECT COUNT(*) AS c FROM employees`,
   ]);
 
   // Seed empty tables in parallel; each table's rows are also inserted in parallel
@@ -112,6 +124,36 @@ export async function ensureSchema(sql) {
     Number(vlgCount.c) === 0 && Promise.all(SEED_VILLAGE_TALUKAS.map(v =>
       sql`INSERT INTO village_talukas (id,code,name,district_id,district_name,is_active,data,created_at,updated_at)
         VALUES (${v.id},${v.villageCode},${v.villageName},${v.districtId||null},${v.districtName||null},${!v.isDeactivated},${JSON.stringify(v)},${v.createdAt},${v.updatedAt})
+        ON CONFLICT DO NOTHING`
+    )),
+    Number(ptCount.c) === 0 && Promise.all(SEED_PRODUCT_TYPES.map(v =>
+      sql`INSERT INTO product_types (id,code,name,is_active,data,created_at,updated_at)
+        VALUES (${v.id},${v.typeId},${v.name},${!v.isDeactivated},${JSON.stringify(v)},${v.createdAt},${v.updatedAt})
+        ON CONFLICT DO NOTHING`
+    )),
+    Number(pstCount.c) === 0 && Promise.all(SEED_PRODUCT_SUBTYPES.map(v =>
+      sql`INSERT INTO product_subtypes (id,code,name,product_type_id,is_active,data,created_at,updated_at)
+        VALUES (${v.id},${v.subtypeId},${v.subtypeName},${v.productTypeId||null},${!v.isDeactivated},${JSON.stringify(v)},${v.createdAt},${v.updatedAt})
+        ON CONFLICT DO NOTHING`
+    )),
+    Number(pmCount.c) === 0 && Promise.all(SEED_PRODUCT_MASTERS.map(v =>
+      sql`INSERT INTO product_masters (id,code,name,product_type_id,subtype_id,is_active,data,created_at,updated_at)
+        VALUES (${v.id},${v.productCode},${v.productName},${v.productTypeId||null},${v.subtypeId||null},${!v.isDeactivated},${JSON.stringify(v)},${v.createdAt},${v.updatedAt})
+        ON CONFLICT DO NOTHING`
+    )),
+    Number(deptCount.c) === 0 && Promise.all(SEED_DEPARTMENTS.map(v =>
+      sql`INSERT INTO departments (id,code,name,is_active,data,created_at,updated_at)
+        VALUES (${v.id},${v.departmentCode},${v.departmentName},${!v.isDeactivated},${JSON.stringify(v)},${v.createdAt},${v.updatedAt})
+        ON CONFLICT DO NOTHING`
+    )),
+    Number(desgCount.c) === 0 && Promise.all(SEED_DESIGNATIONS.map(v =>
+      sql`INSERT INTO designations (id,code,name,level,is_active,data,created_at,updated_at)
+        VALUES (${v.id},${v.designationCode},${v.designationName},${v.level||null},${!v.isDeactivated},${JSON.stringify(v)},${v.createdAt},${v.updatedAt})
+        ON CONFLICT DO NOTHING`
+    )),
+    Number(empCount.c) === 0 && Promise.all(SEED_EMPLOYEES.map(v =>
+      sql`INSERT INTO employees (id,code,name,department_id,designation_id,status,is_active,data,created_at,updated_at)
+        VALUES (${v.id},${v.employeeId},${(v.firstName||'')+' '+(v.lastName||'')},${v.departmentId||null},${v.designationId||null},${v.status||'Active'},${!v.isDeactivated},${JSON.stringify(v)},${v.createdAt},${v.updatedAt})
         ON CONFLICT DO NOTHING`
     )),
   ].filter(Boolean));

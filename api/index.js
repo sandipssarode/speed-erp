@@ -372,6 +372,204 @@ export default async function handler(req, res) {
         break;
       }
 
+      // ── PRODUCT TYPES ─────────────────────────────────────────
+      case 'product-types': {
+        if (id) {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM product_types WHERE id=${id}`;
+            if (!rows.length) return res.status(404).json({ error: 'Not found' });
+            return res.json(rows[0].data);
+          }
+          if (req.method === 'PUT') {
+            const v = req.body;
+            await sql`UPDATE product_types SET code=${v.typeId}, name=${v.name}, is_active=${!v.isDeactivated}, data=${JSON.stringify(v)}, updated_at=${v.updatedAt} WHERE id=${id}`;
+            return res.json(v);
+          }
+          if (req.method === 'DELETE') {
+            await sql`DELETE FROM product_types WHERE id=${id}`;
+            return res.json({ success: true });
+          }
+        } else {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM product_types ORDER BY created_at ASC`;
+            return res.json(rows.map(r => r.data));
+          }
+          if (req.method === 'POST') {
+            const v = req.body;
+            const existing = await sql`SELECT id FROM product_types WHERE code=${v.typeId}`;
+            if (existing.length) return res.status(409).json({ error: 'Type ID already exists.' });
+            await sql`INSERT INTO product_types (id, code, name, is_active, data, created_at, updated_at) VALUES (${v.id}, ${v.typeId}, ${v.name}, ${!v.isDeactivated}, ${JSON.stringify(v)}, ${v.createdAt}, ${v.updatedAt})`;
+            return res.status(201).json(v);
+          }
+        }
+        break;
+      }
+
+      // ── PRODUCT SUB-TYPES ─────────────────────────────────────
+      case 'product-subtypes': {
+        if (id) {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM product_subtypes WHERE id=${id}`;
+            if (!rows.length) return res.status(404).json({ error: 'Not found' });
+            return res.json(rows[0].data);
+          }
+          if (req.method === 'PUT') {
+            const v = req.body;
+            await sql`UPDATE product_subtypes SET code=${v.subtypeId}, name=${v.subtypeName}, product_type_id=${v.productTypeId||null}, is_active=${!v.isDeactivated}, data=${JSON.stringify(v)}, updated_at=${v.updatedAt} WHERE id=${id}`;
+            return res.json(v);
+          }
+          if (req.method === 'DELETE') {
+            await sql`DELETE FROM product_subtypes WHERE id=${id}`;
+            return res.json({ success: true });
+          }
+        } else {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM product_subtypes ORDER BY created_at ASC`;
+            return res.json(rows.map(r => r.data));
+          }
+          if (req.method === 'POST') {
+            const v = req.body;
+            const existing = await sql`SELECT id FROM product_subtypes WHERE code=${v.subtypeId}`;
+            if (existing.length) return res.status(409).json({ error: 'Sub-type ID already exists.' });
+            await sql`INSERT INTO product_subtypes (id, code, name, product_type_id, is_active, data, created_at, updated_at) VALUES (${v.id}, ${v.subtypeId}, ${v.subtypeName}, ${v.productTypeId||null}, ${!v.isDeactivated}, ${JSON.stringify(v)}, ${v.createdAt}, ${v.updatedAt})`;
+            return res.status(201).json(v);
+          }
+        }
+        break;
+      }
+
+      // ── PRODUCT MASTERS (new) ─────────────────────────────────
+      case 'product-masters': {
+        if (id) {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM product_masters WHERE id=${id}`;
+            if (!rows.length) return res.status(404).json({ error: 'Not found' });
+            return res.json(rows[0].data);
+          }
+          if (req.method === 'PUT') {
+            const v = req.body;
+            await sql`UPDATE product_masters SET code=${v.productCode}, name=${v.productName}, product_type_id=${v.productTypeId||null}, subtype_id=${v.subtypeId||null}, is_active=${!v.isDeactivated}, data=${JSON.stringify(v)}, updated_at=${v.updatedAt} WHERE id=${id}`;
+            return res.json(v);
+          }
+          if (req.method === 'DELETE') {
+            await sql`DELETE FROM product_masters WHERE id=${id}`;
+            return res.json({ success: true });
+          }
+        } else {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM product_masters ORDER BY created_at ASC`;
+            return res.json(rows.map(r => r.data));
+          }
+          if (req.method === 'POST') {
+            const v = req.body;
+            const existing = await sql`SELECT id FROM product_masters WHERE code=${v.productCode}`;
+            if (existing.length) return res.status(409).json({ error: 'Product Code already exists.' });
+            await sql`INSERT INTO product_masters (id, code, name, product_type_id, subtype_id, is_active, data, created_at, updated_at) VALUES (${v.id}, ${v.productCode}, ${v.productName}, ${v.productTypeId||null}, ${v.subtypeId||null}, ${!v.isDeactivated}, ${JSON.stringify(v)}, ${v.createdAt}, ${v.updatedAt})`;
+            return res.status(201).json(v);
+          }
+        }
+        break;
+      }
+
+      // ── DEPARTMENTS ───────────────────────────────────────────
+      case 'departments': {
+        if (id) {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM departments WHERE id=${id}`;
+            if (!rows.length) return res.status(404).json({ error: 'Not found' });
+            return res.json(rows[0].data);
+          }
+          if (req.method === 'PUT') {
+            const v = req.body;
+            await sql`UPDATE departments SET code=${v.departmentCode}, name=${v.departmentName}, is_active=${!v.isDeactivated}, data=${JSON.stringify(v)}, updated_at=${v.updatedAt} WHERE id=${id}`;
+            return res.json(v);
+          }
+          if (req.method === 'DELETE') {
+            await sql`DELETE FROM departments WHERE id=${id}`;
+            return res.json({ success: true });
+          }
+        } else {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM departments ORDER BY created_at ASC`;
+            return res.json(rows.map(r => r.data));
+          }
+          if (req.method === 'POST') {
+            const v = req.body;
+            const existing = await sql`SELECT id FROM departments WHERE code=${v.departmentCode}`;
+            if (existing.length) return res.status(409).json({ error: 'Department Code already exists.' });
+            await sql`INSERT INTO departments (id, code, name, is_active, data, created_at, updated_at) VALUES (${v.id}, ${v.departmentCode}, ${v.departmentName}, ${!v.isDeactivated}, ${JSON.stringify(v)}, ${v.createdAt}, ${v.updatedAt})`;
+            return res.status(201).json(v);
+          }
+        }
+        break;
+      }
+
+      // ── DESIGNATIONS ──────────────────────────────────────────
+      case 'designations': {
+        if (id) {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM designations WHERE id=${id}`;
+            if (!rows.length) return res.status(404).json({ error: 'Not found' });
+            return res.json(rows[0].data);
+          }
+          if (req.method === 'PUT') {
+            const v = req.body;
+            await sql`UPDATE designations SET code=${v.designationCode}, name=${v.designationName}, level=${v.level||null}, is_active=${!v.isDeactivated}, data=${JSON.stringify(v)}, updated_at=${v.updatedAt} WHERE id=${id}`;
+            return res.json(v);
+          }
+          if (req.method === 'DELETE') {
+            await sql`DELETE FROM designations WHERE id=${id}`;
+            return res.json({ success: true });
+          }
+        } else {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM designations ORDER BY created_at ASC`;
+            return res.json(rows.map(r => r.data));
+          }
+          if (req.method === 'POST') {
+            const v = req.body;
+            const existing = await sql`SELECT id FROM designations WHERE code=${v.designationCode}`;
+            if (existing.length) return res.status(409).json({ error: 'Designation Code already exists.' });
+            await sql`INSERT INTO designations (id, code, name, level, is_active, data, created_at, updated_at) VALUES (${v.id}, ${v.designationCode}, ${v.designationName}, ${v.level||null}, ${!v.isDeactivated}, ${JSON.stringify(v)}, ${v.createdAt}, ${v.updatedAt})`;
+            return res.status(201).json(v);
+          }
+        }
+        break;
+      }
+
+      // ── EMPLOYEES ─────────────────────────────────────────────
+      case 'employees': {
+        if (id) {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM employees WHERE id=${id}`;
+            if (!rows.length) return res.status(404).json({ error: 'Not found' });
+            return res.json(rows[0].data);
+          }
+          if (req.method === 'PUT') {
+            const v = req.body;
+            await sql`UPDATE employees SET code=${v.employeeId}, name=${(v.firstName||'')+' '+(v.lastName||'')}, department_id=${v.departmentId||null}, designation_id=${v.designationId||null}, status=${v.status||'Active'}, is_active=${!v.isDeactivated}, data=${JSON.stringify(v)}, updated_at=${v.updatedAt} WHERE id=${id}`;
+            return res.json(v);
+          }
+          if (req.method === 'DELETE') {
+            await sql`DELETE FROM employees WHERE id=${id}`;
+            return res.json({ success: true });
+          }
+        } else {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM employees ORDER BY created_at ASC`;
+            return res.json(rows.map(r => r.data));
+          }
+          if (req.method === 'POST') {
+            const v = req.body;
+            const existing = await sql`SELECT id FROM employees WHERE code=${v.employeeId}`;
+            if (existing.length) return res.status(409).json({ error: 'Employee ID already exists.' });
+            await sql`INSERT INTO employees (id, code, name, department_id, designation_id, status, is_active, data, created_at, updated_at) VALUES (${v.id}, ${v.employeeId}, ${(v.firstName||'')+' '+(v.lastName||'')}, ${v.departmentId||null}, ${v.designationId||null}, ${v.status||'Active'}, ${!v.isDeactivated}, ${JSON.stringify(v)}, ${v.createdAt}, ${v.updatedAt})`;
+            return res.status(201).json(v);
+          }
+        }
+        break;
+      }
+
       default:
         return res.status(404).json({ error: `Unknown resource: ${resource}` });
     }
