@@ -25,8 +25,13 @@ function TInput({ value, onChange, disabled, placeholder, maxLength, error }) {
   return <input type="text" value={value ?? ""} onChange={onChange} disabled={disabled} placeholder={placeholder} maxLength={maxLength} className={inputBase(disabled, error)} />;
 }
 
+function nextDeptCode(records) {
+  const nums = records.map(r => { const m = (r.departmentCode || "").match(/(\d+)$/); return m ? parseInt(m[1], 10) : 0; });
+  return `DEPT-${String(Math.max(0, ...nums) + 1).padStart(3, "0")}`;
+}
+
 const emptyForm = () => ({
-  departmentCode: `DEPT-${Date.now().toString().slice(-5)}`,
+  departmentCode: "",
   departmentName: "",
   departmentHead: "",
   isDeactivated: false,
@@ -34,11 +39,8 @@ const emptyForm = () => ({
   changelog: [],
 });
 
-function validate(form, allRecords, editingId) {
+function validate(form) {
   const e = {};
-  if (!form.departmentCode?.trim()) e.departmentCode = "Department Code is required.";
-  else if (allRecords.some(r => r.departmentCode?.trim().toLowerCase() === form.departmentCode.trim().toLowerCase() && r.id !== editingId))
-    e.departmentCode = "Department Code already exists.";
   if (!form.departmentName?.trim()) e.departmentName = "Department Name is required.";
   return e;
 }
@@ -61,7 +63,9 @@ export default function DepartmentForm() {
   useEffect(() => {
     api.get("/api/departments").then(list => {
       setAllRecords(list);
-      if (!isNew && id) {
+      if (isNew) {
+        setForm(prev => ({ ...prev, departmentCode: nextDeptCode(list) }));
+      } else if (id) {
         const found = list.find(r => r.id === id);
         if (found) setForm(found);
         else navigate("/masters/department");
@@ -73,7 +77,7 @@ export default function DepartmentForm() {
   const setField = (key, value) => { setForm(prev => ({ ...prev, [key]: value })); if (errors[key]) setErrors(prev => { const e = { ...prev }; delete e[key]; return e; }); };
 
   const handleSave = async () => {
-    const errs = validate(form, allRecords, isNew ? null : id);
+    const errs = validate(form);
     if (Object.keys(errs).length > 0) { setErrors(errs); showToast("Please correct the highlighted fields.", "error"); return; }
     const now = new Date().toISOString();
     const userName = user.name || user.fullName || "System";
@@ -161,8 +165,8 @@ export default function DepartmentForm() {
             <div className="bg-gray-50 border border-gray-200 rounded p-4 space-y-4">
               <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Department Details</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                <Field label="Department Code" required error={errors.departmentCode}>
-                  <TInput value={form.departmentCode} onChange={e => setField("departmentCode", e.target.value.toUpperCase())} disabled={isReadOnly || !isNew} placeholder="e.g. DEPT-001" maxLength={20} error={errors.departmentCode} />
+                <Field label="Department Code">
+                  <TInput value={form.departmentCode} disabled={true} placeholder="Auto-generated" />
                 </Field>
                 <Field label="Department Name" required error={errors.departmentName} className="sm:col-span-1 lg:col-span-2">
                   <TInput value={form.departmentName} onChange={e => setField("departmentName", e.target.value)} disabled={isReadOnly} placeholder="e.g. Purchase" error={errors.departmentName} />

@@ -25,19 +25,21 @@ function TInput({ value, onChange, disabled, placeholder, maxLength, error }) {
   return <input type="text" value={value ?? ""} onChange={onChange} disabled={disabled} placeholder={placeholder} maxLength={maxLength} className={inputBase(disabled, error)} />;
 }
 
+function nextTypeId(records) {
+  const nums = records.map(r => { const m = (r.typeId || "").match(/(\d+)$/); return m ? parseInt(m[1], 10) : 0; });
+  return `PT-${String(Math.max(0, ...nums) + 1).padStart(3, "0")}`;
+}
+
 const emptyForm = () => ({
-  typeId: `PT-${Date.now().toString().slice(-5)}`,
+  typeId: "",
   name: "",
   isDeactivated: false,
   createdAt: "", updatedAt: "", createdBy: "", updatedBy: "",
   changelog: [],
 });
 
-function validate(form, allRecords, editingId) {
+function validate(form) {
   const e = {};
-  if (!form.typeId?.trim()) e.typeId = "Type ID is required.";
-  else if (allRecords.some(r => r.typeId?.trim().toLowerCase() === form.typeId.trim().toLowerCase() && r.id !== editingId))
-    e.typeId = "Type ID already exists.";
   if (!form.name?.trim()) e.name = "Name is required.";
   return e;
 }
@@ -60,7 +62,9 @@ export default function ProductTypeForm() {
   useEffect(() => {
     api.get("/api/product-types").then(list => {
       setAllRecords(list);
-      if (!isNew && id) {
+      if (isNew) {
+        setForm(prev => ({ ...prev, typeId: nextTypeId(list) }));
+      } else if (id) {
         const found = list.find(r => r.id === id);
         if (found) setForm(found);
         else navigate("/masters/product-type");
@@ -72,7 +76,7 @@ export default function ProductTypeForm() {
   const setField = (key, value) => { setForm(prev => ({ ...prev, [key]: value })); if (errors[key]) setErrors(prev => { const e = { ...prev }; delete e[key]; return e; }); };
 
   const handleSave = async () => {
-    const errs = validate(form, allRecords, isNew ? null : id);
+    const errs = validate(form);
     if (Object.keys(errs).length > 0) { setErrors(errs); showToast("Please correct the highlighted fields.", "error"); return; }
     const now = new Date().toISOString();
     const userName = user.name || user.fullName || "System";
@@ -162,8 +166,8 @@ export default function ProductTypeForm() {
             <div className="bg-gray-50 border border-gray-200 rounded p-4 space-y-4">
               <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Product Type Details</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Field label="Type ID" required error={errors.typeId}>
-                  <TInput value={form.typeId} onChange={e => setField("typeId", e.target.value.toUpperCase())} disabled={isReadOnly || !isNew} placeholder="e.g. PT-001" maxLength={20} error={errors.typeId} />
+                <Field label="Type ID">
+                  <TInput value={form.typeId} disabled={true} placeholder="Auto-generated" />
                 </Field>
                 <Field label="Name" required error={errors.name}>
                   <TInput value={form.name} onChange={e => setField("name", e.target.value)} disabled={isReadOnly} placeholder="e.g. Raw Material" error={errors.name} />

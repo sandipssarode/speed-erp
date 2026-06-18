@@ -45,8 +45,13 @@ function TSelect({ value, onChange, disabled, options, placeholder, error }) {
   );
 }
 
+function nextEmpId(records) {
+  const nums = records.map(r => { const m = (r.employeeId || "").match(/(\d+)$/); return m ? parseInt(m[1], 10) : 0; });
+  return `EMP-${String(Math.max(0, ...nums) + 1).padStart(3, "0")}`;
+}
+
 const emptyForm = () => ({
-  employeeId: `EMP-${Date.now().toString().slice(-5)}`,
+  employeeId: "",
   firstName: "",
   lastName: "",
   mobile: "",
@@ -68,9 +73,6 @@ const emptyForm = () => ({
 
 function validate(form, allRecords, editingId) {
   const e = {};
-  if (!form.employeeId?.trim()) e.employeeId = "Employee ID is required.";
-  else if (allRecords.some(r => r.employeeId?.trim().toLowerCase() === form.employeeId.trim().toLowerCase() && r.id !== editingId))
-    e.employeeId = "Employee ID already exists.";
   if (!form.firstName?.trim()) e.firstName = "First Name is required.";
   if (!form.lastName?.trim()) e.lastName = "Last Name is required.";
   if (!form.mobile?.trim()) e.mobile = "Mobile No. is required.";
@@ -113,7 +115,9 @@ export default function EmployeeForm() {
       setAllRecords(employees);
       setDepartments(depts.filter(d => !d.isDeactivated));
       setDesignations(desigs.filter(d => !d.isDeactivated));
-      if (!isNew && id) {
+      if (isNew) {
+        setForm(prev => ({ ...prev, employeeId: nextEmpId(employees) }));
+      } else if (id) {
         const found = employees.find(r => r.id === id);
         if (found) setForm(found);
         else navigate("/masters/employee");
@@ -242,8 +246,8 @@ export default function EmployeeForm() {
             <div className="bg-gray-50 border border-gray-200 rounded p-4 space-y-4">
               <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Identity</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                <Field label="Employee ID" required error={errors.employeeId}>
-                  <TInput value={form.employeeId} onChange={e => setField("employeeId", e.target.value.toUpperCase())} disabled={isReadOnly || !isNew} placeholder="e.g. EMP-001" maxLength={20} error={errors.employeeId} />
+                <Field label="Employee ID">
+                  <TInput value={form.employeeId} disabled={true} placeholder="Auto-generated" />
                 </Field>
                 <Field label="First Name" required error={errors.firstName}>
                   <TInput value={form.firstName} onChange={e => setField("firstName", e.target.value)} disabled={isReadOnly} placeholder="Rajesh" error={errors.firstName} />

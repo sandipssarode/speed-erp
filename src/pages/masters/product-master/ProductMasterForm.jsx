@@ -232,7 +232,7 @@ export default function ProductMasterForm() {
                 <Field label="Product Name" required error={errors.productName} className="sm:col-span-1 lg:col-span-2">
                   <TInput value={form.productName} onChange={e => setField("productName", e.target.value)} disabled={isReadOnly} placeholder="e.g. MS Plate 10mm" maxLength={128} error={errors.productName} />
                 </Field>
-                <Field label="Unit" required error={errors.units}>
+                <Field label="Units" required error={errors.units}>
                   <TInput value={form.units} onChange={e => setField("units", e.target.value.toUpperCase())} disabled={isReadOnly} placeholder="e.g. KGS, MTR, NOS" maxLength={20} error={errors.units} />
                   <p className="text-[11px] text-gray-400 mt-0.5">UOM Master dropdown coming soon.</p>
                 </Field>

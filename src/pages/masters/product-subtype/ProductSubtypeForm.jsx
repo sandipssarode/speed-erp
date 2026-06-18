@@ -34,8 +34,13 @@ function TSelect({ value, onChange, disabled, options, placeholder, error }) {
   );
 }
 
+function nextSubtypeId(records) {
+  const nums = records.map(r => { const m = (r.subtypeId || "").match(/(\d+)$/); return m ? parseInt(m[1], 10) : 0; });
+  return `PST-${String(Math.max(0, ...nums) + 1).padStart(3, "0")}`;
+}
+
 const emptyForm = () => ({
-  subtypeId: `PST-${Date.now().toString().slice(-5)}`,
+  subtypeId: "",
   subtypeName: "",
   productTypeId: "",
   productTypeName: "",
@@ -44,11 +49,8 @@ const emptyForm = () => ({
   changelog: [],
 });
 
-function validate(form, allRecords, editingId) {
+function validate(form) {
   const e = {};
-  if (!form.subtypeId?.trim()) e.subtypeId = "Sub-type ID is required.";
-  else if (allRecords.some(r => r.subtypeId?.trim().toLowerCase() === form.subtypeId.trim().toLowerCase() && r.id !== editingId))
-    e.subtypeId = "Sub-type ID already exists.";
   if (!form.productTypeId) e.productTypeId = "Product Type is required.";
   if (!form.subtypeName?.trim()) e.subtypeName = "Sub-type Name is required.";
   return e;
@@ -77,7 +79,9 @@ export default function ProductSubtypeForm() {
     ]).then(([subtypes, types]) => {
       setAllRecords(subtypes);
       setProductTypes(types.filter(t => !t.isDeactivated));
-      if (!isNew && id) {
+      if (isNew) {
+        setForm(prev => ({ ...prev, subtypeId: nextSubtypeId(subtypes) }));
+      } else if (id) {
         const found = subtypes.find(r => r.id === id);
         if (found) setForm(found);
         else navigate("/masters/product-subtype");
@@ -95,7 +99,7 @@ export default function ProductSubtypeForm() {
   };
 
   const handleSave = async () => {
-    const errs = validate(form, allRecords, isNew ? null : id);
+    const errs = validate(form);
     if (Object.keys(errs).length > 0) { setErrors(errs); showToast("Please correct the highlighted fields.", "error"); return; }
     const now = new Date().toISOString();
     const userName = user.name || user.fullName || "System";
@@ -185,8 +189,8 @@ export default function ProductSubtypeForm() {
             <div className="bg-gray-50 border border-gray-200 rounded p-4 space-y-4">
               <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Sub-type Details</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                <Field label="Sub-type ID" required error={errors.subtypeId}>
-                  <TInput value={form.subtypeId} onChange={e => setField("subtypeId", e.target.value.toUpperCase())} disabled={isReadOnly || !isNew} placeholder="e.g. PST-001" maxLength={20} error={errors.subtypeId} />
+                <Field label="Sub-type ID">
+                  <TInput value={form.subtypeId} disabled={true} placeholder="Auto-generated" />
                 </Field>
                 <Field label="Product Type" required error={errors.productTypeId} className="sm:col-span-1 lg:col-span-2">
                   <TSelect

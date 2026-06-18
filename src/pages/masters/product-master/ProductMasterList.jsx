@@ -91,7 +91,7 @@ export default function ProductMasterList() {
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">Product Name</th>
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">Type</th>
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">Sub-type</th>
-                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">Unit</th>
+                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">Units</th>
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">Status</th>
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">Actions</th>
                 </tr>

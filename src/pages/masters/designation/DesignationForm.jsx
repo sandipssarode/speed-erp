@@ -42,8 +42,13 @@ function TSelect({ value, onChange, disabled, options, placeholder, error }) {
   );
 }
 
+function nextDesigCode(records) {
+  const nums = records.map(r => { const m = (r.designationCode || "").match(/(\d+)$/); return m ? parseInt(m[1], 10) : 0; });
+  return `DESG-${String(Math.max(0, ...nums) + 1).padStart(3, "0")}`;
+}
+
 const emptyForm = () => ({
-  designationCode: `DESG-${Date.now().toString().slice(-5)}`,
+  designationCode: "",
   designationName: "",
   level: "",
   isDeactivated: false,
@@ -51,11 +56,8 @@ const emptyForm = () => ({
   changelog: [],
 });
 
-function validate(form, allRecords, editingId) {
+function validate(form) {
   const e = {};
-  if (!form.designationCode?.trim()) e.designationCode = "Designation Code is required.";
-  else if (allRecords.some(r => r.designationCode?.trim().toLowerCase() === form.designationCode.trim().toLowerCase() && r.id !== editingId))
-    e.designationCode = "Designation Code already exists.";
   if (!form.designationName?.trim()) e.designationName = "Designation Name is required.";
   if (!form.level) e.level = "Level is required.";
   return e;
@@ -79,7 +81,9 @@ export default function DesignationForm() {
   useEffect(() => {
     api.get("/api/designations").then(list => {
       setAllRecords(list);
-      if (!isNew && id) {
+      if (isNew) {
+        setForm(prev => ({ ...prev, designationCode: nextDesigCode(list) }));
+      } else if (id) {
         const found = list.find(r => r.id === id);
         if (found) setForm(found);
         else navigate("/masters/designation");
@@ -91,7 +95,7 @@ export default function DesignationForm() {
   const setField = (key, value) => { setForm(prev => ({ ...prev, [key]: value })); if (errors[key]) setErrors(prev => { const e = { ...prev }; delete e[key]; return e; }); };
 
   const handleSave = async () => {
-    const errs = validate(form, allRecords, isNew ? null : id);
+    const errs = validate(form);
     if (Object.keys(errs).length > 0) { setErrors(errs); showToast("Please correct the highlighted fields.", "error"); return; }
     const now = new Date().toISOString();
     const userName = user.name || user.fullName || "System";
@@ -181,8 +185,8 @@ export default function DesignationForm() {
             <div className="bg-gray-50 border border-gray-200 rounded p-4 space-y-4">
               <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Designation Details</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                <Field label="Designation Code" required error={errors.designationCode}>
-                  <TInput value={form.designationCode} onChange={e => setField("designationCode", e.target.value.toUpperCase())} disabled={isReadOnly || !isNew} placeholder="e.g. DESG-001" maxLength={20} error={errors.designationCode} />
+                <Field label="Designation Code">
+                  <TInput value={form.designationCode} disabled={true} placeholder="Auto-generated" />
                 </Field>
                 <Field label="Designation Name" required error={errors.designationName} className="sm:col-span-1 lg:col-span-2">
                   <TInput value={form.designationName} onChange={e => setField("designationName", e.target.value)} disabled={isReadOnly} placeholder="e.g. Purchase Manager" error={errors.designationName} />
