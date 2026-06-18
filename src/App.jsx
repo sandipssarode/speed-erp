@@ -51,7 +51,6 @@ import DesignationList from "./pages/masters/designation/DesignationList";
 import DesignationForm from "./pages/masters/designation/DesignationForm";
 import EmployeeList from "./pages/masters/employee/EmployeeList";
 import EmployeeForm from "./pages/masters/employee/EmployeeForm";
-import UIShowcase from "./pages/UIShowcase";
 
 function App() {
   return (
@@ -187,8 +186,7 @@ function App() {
         {/* Profile */}
         <Route path="/profile" element={<WorkInProgress />} />
 
-        {/* UI Design Showcase — SCRUM-15 */}
-        <Route path="/ui-showcase" element={<UIShowcase />} />
+
       </Routes>
     </BrowserRouter>
   );
