@@ -29,9 +29,15 @@ const menu = [
       { label: "State Master",          path: "/system/states" },
       { label: "District Master",       path: "/masters/district" },
       { label: "Village / Taluka",      path: "/masters/village-taluka" },
+      { label: "Product Type Master",    path: "/masters/product-type" },
+      { label: "Product Sub-type Master", path: "/masters/product-subtype" },
+      { label: "Product Master",         path: "/masters/product-master" },
+      { label: "Department Master",      path: "/masters/department" },
+      { label: "Designation Master",     path: "/masters/designation" },
+      { label: "Employee Master",        path: "/masters/employee" },
       { label: "Vendor Master",         path: "/vendors" },
       { label: "Customer Master",       path: "/sales/customers" },
-      { label: "Product Master",        path: "/products" },
+      { label: "Product Master",        path: "/products", deprecated: true },
       { label: "Asset Structure",       path: "/masters/asset-structure" },
       { label: "Asset Type",            path: "/masters/asset-type" },
       { label: "Asset Master",          path: "/masters/asset-master" },
@@ -51,7 +57,7 @@ const menu = [
       { label: "Document Series",               path: "/system/document-series" },
       { label: "Financial Year",                path: "/system/financial-year" },
       { label: "Email Configuration",           path: "/system/email-config" },
-      { label: "Department",                    path: "/system/department" },
+      { label: "Department",                    path: "/masters/department" },
       { label: "User Access Rights Management", path: "/system/access-rights" },
     ],
   },
@@ -316,12 +322,19 @@ export default function Layout({ children }) {
                           to={link.path}
                           onClick={closeSidebar}
                           className={`block pl-8 pr-4 py-1.5 text-xs transition-colors
-                            ${location.pathname === link.path
-                              ? "bg-blue-50 text-blue-700 font-semibold border-r-2 border-blue-500"
-                              : "text-gray-600 hover:bg-gray-100 hover:text-gray-800"
+                            ${link.deprecated
+                              ? location.pathname === link.path
+                                ? "bg-red-50 text-red-600 font-semibold border-r-2 border-red-400"
+                                : "text-red-400 hover:bg-red-50 hover:text-red-500"
+                              : location.pathname === link.path
+                                ? "bg-blue-50 text-blue-700 font-semibold border-r-2 border-blue-500"
+                                : "text-gray-600 hover:bg-gray-100 hover:text-gray-800"
                             }`}
                         >
                           {link.label}
+                          {link.deprecated && (
+                            <span className="ml-1.5 text-[9px] bg-red-100 text-red-500 border border-red-200 px-1 py-0.5 rounded font-semibold uppercase tracking-wide">Old</span>
+                          )}
                         </Link>
                       ))}
                     </div>

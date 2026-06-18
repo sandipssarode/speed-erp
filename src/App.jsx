@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/auth/Login";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import Signup from "./pages/auth/Signup";
@@ -39,6 +39,19 @@ import CountryList from "./pages/masters/country/CountryList";
 import CountryForm from "./pages/masters/country/CountryForm";
 import StateList from "./pages/masters/state/StateList";
 import StateForm from "./pages/masters/state/StateForm";
+import ProductTypeList from "./pages/masters/product-type/ProductTypeList";
+import ProductTypeForm from "./pages/masters/product-type/ProductTypeForm";
+import ProductSubtypeList from "./pages/masters/product-subtype/ProductSubtypeList";
+import ProductSubtypeForm from "./pages/masters/product-subtype/ProductSubtypeForm";
+import ProductMasterList from "./pages/masters/product-master/ProductMasterList";
+import ProductMasterForm from "./pages/masters/product-master/ProductMasterForm";
+import DepartmentList from "./pages/masters/department/DepartmentList";
+import DepartmentForm from "./pages/masters/department/DepartmentForm";
+import DesignationList from "./pages/masters/designation/DesignationList";
+import DesignationForm from "./pages/masters/designation/DesignationForm";
+import EmployeeList from "./pages/masters/employee/EmployeeList";
+import EmployeeForm from "./pages/masters/employee/EmployeeForm";
+import UIShowcase from "./pages/UIShowcase";
 
 function App() {
   return (
@@ -75,7 +88,7 @@ function App() {
         <Route path="/system/document-series" element={<WorkInProgress />} />
         <Route path="/system/financial-year" element={<WorkInProgress />} />
         <Route path="/system/email-config" element={<WorkInProgress />} />
-        <Route path="/system/department" element={<WorkInProgress />} />
+        <Route path="/system/department" element={<Navigate to="/masters/department" replace />} />
         <Route path="/system/access-rights" element={<WorkInProgress />} />
 
         {/* Vendor Master */}
@@ -141,6 +154,24 @@ function App() {
         <Route path="/masters/village-taluka"       element={<VillageTalukaList />} />
         <Route path="/masters/village-taluka/new"   element={<VillageTalukaForm />} />
         <Route path="/masters/village-taluka/:id"   element={<VillageTalukaForm />} />
+        <Route path="/masters/product-type"         element={<ProductTypeList />} />
+        <Route path="/masters/product-type/new"     element={<ProductTypeForm />} />
+        <Route path="/masters/product-type/:id"     element={<ProductTypeForm />} />
+        <Route path="/masters/product-subtype"      element={<ProductSubtypeList />} />
+        <Route path="/masters/product-subtype/new"  element={<ProductSubtypeForm />} />
+        <Route path="/masters/product-subtype/:id"  element={<ProductSubtypeForm />} />
+        <Route path="/masters/product-master"       element={<ProductMasterList />} />
+        <Route path="/masters/product-master/new"   element={<ProductMasterForm />} />
+        <Route path="/masters/product-master/:id"   element={<ProductMasterForm />} />
+        <Route path="/masters/department"           element={<DepartmentList />} />
+        <Route path="/masters/department/new"       element={<DepartmentForm />} />
+        <Route path="/masters/department/:id"       element={<DepartmentForm />} />
+        <Route path="/masters/designation"          element={<DesignationList />} />
+        <Route path="/masters/designation/new"      element={<DesignationForm />} />
+        <Route path="/masters/designation/:id"      element={<DesignationForm />} />
+        <Route path="/masters/employee"             element={<EmployeeList />} />
+        <Route path="/masters/employee/new"         element={<EmployeeForm />} />
+        <Route path="/masters/employee/:id"         element={<EmployeeForm />} />
 
         {/* Finance */}
         <Route path="/finance/ledger" element={<WorkInProgress />} />
@@ -155,6 +186,9 @@ function App() {
 
         {/* Profile */}
         <Route path="/profile" element={<WorkInProgress />} />
+
+        {/* UI Design Showcase — SCRUM-15 */}
+        <Route path="/ui-showcase" element={<UIShowcase />} />
       </Routes>
     </BrowserRouter>
   );
