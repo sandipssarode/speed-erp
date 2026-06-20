@@ -33,8 +33,6 @@ function nextDeptCode(records) {
 const emptyForm = () => ({
   departmentCode: "",
   departmentName: "",
-  departmentHead: "",
-  isDeactivated: false,
   createdAt: "", updatedAt: "", createdBy: "", updatedBy: "",
   changelog: [],
 });
@@ -159,7 +157,6 @@ export default function DepartmentForm() {
           <div className="bg-gradient-to-r from-blue-800 to-blue-600 px-5 py-2.5 rounded-t flex items-center gap-4 text-white">
             <span className="font-bold text-base tracking-wide">{form.departmentCode || "NEW DEPARTMENT"}</span>
             <span className="text-blue-200 text-sm">{form.departmentName || "—"}</span>
-            {form.isDeactivated && <span className="ml-auto bg-red-400/30 text-red-100 border border-red-300/30 px-2 py-0.5 rounded text-xs font-medium">Inactive</span>}
           </div>
           <div className="p-5">
             <div className="bg-gray-50 border border-gray-200 rounded p-4 space-y-4">
@@ -171,14 +168,6 @@ export default function DepartmentForm() {
                 <Field label="Department Name" required error={errors.departmentName} className="sm:col-span-1 lg:col-span-2">
                   <TInput value={form.departmentName} onChange={e => setField("departmentName", e.target.value)} disabled={isReadOnly} placeholder="e.g. Purchase" error={errors.departmentName} />
                 </Field>
-                <Field label="Department Head" className="sm:col-span-2 lg:col-span-3">
-                  <TInput value={form.departmentHead} onChange={e => setField("departmentHead", e.target.value)} disabled={isReadOnly} placeholder="Enter employee name or ID" />
-                  <p className="text-[11px] text-gray-400 mt-0.5">Lookup to Employee Master — enter name or EMP-ID. Dropdown available once employees are set up.</p>
-                </Field>
-              </div>
-              <div className="flex items-center gap-2 mt-2">
-                <input type="checkbox" id="isDeactivated" checked={!!form.isDeactivated} onChange={e => setField("isDeactivated", e.target.checked)} disabled={isReadOnly} className="rounded border-gray-300 text-blue-600 focus:ring-blue-400" />
-                <label htmlFor="isDeactivated" className="text-xs text-gray-600 select-none cursor-pointer">Deactivate (hides from new entries)</label>
               </div>
             </div>
           </div>

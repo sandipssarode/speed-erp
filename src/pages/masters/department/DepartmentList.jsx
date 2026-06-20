@@ -24,7 +24,7 @@ export default function DepartmentList() {
 
   const filtered = records.filter((r) => {
     const q = search.toLowerCase();
-    return !q || r.departmentCode?.toLowerCase().includes(q) || r.departmentName?.toLowerCase().includes(q) || r.departmentHead?.toLowerCase().includes(q);
+    return !q || r.departmentCode?.toLowerCase().includes(q) || r.departmentName?.toLowerCase().includes(q);
   });
 
   const pageCount = Math.ceil(filtered.length / PAGE_SIZE);
@@ -58,7 +58,7 @@ export default function DepartmentList() {
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
-              placeholder="Search Code, Name or Head..."
+              placeholder="Search Code or Name..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-8 pr-3 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-400"
@@ -76,15 +76,13 @@ export default function DepartmentList() {
                 <tr className="bg-blue-600">
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">Dept Code</th>
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">Department Name</th>
-                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">Dept Head</th>
-                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">Status</th>
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {paginated.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="text-center py-16 text-gray-400 text-sm">
+                    <td colSpan={3} className="text-center py-16 text-gray-400 text-sm">
                       {records.length === 0 ? 'No departments yet. Click "Add New" to get started.' : "No records match your search."}
                     </td>
                   </tr>
@@ -97,12 +95,6 @@ export default function DepartmentList() {
                     >
                       <td className="px-4 py-2.5 font-mono text-xs font-semibold text-blue-600">{r.departmentCode}</td>
                       <td className="px-4 py-2.5 font-medium text-gray-800">{r.departmentName}</td>
-                      <td className="px-4 py-2.5 text-gray-600">{r.departmentHead || "—"}</td>
-                      <td className="px-4 py-2.5">
-                        <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${r.isDeactivated ? "bg-red-50 text-red-600" : "bg-green-50 text-green-700"}`}>
-                          {r.isDeactivated ? "Inactive" : "Active"}
-                        </span>
-                      </td>
                       <td className="px-4 py-2.5">
                         <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
                           <button onClick={() => navigate(`/masters/department/${r.id}`)} className="p-1.5 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded" title="Edit">
