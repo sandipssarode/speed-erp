@@ -35,7 +35,7 @@ export default function DesignationList() {
 
   const filtered = records.filter((r) => {
     const q = search.toLowerCase();
-    const matchSearch = !q || r.designationCode?.toLowerCase().includes(q) || r.designationName?.toLowerCase().includes(q);
+    const matchSearch = !q || r.designationCode?.toLowerCase().includes(q) || r.designationName?.toLowerCase().includes(q) || r.departmentName?.toLowerCase().includes(q);
     const matchLevel = filterLevel === "all" || r.level === filterLevel;
     return matchSearch && matchLevel;
   });
@@ -71,7 +71,7 @@ export default function DesignationList() {
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
-              placeholder="Search Code or Name..."
+              placeholder="Search Code, Name or Department..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-8 pr-3 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-400"
@@ -97,6 +97,7 @@ export default function DesignationList() {
                 <tr className="bg-blue-600">
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">Designation Code</th>
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">Designation Name</th>
+                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">Department</th>
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">Level</th>
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">Actions</th>
                 </tr>
@@ -104,7 +105,7 @@ export default function DesignationList() {
               <tbody>
                 {paginated.length === 0 ? (
                   <tr>
-                    <td colSpan={4} className="text-center py-16 text-gray-400 text-sm">
+                    <td colSpan={5} className="text-center py-16 text-gray-400 text-sm">
                       {records.length === 0 ? 'No designations yet. Click "Add New" to get started.' : "No records match your search."}
                     </td>
                   </tr>
@@ -117,6 +118,7 @@ export default function DesignationList() {
                     >
                       <td className="px-4 py-2.5 font-mono text-xs font-semibold text-blue-600">{r.designationCode}</td>
                       <td className="px-4 py-2.5 font-medium text-gray-800">{r.designationName}</td>
+                      <td className="px-4 py-2.5 text-gray-600 text-sm">{r.departmentName || "—"}</td>
                       <td className="px-4 py-2.5 text-gray-600 text-xs">{LEVEL_LABELS[r.level] || r.level || "—"}</td>
                       <td className="px-4 py-2.5">
                         <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>

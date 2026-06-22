@@ -58,6 +58,7 @@ function nextDesigCode(records) {
 }
 
 const emptyForm = () => ({
+  departmentName: "",
   designationCode: "",
   designationName: "",
   level: "",
@@ -67,6 +68,7 @@ const emptyForm = () => ({
 
 function validate(form) {
   const e = {};
+  if (!form.departmentName?.trim()) e.departmentName = "Department Name is required.";
   if (!form.designationName?.trim()) e.designationName = "Designation Name is required.";
   if (!form.level) e.level = "Level is required.";
   return e;
@@ -83,11 +85,13 @@ export default function DesignationForm() {
   const [toast, setToast] = useState(null);
   const [showChangelog, setShowChangelog] = useState(false);
   const [allRecords, setAllRecords] = useState([]);
+  const [departments, setDepartments] = useState([]);
 
   const user = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
   const isReadOnly = mode === "view";
 
   useEffect(() => {
+    api.get("/api/departments").then(setDepartments).catch(console.error);
     api.get("/api/designations").then(list => {
       setAllRecords(list);
       if (isNew) {
@@ -188,12 +192,23 @@ export default function DesignationForm() {
           <div className="bg-gradient-to-r from-blue-800 to-blue-600 px-5 py-2.5 rounded-t flex items-center gap-4 text-white">
             <span className="font-bold text-base tracking-wide">{form.designationCode || "NEW DESIGNATION"}</span>
             <span className="text-blue-200 text-sm">{form.designationName || "—"}</span>
+            {form.departmentName && <span className="text-blue-300 text-xs">{form.departmentName}</span>}
             {form.level && <span className="ml-auto bg-white/10 text-white border border-white/20 px-2 py-0.5 rounded text-xs font-medium">{LEVEL_OPTIONS.find(o => o.value === form.level)?.label || form.level}</span>}
           </div>
           <div className="p-5">
             <div className="bg-gray-50 border border-gray-200 rounded p-4 space-y-4">
               <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Designation Details</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <Field label="Department Name" required error={errors.departmentName} className="sm:col-span-2 lg:col-span-3">
+                  <TSelect
+                    value={form.departmentName}
+                    onChange={e => setField("departmentName", e.target.value)}
+                    disabled={isReadOnly}
+                    options={departments.map(d => ({ value: d.departmentName, label: d.departmentName }))}
+                    placeholder="Select Department"
+                    error={errors.departmentName}
+                  />
+                </Field>
                 <Field label="Designation Code">
                   <TInput value={form.designationCode} disabled={true} placeholder="Auto-generated" />
                 </Field>
