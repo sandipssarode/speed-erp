@@ -12,6 +12,8 @@ const LEVEL_LABELS = {
   L3: "L3 — Middle Management",
   L4: "L4 — Executive",
   L5: "L5 — Staff / Operator",
+  L6: "L6", L7: "L7", L8: "L8", L9: "L9", L10: "L10",
+  L11: "L11", L12: "L12", L13: "L13", L14: "L14", L15: "L15",
 };
 
 export default function DesignationList() {
@@ -96,14 +98,13 @@ export default function DesignationList() {
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">Designation Code</th>
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">Designation Name</th>
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">Level</th>
-                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">Status</th>
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {paginated.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="text-center py-16 text-gray-400 text-sm">
+                    <td colSpan={4} className="text-center py-16 text-gray-400 text-sm">
                       {records.length === 0 ? 'No designations yet. Click "Add New" to get started.' : "No records match your search."}
                     </td>
                   </tr>
@@ -117,11 +118,6 @@ export default function DesignationList() {
                       <td className="px-4 py-2.5 font-mono text-xs font-semibold text-blue-600">{r.designationCode}</td>
                       <td className="px-4 py-2.5 font-medium text-gray-800">{r.designationName}</td>
                       <td className="px-4 py-2.5 text-gray-600 text-xs">{LEVEL_LABELS[r.level] || r.level || "—"}</td>
-                      <td className="px-4 py-2.5">
-                        <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${r.isDeactivated ? "bg-red-50 text-red-600" : "bg-green-50 text-green-700"}`}>
-                          {r.isDeactivated ? "Inactive" : "Active"}
-                        </span>
-                      </td>
                       <td className="px-4 py-2.5">
                         <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
                           <button onClick={() => navigate(`/masters/designation/${r.id}`)} className="p-1.5 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded" title="Edit">

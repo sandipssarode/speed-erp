@@ -5,11 +5,21 @@ import { api } from "../../../lib/api.js";
 import { Save, X, Trash2, Edit2, FileText, CheckCircle, AlertCircle, ChevronRight, ArrowLeft } from "lucide-react";
 
 const LEVEL_OPTIONS = [
-  { value: "L1", label: "L1 — Top Management (Director / CEO / MD / CXO)" },
-  { value: "L2", label: "L2 — Senior Management (VP / General Manager / AGM)" },
-  { value: "L3", label: "L3 — Middle Management (Manager / Deputy Manager / AM)" },
-  { value: "L4", label: "L4 — Executive (Sr. Executive / Engineer / Officer)" },
-  { value: "L5", label: "L5 — Staff / Operator (Technician / Associate / Helper)" },
+  { value: "L1",  label: "L1 — Top Management (Director / CEO / MD / CXO)" },
+  { value: "L2",  label: "L2 — Senior Management (VP / General Manager / AGM)" },
+  { value: "L3",  label: "L3 — Middle Management (Manager / Deputy Manager / AM)" },
+  { value: "L4",  label: "L4 — Executive (Sr. Executive / Engineer / Officer)" },
+  { value: "L5",  label: "L5 — Staff / Operator (Technician / Associate / Helper)" },
+  { value: "L6",  label: "L6" },
+  { value: "L7",  label: "L7" },
+  { value: "L8",  label: "L8" },
+  { value: "L9",  label: "L9" },
+  { value: "L10", label: "L10" },
+  { value: "L11", label: "L11" },
+  { value: "L12", label: "L12" },
+  { value: "L13", label: "L13" },
+  { value: "L14", label: "L14" },
+  { value: "L15", label: "L15" },
 ];
 
 function Field({ label, required, error, children, className = "" }) {
@@ -51,7 +61,6 @@ const emptyForm = () => ({
   designationCode: "",
   designationName: "",
   level: "",
-  isDeactivated: false,
   createdAt: "", updatedAt: "", createdBy: "", updatedBy: "",
   changelog: [],
 });
@@ -179,7 +188,7 @@ export default function DesignationForm() {
           <div className="bg-gradient-to-r from-blue-800 to-blue-600 px-5 py-2.5 rounded-t flex items-center gap-4 text-white">
             <span className="font-bold text-base tracking-wide">{form.designationCode || "NEW DESIGNATION"}</span>
             <span className="text-blue-200 text-sm">{form.designationName || "—"}</span>
-            {form.level && <span className="ml-auto bg-white/10 text-white border border-white/20 px-2 py-0.5 rounded text-xs font-medium">{form.level}</span>}
+            {form.level && <span className="ml-auto bg-white/10 text-white border border-white/20 px-2 py-0.5 rounded text-xs font-medium">{LEVEL_OPTIONS.find(o => o.value === form.level)?.label || form.level}</span>}
           </div>
           <div className="p-5">
             <div className="bg-gray-50 border border-gray-200 rounded p-4 space-y-4">
@@ -194,10 +203,6 @@ export default function DesignationForm() {
                 <Field label="Level" required error={errors.level} className="sm:col-span-2 lg:col-span-3">
                   <TSelect value={form.level} onChange={e => setField("level", e.target.value)} disabled={isReadOnly} options={LEVEL_OPTIONS} placeholder="Select Level" error={errors.level} />
                 </Field>
-              </div>
-              <div className="flex items-center gap-2 mt-2">
-                <input type="checkbox" id="isDeactivated" checked={!!form.isDeactivated} onChange={e => setField("isDeactivated", e.target.checked)} disabled={isReadOnly} className="rounded border-gray-300 text-blue-600 focus:ring-blue-400" />
-                <label htmlFor="isDeactivated" className="text-xs text-gray-600 select-none cursor-pointer">Deactivate (hides from new entries)</label>
               </div>
             </div>
           </div>
