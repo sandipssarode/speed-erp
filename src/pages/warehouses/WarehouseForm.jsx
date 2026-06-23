@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Layout from "../../components/Layout";
 import { api } from "../../lib/api.js";
@@ -163,7 +163,7 @@ function Field({ label, required, error, children, className = "" }) {
 
 const inputBase = (disabled, error) =>
   `w-full px-2.5 py-1.5 text-sm border rounded focus:outline-none focus:ring-1 transition-colors
-  ${error ? "border-red-300 focus:ring-red-300 bg-red-50/20" : "focus:ring-blue-400"}
+  ${error ? "border-red-300 focus:ring-red-300 bg-red-50/20" : "focus:ring-violet-400"}
   ${disabled ? "bg-gray-100 text-gray-500 cursor-not-allowed border-gray-200" : "bg-white border-gray-300 hover:border-gray-400"}`;
 
 function TInput({ value, onChange, disabled, placeholder, maxLength, error, type = "text" }) {
@@ -205,7 +205,7 @@ function TCheckbox({ checked, onChange, disabled, label }) {
     <label className={`flex items-center gap-2 text-sm select-none ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"}`}>
       <input
         type="checkbox" checked={!!checked} onChange={onChange} disabled={disabled}
-        className="w-3.5 h-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-400 focus:ring-1"
+        className="w-3.5 h-3.5 rounded border-gray-300 text-violet-600 focus:ring-violet-400 focus:ring-1"
       />
       <span className="text-gray-700">{label}</span>
     </label>
@@ -383,8 +383,8 @@ export default function WarehouseForm() {
         {/* Breadcrumb */}
         <div className="flex items-center gap-1.5 text-xs text-gray-400">
           <span>System Setup</span><ChevronRight size={12} />
-          <button onClick={() => navigate("/system/warehouses")} className="hover:text-blue-500 transition-colors">Warehouse Master</button>
-          {form.warehouseCode && <><ChevronRight size={12} /><span className="text-blue-600 font-medium">{form.warehouseCode}</span></>}
+          <button onClick={() => navigate("/system/warehouses")} className="hover:text-violet-500 transition-colors">Warehouse Master</button>
+          {form.warehouseCode && <><ChevronRight size={12} /><span className="text-violet-600 font-medium">{form.warehouseCode}</span></>}
         </div>
 
         {/* Toast */}
@@ -448,7 +448,7 @@ export default function WarehouseForm() {
           <button
             onClick={() => setShowChangelog(!showChangelog)}
             className={`flex items-center gap-1.5 text-xs px-3 py-1.5 border rounded font-medium transition-colors ${
-              showChangelog ? "border-blue-300 bg-blue-50 text-blue-600" : "border-gray-300 text-gray-600 hover:bg-gray-50"
+              showChangelog ? "border-blue-300 bg-blue-50 text-violet-600" : "border-gray-300 text-gray-600 hover:bg-gray-50"
             }`}
           >
             <FileText size={13} /> Changelog
@@ -486,7 +486,7 @@ export default function WarehouseForm() {
                       <td className="py-1.5 text-gray-600">{new Date(c.timestamp).toLocaleString()}</td>
                       <td className="py-1.5 text-gray-600">{c.user}</td>
                       <td className="py-1.5">
-                        <span className={`px-1.5 py-0.5 rounded text-xs ${c.action === "Created" ? "bg-green-50 text-green-600" : "bg-blue-50 text-blue-600"}`}>
+                        <span className={`px-1.5 py-0.5 rounded text-xs ${c.action === "Created" ? "bg-green-50 text-green-600" : "bg-blue-50 text-violet-600"}`}>
                           {c.action}
                         </span>
                       </td>
@@ -502,7 +502,7 @@ export default function WarehouseForm() {
         {/* ── HEADER SECTION ── */}
         <div className="bg-white border border-gray-200 rounded shadow-sm">
           {/* Status Bar */}
-          <div className="bg-gradient-to-r from-blue-800 to-blue-600 px-5 py-2.5 rounded-t flex items-center gap-4 text-white">
+          <div className="bg-gradient-to-r from-violet-900 to-violet-700 px-5 py-2.5 rounded-t flex items-center gap-4 text-white">
             <span className="font-bold text-base tracking-wide">{form.warehouseCode || "NEW WAREHOUSE"}</span>
             <span className="text-blue-200 text-sm">{form.warehouseName || "—"}</span>
             <div className="ml-auto flex items-center gap-2">
@@ -589,7 +589,7 @@ export default function WarehouseForm() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-1.5 px-5 py-3 text-xs font-medium whitespace-nowrap border-b-2 transition-colors
                   ${activeTab === tab.id
-                    ? "border-blue-600 text-blue-600 bg-blue-50/50"
+                    ? "border-violet-700 text-violet-600 bg-blue-50/50"
                     : "border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50"
                   }`}
               >
@@ -705,7 +705,7 @@ export default function WarehouseForm() {
                     <button
                       type="button"
                       onClick={openLocModal}
-                      className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded"
+                      className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-violet-700 hover:bg-violet-800 text-white rounded"
                     >
                       <Plus size={13} /> Add Location
                     </button>
@@ -733,19 +733,19 @@ export default function WarehouseForm() {
                             <td className="px-4 py-2">
                               {editingLocId === loc.id ? (
                                 <input
-                                  className="w-full px-2 py-1 text-xs border border-blue-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-400 font-mono"
+                                  className="w-full px-2 py-1 text-xs border border-blue-300 rounded focus:outline-none focus:ring-1 focus:ring-violet-400 font-mono"
                                   value={editingLocDraft.code}
                                   onChange={e => setEditingLocDraft(d => ({ ...d, code: e.target.value.toUpperCase() }))}
                                   maxLength={20}
                                 />
                               ) : (
-                                <span className="font-mono text-xs font-semibold text-blue-600">{loc.code}</span>
+                                <span className="font-mono text-xs font-semibold text-violet-600">{loc.code}</span>
                               )}
                             </td>
                             <td className="px-4 py-2">
                               {editingLocId === loc.id ? (
                                 <input
-                                  className="w-full px-2 py-1 text-xs border border-blue-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-400"
+                                  className="w-full px-2 py-1 text-xs border border-blue-300 rounded focus:outline-none focus:ring-1 focus:ring-violet-400"
                                   value={editingLocDraft.locationName}
                                   onChange={e => setEditingLocDraft(d => ({ ...d, locationName: e.target.value }))}
                                   maxLength={100}

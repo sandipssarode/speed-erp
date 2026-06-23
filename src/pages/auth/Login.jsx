@@ -28,7 +28,7 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center bg-gray-100 text-gray-900 font-sans">
       <div className="w-full max-w-sm mx-4 p-6 sm:p-8 bg-white border border-gray-200 rounded-2xl shadow-lg">
         <div className="flex flex-col items-center gap-3 mb-7">
-          <svg viewBox="0 0 48 48" className="w-14 h-14 rounded-2xl shadow-md">
+          <svg viewBox="0 0 48 48" width="56" height="56" className="w-14 h-14 rounded-2xl shadow-md">
             <defs>
               <linearGradient id="login-bg" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" stopColor="#050d1a"/>

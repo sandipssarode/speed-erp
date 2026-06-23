@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../../components/Layout";
 import { Plus, Search, Edit2, Trash2, ChevronRight } from "lucide-react";
@@ -67,7 +67,7 @@ export default function WarehouseList() {
           </div>
           <button
             onClick={() => navigate("/system/warehouses/new")}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded shadow-sm"
+            className="flex items-center gap-2 bg-violet-700 hover:bg-violet-800 text-white text-sm px-4 py-2 rounded shadow-sm"
           >
             <Plus size={15} /> Add New Warehouse
           </button>
@@ -82,13 +82,13 @@ export default function WarehouseList() {
               placeholder="Search Name, Code, Company, City..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full pl-8 pr-3 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-400"
+              className="w-full pl-8 pr-3 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-violet-400"
             />
           </div>
           <select
             value={filterStatus}
             onChange={e => setFilterStatus(e.target.value)}
-            className="text-sm border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-400"
+            className="text-sm border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-violet-400"
           >
             <option value="all">All Status</option>
             <option value="active">Active</option>
@@ -97,7 +97,7 @@ export default function WarehouseList() {
           <select
             value={filterState}
             onChange={e => setFilterState(e.target.value)}
-            className="text-sm border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-400"
+            className="text-sm border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-violet-400"
           >
             <option value="all">All States</option>
             {allStates.map(s => <option key={s} value={s}>{s}</option>)}
@@ -105,7 +105,7 @@ export default function WarehouseList() {
           <select
             value={filterCompany}
             onChange={e => setFilterCompany(e.target.value)}
-            className="text-sm border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-400"
+            className="text-sm border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-violet-400"
           >
             <option value="all">All Companies</option>
             {allCompanies.map(c => <option key={c} value={c}>{c}</option>)}
@@ -148,7 +148,7 @@ export default function WarehouseList() {
                     onClick={() => navigate(`/system/warehouses/${w.id}`)}
                   >
                     <td className="px-4 py-2.5 font-medium text-gray-800">{w.warehouseName}</td>
-                    <td className="px-4 py-2.5 font-mono text-xs font-semibold text-blue-600">{w.warehouseCode || "—"}</td>
+                    <td className="px-4 py-2.5 font-mono text-xs font-semibold text-violet-600">{w.warehouseCode || "—"}</td>
                     <td className="px-4 py-2.5 text-gray-600">{w.companyName || "—"}</td>
                     <td className="px-4 py-2.5 text-gray-600">{w.state || "—"}</td>
                     <td className="px-4 py-2.5 text-gray-600">{w.city || "—"}</td>
@@ -166,7 +166,7 @@ export default function WarehouseList() {
                       <div className="flex items-center gap-1" onClick={e => e.stopPropagation()}>
                         <button
                           onClick={() => navigate(`/system/warehouses/${w.id}`)}
-                          className="p-1.5 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded"
+                          className="p-1.5 text-violet-500 hover:text-violet-700 hover:bg-violet-50 rounded"
                           title="Edit"
                         >
                           <Edit2 size={13} />

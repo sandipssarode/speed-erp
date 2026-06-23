@@ -15,6 +15,7 @@ import {
   Database,
 } from "lucide-react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
+import siLogo from "../../logo/si_logo_trans.png";
 
 // ─────────────────────────────────────────────────────────────
 // MENU CONFIG
@@ -190,10 +191,10 @@ export default function Layout({ children }) {
   const closeSidebar = () => setSidebarOpen(false);
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden bg-gray-100 text-gray-800" style={{ fontFamily: "Inter, Arial, sans-serif" }}>
+    <div className="h-screen flex flex-col overflow-hidden bg-gradient-to-br from-violet-50 via-slate-50 to-indigo-100 text-gray-800" style={{ fontFamily: "Inter, Arial, sans-serif" }}>
 
       {/* ── TOP BAR ── */}
-      <header className="bg-white border-b border-gray-200 flex items-center justify-between px-3 lg:px-4 py-2 shadow-sm shrink-0">
+      <header className="bg-white/90 backdrop-blur-sm border-b border-violet-100 flex items-center justify-between px-3 lg:px-4 py-2 shadow-sm shrink-0">
         {/* Left — hamburger (mobile/tablet) + logo */}
         <div className="flex items-center gap-2 lg:gap-3">
           <button
@@ -203,27 +204,7 @@ export default function Layout({ children }) {
           >
             <Menu size={20} />
           </button>
-          <svg viewBox="0 0 48 48" className="w-8 h-8 shrink-0 rounded-lg shadow-sm">
-            <defs>
-              <linearGradient id="si-bg" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="#050d1a"/>
-                <stop offset="100%" stopColor="#0f2045"/>
-              </linearGradient>
-              <linearGradient id="si-s" x1="34" y1="11" x2="12" y2="42" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="#e2d4ff"/>
-                <stop offset="100%" stopColor="#60a5fa"/>
-              </linearGradient>
-            </defs>
-            <rect width="48" height="48" rx="11" fill="url(#si-bg)"/>
-            <path d="M 34 11 C 34 11 12 11 12 20 C 12 28 34 26 34 35 C 34 41 12 42 12 42"
-              fill="none" stroke="url(#si-s)" strokeWidth="5.5" strokeLinecap="round"/>
-            <circle cx="34" cy="11" r="3.5" fill="white"/>
-            <circle cx="12" cy="42" r="2.5" fill="#93c5fd" fillOpacity="0.8"/>
-          </svg>
-          <div>
-            <p className="text-sm font-bold text-gray-900 leading-none tracking-tight">Speed ERP</p>
-            <p className="text-[10px] text-gray-500 leading-none mt-0.5 tracking-widest uppercase">Speed Innovations</p>
-          </div>
+          <img src={siLogo} alt="Speed Innovations" className="h-8 w-auto max-w-[160px] object-contain" />
         </div>
 
         {/* Right — user info + actions */}
@@ -259,7 +240,7 @@ export default function Layout({ children }) {
 
         {/* ── SIDEBAR ── */}
         <aside className={`
-          fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 flex flex-col overflow-y-auto
+          fixed inset-y-0 left-0 z-50 w-64 bg-white/95 backdrop-blur-sm border-r border-violet-100 flex flex-col overflow-y-auto
           transition-transform duration-300 ease-in-out
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
           lg:static lg:inset-auto lg:z-auto lg:w-56 lg:translate-x-0 lg:transition-none lg:shrink-0
@@ -279,7 +260,7 @@ export default function Layout({ children }) {
             onClick={closeSidebar}
             className={`flex items-center gap-2.5 px-4 py-3 text-sm font-semibold border-b border-gray-100 transition-colors
               ${location.pathname === "/dashboard"
-                ? "bg-blue-600 text-white"
+                ? "bg-violet-700 text-white"
                 : "text-gray-700 hover:bg-gray-50"
               }`}
           >
@@ -327,7 +308,7 @@ export default function Layout({ children }) {
                                 ? "bg-red-50 text-red-600 font-semibold border-r-2 border-red-400"
                                 : "text-red-400 hover:bg-red-50 hover:text-red-500"
                               : location.pathname === link.path
-                                ? "bg-blue-50 text-blue-700 font-semibold border-r-2 border-blue-500"
+                                ? "bg-violet-50 text-violet-700 font-semibold border-r-2 border-violet-600"
                                 : "text-gray-600 hover:bg-gray-100 hover:text-gray-800"
                             }`}
                         >
@@ -360,7 +341,7 @@ export default function Layout({ children }) {
                               onClick={closeSidebar}
                               className={`block pl-8 pr-4 py-1.5 text-xs transition-colors
                                 ${location.pathname === link.path
-                                  ? "bg-blue-50 text-blue-700 font-semibold border-r-2 border-blue-500"
+                                  ? "bg-violet-50 text-violet-700 font-semibold border-r-2 border-violet-600"
                                   : "text-gray-600 hover:bg-gray-100 hover:text-gray-800"
                                 }`}
                             >
@@ -391,7 +372,7 @@ export default function Layout({ children }) {
       </div>
 
       {/* ── FOOTER ── */}
-      <footer className="bg-white border-t border-gray-200 px-4 py-1.5 flex items-center justify-center flex-wrap gap-2 sm:gap-8 text-xs text-gray-400 shrink-0">
+      <footer className="bg-white/80 border-t border-violet-100 px-4 py-1.5 flex items-center justify-center flex-wrap gap-2 sm:gap-8 text-xs text-gray-400 shrink-0">
         <span>Version 1.0.0</span>
         <span className="hidden sm:inline">|</span>
         <span className="hidden sm:inline">Login: {new Date().toLocaleString()}</span>

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+﻿import { useState, useEffect, useRef } from "react";
 import Layout from "../../components/Layout";
 import {
   Save, X, Plus, Trash2, FileText, ChevronRight, AlertCircle, CheckCircle,
@@ -253,7 +253,7 @@ function Field({ label, required, error, children, className = "" }) {
 
 const inputCls = (disabled, error) =>
   `w-full px-2.5 py-1.5 text-sm border rounded focus:outline-none focus:ring-1 transition-colors
-  ${error   ? "border-red-300 focus:ring-red-300 bg-red-50/20" : "focus:ring-blue-400"}
+  ${error   ? "border-red-300 focus:ring-red-300 bg-red-50/20" : "focus:ring-violet-400"}
   ${disabled ? "bg-gray-100 text-gray-500 cursor-not-allowed border-gray-200" : "bg-white border-gray-300 hover:border-gray-400"}`;
 
 function TInput({ value, onChange, disabled, placeholder, type = "text", error, min, rows }) {
@@ -272,7 +272,7 @@ function TSelect({ value, onChange, disabled, options, placeholder, error }) {
 }
 
 const cellCls = (err) =>
-  `w-full px-1.5 py-1 text-xs border-0 outline-none bg-transparent focus:bg-white focus:ring-1 focus:ring-blue-300 rounded
+  `w-full px-1.5 py-1 text-xs border-0 outline-none bg-transparent focus:bg-white focus:ring-1 focus:ring-violet-300 rounded
   ${err ? "bg-red-50 ring-1 ring-red-300" : ""}`;
 
 function Toast({ toast }) {
@@ -692,7 +692,7 @@ export default function PurchaseOrderList() {
           {form.number && (
             <>
               <ChevronRight size={12} />
-              <span className="text-blue-600 font-medium">{form.number}</span>
+              <span className="text-violet-600 font-medium">{form.number}</span>
             </>
           )}
         </div>
@@ -737,7 +737,7 @@ export default function PurchaseOrderList() {
 
           <button onClick={() => setShowSearch((v) => !v)}
             className={`flex items-center gap-1.5 text-xs px-3 py-1.5 border rounded font-medium transition-colors
-              ${showSearch ? "border-blue-300 bg-blue-50 text-blue-600" : "border-gray-300 text-gray-600 hover:bg-gray-50"}`}>
+              ${showSearch ? "border-blue-300 bg-blue-50 text-violet-600" : "border-gray-300 text-gray-600 hover:bg-gray-50"}`}>
             <Search size={13} /> Search
           </button>
 
@@ -784,10 +784,10 @@ export default function PurchaseOrderList() {
 
           <button onClick={() => setShowAttach((v) => !v)}
             className={`flex items-center gap-1.5 text-xs px-3 py-1.5 border rounded font-medium transition-colors
-              ${showAttach ? "border-blue-300 bg-blue-50 text-blue-600" : "border-gray-300 text-gray-600 hover:bg-gray-50"}`}>
+              ${showAttach ? "border-blue-300 bg-blue-50 text-violet-600" : "border-gray-300 text-gray-600 hover:bg-gray-50"}`}>
             <Paperclip size={13} /> File Attachments
             {(form.attachments?.length > 0) && (
-              <span className="bg-blue-100 text-blue-600 text-xs px-1.5 rounded-full">{form.attachments.length}</span>
+              <span className="bg-blue-100 text-violet-600 text-xs px-1.5 rounded-full">{form.attachments.length}</span>
             )}
           </button>
 
@@ -820,7 +820,7 @@ export default function PurchaseOrderList() {
             </button>
             <button onClick={() => setShowList((v) => !v)} title="All POs"
               className={`flex items-center gap-1.5 text-xs px-2.5 py-1.5 border rounded font-medium transition-colors
-                ${showList ? "border-blue-300 bg-blue-50 text-blue-600" : "border-gray-300 text-gray-500 hover:bg-gray-50"}`}>
+                ${showList ? "border-blue-300 bg-blue-50 text-violet-600" : "border-gray-300 text-gray-500 hover:bg-gray-50"}`}>
               <List size={13} />
               {allPOs.length > 0 && (
                 <span className="text-gray-400">{currentIdx >= 0 ? `${currentIdx + 1} / ${allPOs.length}` : allPOs.length}</span>
@@ -846,7 +846,7 @@ export default function PurchaseOrderList() {
               {!isReadOnly && (
                 <>
                   <button onClick={() => fileRef.current?.click()}
-                    className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded">
+                    className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-violet-700 hover:bg-violet-800 text-white rounded">
                     <Upload size={13} /> Upload File
                   </button>
                   <input ref={fileRef} type="file" multiple className="hidden" onChange={handleFileChange} />
@@ -892,20 +892,20 @@ export default function PurchaseOrderList() {
             <div className="p-3 border-b border-gray-100 space-y-2">
               <input value={searchQ} onChange={(e) => setSearchQ(e.target.value)}
                 placeholder="Search by PO number, vendor, status, buyer, unit…"
-                className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-400" />
+                className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-violet-400" />
               <div className="flex items-center gap-2 flex-wrap">
                 <select value={searchYear} onChange={(e) => setSearchYear(e.target.value)}
-                  className="text-xs border border-gray-300 rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-400">
+                  className="text-xs border border-gray-300 rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-violet-400">
                   <option value="all">All Years</option>
                   {[...new Set(allPOs.map(p => p.year).filter(Boolean))].sort().map(y => <option key={y} value={y}>{y}</option>)}
                 </select>
                 <select value={searchSeries} onChange={(e) => setSearchSeries(e.target.value)}
-                  className="text-xs border border-gray-300 rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-400">
+                  className="text-xs border border-gray-300 rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-violet-400">
                   <option value="all">All Series</option>
                   {SERIES_OPTIONS.map(s => <option key={s} value={s}>{s}</option>)}
                 </select>
                 <select value={searchCat} onChange={(e) => setSearchCat(e.target.value)}
-                  className="text-xs border border-gray-300 rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-400">
+                  className="text-xs border border-gray-300 rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-violet-400">
                   <option value="all">All Categories</option>
                   {CATEGORY_OPTIONS.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
@@ -927,8 +927,8 @@ export default function PurchaseOrderList() {
                     const idx = allPOs.findIndex((p) => p.id === po.id);
                     return (
                       <tr key={po.id} onClick={() => { goTo(idx); setShowSearch(false); setSearchQ(""); }}
-                        className={`border-b border-gray-100 cursor-pointer hover:bg-blue-50/40 ${idx === currentIdx ? "bg-blue-50 border-l-2 border-l-blue-500" : ""}`}>
-                        <td className="px-3 py-2 font-mono font-semibold text-blue-600">{po.number}</td>
+                        className={`border-b border-gray-100 cursor-pointer hover:bg-violet-50/40 ${idx === currentIdx ? "bg-blue-50 border-l-2 border-l-blue-500" : ""}`}>
+                        <td className="px-3 py-2 font-mono font-semibold text-violet-600">{po.number}</td>
                         <td className="px-3 py-2 text-gray-600">{po.date ? new Date(po.date).toLocaleDateString("en-IN") : "—"}</td>
                         <td className="px-3 py-2 text-gray-600">{po.vendorName || "—"}</td>
                         <td className="px-3 py-2 text-gray-600">{po.unit || "—"}</td>
@@ -937,7 +937,7 @@ export default function PurchaseOrderList() {
                         <td className="px-3 py-2">
                           <span className="px-2 py-0.5 bg-green-50 text-green-600 border border-green-200 rounded-full">{po.status}</span>
                         </td>
-                        <td className="px-3 py-2 text-blue-500 font-medium">Open →</td>
+                        <td className="px-3 py-2 text-violet-500 font-medium">Open →</td>
                       </tr>
                     );
                   })}
@@ -974,8 +974,8 @@ export default function PurchaseOrderList() {
                 <tbody>
                   {allPOs.map((po, i) => (
                     <tr key={po.id} onClick={() => goTo(i)}
-                      className={`border-b border-gray-100 cursor-pointer hover:bg-blue-50/40 ${i === currentIdx ? "bg-blue-50 border-l-2 border-l-blue-500" : ""}`}>
-                      <td className="px-3 py-2 font-mono font-semibold text-blue-600">{po.number}</td>
+                      className={`border-b border-gray-100 cursor-pointer hover:bg-violet-50/40 ${i === currentIdx ? "bg-blue-50 border-l-2 border-l-blue-500" : ""}`}>
+                      <td className="px-3 py-2 font-mono font-semibold text-violet-600">{po.number}</td>
                       <td className="px-3 py-2 text-gray-600">{po.date ? new Date(po.date).toLocaleDateString("en-IN") : "—"}</td>
                       <td className="px-3 py-2 text-gray-600">{po.vendorName || "—"}</td>
                       <td className="px-3 py-2 text-gray-600">{po.unit || "—"}</td>
@@ -987,7 +987,7 @@ export default function PurchaseOrderList() {
                       <td className="px-3 py-2">
                         <span className="px-2 py-0.5 bg-green-50 text-green-600 border border-green-200 rounded-full">{po.status}</span>
                       </td>
-                      <td className="px-3 py-2 text-blue-500 font-medium">Open →</td>
+                      <td className="px-3 py-2 text-violet-500 font-medium">Open →</td>
                     </tr>
                   ))}
                 </tbody>
@@ -997,7 +997,7 @@ export default function PurchaseOrderList() {
         )}
 
         {/* ── Status Banner ── */}
-        <div className="bg-gradient-to-r from-blue-800 to-blue-600 rounded px-4 py-3 flex items-center gap-2 flex-wrap text-white shadow-sm">
+        <div className="bg-gradient-to-r from-violet-900 to-violet-700 rounded px-4 py-3 flex items-center gap-2 flex-wrap text-white shadow-sm">
           <FileText size={16} className="text-blue-200 shrink-0" />
           <span className="font-bold text-base tracking-wide">{form.number || "New Purchase Order"}</span>
           {form.unit       && <span className="text-blue-200 text-sm hidden sm:inline">| {form.unit}</span>}
@@ -1193,7 +1193,7 @@ export default function PurchaseOrderList() {
               <button key={t.id} onClick={() => setActiveTab(t.id)}
                 className={`flex items-center gap-1.5 px-5 py-3 text-xs font-medium border-b-2 whitespace-nowrap transition-colors
                   ${activeTab === t.id
-                    ? "border-blue-600 text-blue-600 bg-blue-50/50"
+                    ? "border-violet-700 text-violet-600 bg-blue-50/50"
                     : "border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50"}`}>
                 {t.label}{t.hasErr && <AlertCircle size={12} className="text-red-400" />}
               </button>
@@ -1221,7 +1221,7 @@ export default function PurchaseOrderList() {
                       <select
                         defaultValue=""
                         onChange={(e) => { addPRNo(e.target.value); e.target.value = ""; }}
-                        className="text-sm border border-gray-300 rounded px-2.5 py-1.5 bg-white focus:outline-none focus:ring-1 focus:ring-blue-400 min-w-[220px]"
+                        className="text-sm border border-gray-300 rounded px-2.5 py-1.5 bg-white focus:outline-none focus:ring-1 focus:ring-violet-400 min-w-[220px]"
                       >
                         <option value="">— Select PR Number —</option>
                         {allPRs
@@ -1242,7 +1242,7 @@ export default function PurchaseOrderList() {
                           <span key={no} className="inline-flex items-center gap-1.5 bg-blue-50 border border-blue-200 text-blue-700 text-xs px-2.5 py-1 rounded-full font-medium">
                             {no}
                             {!isReadOnly && (
-                              <button onClick={() => removePRNo(no)} className="text-blue-400 hover:text-blue-700 leading-none">
+                              <button onClick={() => removePRNo(no)} className="text-blue-400 hover:text-violet-700 leading-none">
                                 <X size={11} />
                               </button>
                             )}
@@ -1287,7 +1287,7 @@ export default function PurchaseOrderList() {
                                 <input type="checkbox" checked={checkedItems.has(key)}
                                   onChange={() => toggleItem(key)} className="rounded" />
                               </td>
-                              <td className="px-3 py-2 text-blue-600 font-mono font-semibold whitespace-nowrap">{pr.number}</td>
+                              <td className="px-3 py-2 text-violet-600 font-mono font-semibold whitespace-nowrap">{pr.number}</td>
                               <td className="px-3 py-2 text-gray-500 font-mono">{pr.series || pr.number?.split('/')[0] || '—'}</td>
                               <td className="px-3 py-2 text-gray-500">{pr.year}</td>
                               <td className="px-3 py-2 text-gray-700 font-mono">{it.itemCode}</td>
@@ -1300,7 +1300,7 @@ export default function PurchaseOrderList() {
                                   value={prItemQtys[key] ?? ""}
                                   onChange={(e) => setPrItemQtys(prev => ({ ...prev, [key]: e.target.value }))}
                                   placeholder={it.qty}
-                                  className="w-20 px-1.5 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-400 text-right" />
+                                  className="w-20 px-1.5 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-violet-400 text-right" />
                               </td>
                             </tr>
                           ))
@@ -1314,7 +1314,7 @@ export default function PurchaseOrderList() {
                     <button
                       onClick={handleCopyToPO}
                       disabled={checkedItems.size === 0 || isAuthorized}
-                      className="flex items-center gap-1.5 text-xs px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium disabled:opacity-40 disabled:cursor-not-allowed"
+                      className="flex items-center gap-1.5 text-xs px-4 py-2 bg-violet-700 hover:bg-violet-800 text-white rounded font-medium disabled:opacity-40 disabled:cursor-not-allowed"
                     >
                       <Plus size={13} /> Copy to PO Item Detail
                     </button>
@@ -1509,7 +1509,7 @@ export default function PurchaseOrderList() {
 
                 <div className="flex items-center gap-3 flex-wrap">
                   {!isReadOnly && (
-                    <button onClick={addItem} className="flex items-center gap-1.5 text-xs text-blue-600 hover:text-blue-800 font-medium">
+                    <button onClick={addItem} className="flex items-center gap-1.5 text-xs text-violet-600 hover:text-blue-800 font-medium">
                       <Plus size={13} /> Add Item
                     </button>
                   )}
@@ -1540,7 +1540,7 @@ export default function PurchaseOrderList() {
                   <input type="number" min="0" value={poLevelDisc}
                     onChange={(e) => setPoLevelDisc(e.target.value)}
                     disabled={isReadOnly} placeholder="0.00"
-                    className="w-32 px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-400 text-right" />
+                    className="w-32 px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-violet-400 text-right" />
                   <span className="text-xs text-gray-400">Applied at PO level (flat amount in addition to line-item discounts)</span>
                 </div>
               </div>
@@ -1555,9 +1555,9 @@ export default function PurchaseOrderList() {
                       <label className="text-gray-500 font-medium whitespace-nowrap">Common Delivery Date:</label>
                       <input type="date" value={commonDelDate} min={form.date}
                         onChange={(e) => setCommonDelDate(e.target.value)}
-                        className="border border-gray-300 rounded px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-blue-400" />
+                        className="border border-gray-300 rounded px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-violet-400" />
                       <button onClick={applyCommonDate}
-                        className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium">Apply</button>
+                        className="px-3 py-1.5 bg-violet-700 hover:bg-violet-800 text-white rounded font-medium">Apply</button>
                     </div>
                   </div>
                 )}
@@ -1622,7 +1622,7 @@ export default function PurchaseOrderList() {
                   <div className="flex items-center gap-2">
                     <label className="text-xs font-medium text-gray-600 whitespace-nowrap">Tax Group:</label>
                     <select value={taxGroup} onChange={(e) => setTaxGroup(e.target.value)}
-                      className="text-sm border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-400 min-w-[160px]">
+                      className="text-sm border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-violet-400 min-w-[160px]">
                       <option value="">— Select Tax Group —</option>
                       {TAX_GROUP_OPTIONS.map(g => <option key={g} value={g}>{g}</option>)}
                     </select>
@@ -1635,7 +1635,7 @@ export default function PurchaseOrderList() {
                       setTaxRows(rows);
                       showToast("Tax rows recomputed from items.");
                     }}
-                    className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium">
+                    className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-violet-700 hover:bg-violet-800 text-white rounded font-medium">
                     <RefreshCw size={13} /> Compute Tax
                   </button>
                   <p className="text-xs text-gray-500">
@@ -1666,7 +1666,7 @@ export default function PurchaseOrderList() {
                       ) : (
                         taxRows.map((r, i) => (
                           <tr key={i} className="border-b border-gray-100 hover:bg-blue-50/20">
-                            <td className="px-3 py-2 font-mono text-blue-600">{r.taxCode}</td>
+                            <td className="px-3 py-2 font-mono text-violet-600">{r.taxCode}</td>
                             <td className="px-3 py-2 text-gray-700">{r.name}</td>
                             <td className="px-3 py-2 text-gray-600">{r.taxType}</td>
                             <td className="px-3 py-2 text-gray-600">{r.incExc}</td>
@@ -1701,7 +1701,7 @@ export default function PurchaseOrderList() {
                       <select value={termsTemplate}
                         onChange={(e) => setTermsTemplate(e.target.value)}
                         disabled={isReadOnly}
-                        className="flex-1 px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-400">
+                        className="flex-1 px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-violet-400">
                         <option value="">— Select Template —</option>
                         {TERMS_TEMPLATE_OPTIONS.map(t => <option key={t} value={t}>{t}</option>)}
                       </select>
@@ -1713,7 +1713,7 @@ export default function PurchaseOrderList() {
                             setForm(p => ({ ...p, terms: newTerms }));
                             showToast(`Applied "${termsTemplate}" template — ${newTerms.length} terms loaded.`);
                           }}
-                          className="flex items-center gap-1 text-xs px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium whitespace-nowrap">
+                          className="flex items-center gap-1 text-xs px-3 py-1.5 bg-violet-700 hover:bg-violet-800 text-white rounded font-medium whitespace-nowrap">
                           <Plus size={12} /> Apply
                         </button>
                       )}
@@ -1780,7 +1780,7 @@ export default function PurchaseOrderList() {
                 </div>
 
                 {!isReadOnly && (
-                  <button onClick={addTerm} className="flex items-center gap-1.5 text-xs text-blue-600 hover:text-blue-800 font-medium">
+                  <button onClick={addTerm} className="flex items-center gap-1.5 text-xs text-violet-600 hover:text-blue-800 font-medium">
                     <Plus size={13} /> Add Term
                   </button>
                 )}
@@ -1852,7 +1852,7 @@ export default function PurchaseOrderList() {
                 </div>
 
                 {!isReadOnly && (
-                  <button onClick={addMilestone} className="flex items-center gap-1.5 text-xs text-blue-600 hover:text-blue-800 font-medium">
+                  <button onClick={addMilestone} className="flex items-center gap-1.5 text-xs text-violet-600 hover:text-blue-800 font-medium">
                     <Plus size={13} /> Add Milestone
                   </button>
                 )}
@@ -1889,7 +1889,7 @@ export default function PurchaseOrderList() {
                       ) : (
                         (form.history || []).map((h, i) => (
                           <tr key={i} className="border-b border-gray-100 hover:bg-blue-50/20">
-                            <td className="px-2 py-2 font-mono text-blue-600 whitespace-nowrap">{h.docNo}</td>
+                            <td className="px-2 py-2 font-mono text-violet-600 whitespace-nowrap">{h.docNo}</td>
                             <td className="px-2 py-2 text-gray-600 whitespace-nowrap">{h.docDate}</td>
                             <td className="px-2 py-2 text-gray-600 whitespace-nowrap">{h.unit}</td>
                             <td className="px-2 py-2 text-gray-600 whitespace-nowrap">{h.docType}</td>

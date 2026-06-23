@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Layout from "../../components/Layout";
 import { api } from "../../lib/api.js";
@@ -258,7 +258,7 @@ function Field({ label, required, error, children, className = "" }) {
 
 const inputBase = (disabled, error) =>
   `w-full px-2.5 py-1.5 text-sm border rounded focus:outline-none focus:ring-1 transition-colors
-  ${error ? "border-red-300 focus:ring-red-300 bg-red-50/20" : "focus:ring-blue-400"}
+  ${error ? "border-red-300 focus:ring-red-300 bg-red-50/20" : "focus:ring-violet-400"}
   ${disabled ? "bg-gray-100 text-gray-500 cursor-not-allowed border-gray-200" : "bg-white border-gray-300 hover:border-gray-400"}`;
 
 function TInput({ value, onChange, disabled, placeholder, maxLength, error, type = "text" }) {
@@ -300,7 +300,7 @@ function TCheckbox({ checked, onChange, disabled, label }) {
     <label className={`flex items-center gap-2 text-sm select-none ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"}`}>
       <input
         type="checkbox" checked={!!checked} onChange={onChange} disabled={disabled}
-        className="w-3.5 h-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-400 focus:ring-1"
+        className="w-3.5 h-3.5 rounded border-gray-300 text-violet-600 focus:ring-violet-400 focus:ring-1"
       />
       <span className="text-gray-700">{label}</span>
     </label>
@@ -328,7 +328,7 @@ function AddressBlock({ title, badge, fields, form, onChange, disabled, errors, 
     <div className="bg-gray-50 border border-gray-200 rounded p-3 space-y-3">
       <div className="flex items-center gap-2">
         <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">{title}</p>
-        {badge && <span className="text-xs bg-blue-50 text-blue-500 px-1.5 py-0.5 rounded border border-blue-100">{badge}</span>}
+        {badge && <span className="text-xs bg-blue-50 text-violet-500 px-1.5 py-0.5 rounded border border-blue-100">{badge}</span>}
       </div>
       <div className="grid grid-cols-2 gap-3">
         <div className="col-span-2">
@@ -535,8 +535,8 @@ export default function VendorForm() {
         <div className="flex items-center gap-1.5 text-xs text-gray-400">
           <span>Purchase</span><ChevronRight size={12} />
           <span>Master</span><ChevronRight size={12} />
-          <button onClick={() => navigate("/vendors")} className="hover:text-blue-500 transition-colors">Vendor Master</button>
-          {form.code && <><ChevronRight size={12} /><span className="text-blue-600 font-medium">{form.code}</span></>}
+          <button onClick={() => navigate("/vendors")} className="hover:text-violet-500 transition-colors">Vendor Master</button>
+          {form.code && <><ChevronRight size={12} /><span className="text-violet-600 font-medium">{form.code}</span></>}
         </div>
 
         {/* Toast */}
@@ -600,7 +600,7 @@ export default function VendorForm() {
           <button
             onClick={() => setShowChangelog(!showChangelog)}
             className={`flex items-center gap-1.5 text-xs px-3 py-1.5 border rounded font-medium transition-colors ${
-              showChangelog ? "border-blue-300 bg-blue-50 text-blue-600" : "border-gray-300 text-gray-600 hover:bg-gray-50"
+              showChangelog ? "border-blue-300 bg-blue-50 text-violet-600" : "border-gray-300 text-gray-600 hover:bg-gray-50"
             }`}
           >
             <FileText size={13} /> Changelog
@@ -646,7 +646,7 @@ export default function VendorForm() {
                       <td className="py-1.5 text-gray-600">{new Date(c.timestamp).toLocaleString()}</td>
                       <td className="py-1.5 text-gray-600">{c.user}</td>
                       <td className="py-1.5">
-                        <span className={`px-1.5 py-0.5 rounded text-xs ${c.action === "Created" ? "bg-green-50 text-green-600" : "bg-blue-50 text-blue-600"}`}>
+                        <span className={`px-1.5 py-0.5 rounded text-xs ${c.action === "Created" ? "bg-green-50 text-green-600" : "bg-blue-50 text-violet-600"}`}>
                           {c.action}
                         </span>
                       </td>
@@ -662,7 +662,7 @@ export default function VendorForm() {
         {/* ── HEADER SECTION ── */}
         <div className="bg-white border border-gray-200 rounded shadow-sm">
           {/* Status Bar */}
-          <div className="bg-gradient-to-r from-blue-800 to-blue-600 px-5 py-2.5 rounded-t flex items-center gap-4 text-white">
+          <div className="bg-gradient-to-r from-violet-900 to-violet-700 px-5 py-2.5 rounded-t flex items-center gap-4 text-white">
             <span className="font-bold text-base tracking-wide">{form.code || "NEW VENDOR"}</span>
             <span className="text-blue-200 text-sm">{form.name || "—"}</span>
             <div className="ml-auto flex items-center gap-2">
@@ -781,7 +781,7 @@ export default function VendorForm() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-1.5 px-5 py-3 text-xs font-medium whitespace-nowrap border-b-2 transition-colors
                   ${activeTab === tab.id
-                    ? "border-blue-600 text-blue-600 bg-blue-50/50"
+                    ? "border-violet-700 text-violet-600 bg-blue-50/50"
                     : "border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50"
                   }`}
               >
@@ -917,7 +917,7 @@ export default function VendorForm() {
                     />
                   )}
                   {(isReadOnly && form.shipFromSameAsVendor) && (
-                    <p className="text-xs text-blue-500 font-medium">✓ Ship From — same as Corporate Address</p>
+                    <p className="text-xs text-violet-500 font-medium">✓ Ship From — same as Corporate Address</p>
                   )}
                   <AddressBlock
                     title="Ship From Address"
@@ -941,7 +941,7 @@ export default function VendorForm() {
                     />
                   )}
                   {(isReadOnly && form.billToSameAsShipFrom) && (
-                    <p className="text-xs text-blue-500 font-medium">✓ Bill To — same as Ship From</p>
+                    <p className="text-xs text-violet-500 font-medium">✓ Bill To — same as Ship From</p>
                   )}
                   <AddressBlock
                     title="Bill To Address"
@@ -963,7 +963,7 @@ export default function VendorForm() {
                 <div className="flex items-center justify-between">
                   <p className="text-xs text-gray-500">{form.contactPersons.length} contact person(s)</p>
                   {!isReadOnly && (
-                    <button onClick={addContact} className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded">
+                    <button onClick={addContact} className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-violet-700 hover:bg-violet-800 text-white rounded">
                       <Plus size={13} /> Add Contact
                     </button>
                   )}
@@ -1024,7 +1024,7 @@ export default function VendorForm() {
                 <div className="flex items-center justify-between">
                   <p className="text-xs text-gray-500">{form.terms.length} term(s)</p>
                   {!isReadOnly && (
-                    <button onClick={addTerm} className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded">
+                    <button onClick={addTerm} className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-violet-700 hover:bg-violet-800 text-white rounded">
                       <Plus size={13} /> Add Term
                     </button>
                   )}
@@ -1134,7 +1134,7 @@ export default function VendorForm() {
                 <div className="flex items-center justify-between">
                   <p className="text-xs text-gray-500">{form.banks.length} bank account(s)</p>
                   {!isReadOnly && (
-                    <button onClick={addBank} className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded">
+                    <button onClick={addBank} className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-violet-700 hover:bg-violet-800 text-white rounded">
                       <Plus size={13} /> Add Bank Account
                     </button>
                   )}

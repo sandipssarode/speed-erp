@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../../components/Layout";
 import {
@@ -128,7 +128,7 @@ const inputCls = (disabled, error, highlight) =>
   ${error     ? "border-red-300 focus:ring-red-300 bg-red-50/30"
   : highlight ? "border-yellow-400 bg-yellow-50 focus:ring-yellow-300"
   : disabled  ? "bg-gray-100 text-gray-500 cursor-not-allowed border-gray-200"
-              : "bg-white border-gray-300 hover:border-gray-400 focus:ring-blue-400"}`;
+              : "bg-white border-gray-300 hover:border-gray-400 focus:ring-violet-400"}`;
 
 function TInput({ value, onChange, disabled, placeholder, type = "text", error, highlight, rows }) {
   const cls = inputCls(disabled, error, !disabled && highlight);
@@ -360,7 +360,7 @@ export default function QuotationComparison() {
         <div className="flex items-center gap-1.5 text-xs text-gray-400">
           <span>Purchase</span><ChevronRight size={12} /><span>Transaction</span><ChevronRight size={12} />
           <span className="text-gray-600 font-medium">Quotation Comparison</span>
-          {form.number && <><ChevronRight size={12} /><span className="text-blue-600 font-medium">{form.number}</span></>}
+          {form.number && <><ChevronRight size={12} /><span className="text-violet-600 font-medium">{form.number}</span></>}
         </div>
 
         <Toast toast={toast} />
@@ -414,7 +414,7 @@ export default function QuotationComparison() {
             <button onClick={() => goTo(currentIdx + 1)} disabled={currentIdx >= allQCs.length - 1 || mode !== "view"}
               className="p-1.5 border border-gray-300 text-gray-500 hover:bg-gray-50 rounded disabled:opacity-30 disabled:cursor-not-allowed text-xs px-2">›</button>
             <button onClick={() => setShowList((v) => !v)}
-              className={`flex items-center gap-1.5 text-xs px-2.5 py-1.5 border rounded font-medium ${showList ? "border-blue-300 bg-blue-50 text-blue-600" : "border-gray-300 text-gray-500 hover:bg-gray-50"}`}>
+              className={`flex items-center gap-1.5 text-xs px-2.5 py-1.5 border rounded font-medium ${showList ? "border-blue-300 bg-blue-50 text-violet-600" : "border-gray-300 text-gray-500 hover:bg-gray-50"}`}>
               <List size={13} />{allQCs.length > 0 && <span className="text-gray-400">{currentIdx >= 0 ? `${currentIdx + 1}/${allQCs.length}` : allQCs.length}</span>}
             </button>
           </div>
@@ -447,8 +447,8 @@ export default function QuotationComparison() {
                 <tbody>
                   {allQCs.map((qc, i) => (
                     <tr key={qc.id} onClick={() => { goTo(i); setShowList(false); }}
-                      className={`border-b border-gray-100 cursor-pointer hover:bg-blue-50/40 ${i === currentIdx ? "bg-blue-50 border-l-2 border-l-blue-500" : ""}`}>
-                      <td className="px-3 py-2 font-mono font-semibold text-blue-600">{qc.number}</td>
+                      className={`border-b border-gray-100 cursor-pointer hover:bg-violet-50/40 ${i === currentIdx ? "bg-blue-50 border-l-2 border-l-blue-500" : ""}`}>
+                      <td className="px-3 py-2 font-mono font-semibold text-violet-600">{qc.number}</td>
                       <td className="px-3 py-2 text-gray-600">{qc.comparisonDate ? new Date(qc.comparisonDate).toLocaleDateString("en-IN") : "—"}</td>
                       <td className="px-3 py-2 font-mono text-gray-600">{qc.piNumber || "—"}</td>
                       <td className="px-3 py-2 text-gray-600">{qc.buyer || "—"}</td>
@@ -458,7 +458,7 @@ export default function QuotationComparison() {
                           {qc.locked ? "Locked" : "Draft"}
                         </span>
                       </td>
-                      <td className="px-3 py-2 text-blue-500 font-medium">Open →</td>
+                      <td className="px-3 py-2 text-violet-500 font-medium">Open →</td>
                     </tr>
                   ))}
                   {allQCs.length === 0 && <tr><td colSpan={7} className="py-6 text-center text-gray-400">No comparisons yet.</td></tr>}
@@ -469,7 +469,7 @@ export default function QuotationComparison() {
         )}
 
         {/* ── Status Banner ── */}
-        <div className="bg-gradient-to-r from-blue-800 to-blue-600 rounded px-5 py-3 flex items-center gap-4 text-white shadow-sm">
+        <div className="bg-gradient-to-r from-violet-900 to-violet-700 rounded px-5 py-3 flex items-center gap-4 text-white shadow-sm">
           <BarChart2 size={16} className="text-blue-200 shrink-0" />
           <span className="font-bold text-base tracking-wide">{form.number || "New Quotation Comparison"}</span>
           {form.piNumber && <span className="text-blue-200 text-sm">| PI: {form.piNumber}</span>}
@@ -504,7 +504,7 @@ export default function QuotationComparison() {
                   <TInput value={form.piNumber} disabled placeholder="Select a PI" error={errors.piNumber} />
                   {!isReadOnly && (
                     <button onClick={() => setShowPISel((v) => !v)}
-                      className={`flex items-center gap-1 text-xs px-2.5 py-1.5 border rounded whitespace-nowrap font-medium transition-colors ${showPISel ? "border-blue-300 bg-blue-50 text-blue-600" : "border-gray-300 text-gray-600 hover:bg-gray-50"}`}>
+                      className={`flex items-center gap-1 text-xs px-2.5 py-1.5 border rounded whitespace-nowrap font-medium transition-colors ${showPISel ? "border-blue-300 bg-blue-50 text-violet-600" : "border-gray-300 text-gray-600 hover:bg-gray-50"}`}>
                       <Search size={12} /> Select
                     </button>
                   )}
@@ -531,7 +531,7 @@ export default function QuotationComparison() {
                     <tbody>
                       {allPIs.map((pi) => (
                         <tr key={pi.id} onClick={() => selectPI(pi)} className="border-b border-gray-100 cursor-pointer hover:bg-blue-50">
-                          <td className="px-3 py-2 font-mono font-semibold text-blue-600">{pi.number}</td>
+                          <td className="px-3 py-2 font-mono font-semibold text-violet-600">{pi.number}</td>
                           <td className="px-3 py-2">{pi.date ? new Date(pi.date).toLocaleDateString("en-IN") : "—"}</td>
                           <td className="px-3 py-2">{pi.buyer || "—"}</td>
                           <td className="px-3 py-2">{pi.unit || "—"}</td>
@@ -663,7 +663,7 @@ export default function QuotationComparison() {
                           <div className="text-gray-500 text-xs mb-1">{row.lastPONo || "—"}</div>
                           {isReadOnly
                             ? <span className="font-mono text-gray-600">{row.lastPORate ? `₹${row.lastPORate}` : "—"}</span>
-                            : <input value={row.lastPORate || ""} onChange={(e) => setForm((p) => { const rows = p.rows.map((r, i) => i === ri ? { ...r, lastPORate: e.target.value } : r); return { ...p, rows }; })} placeholder="0.00" className="w-full px-1.5 py-1 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 text-right bg-white" />
+                            : <input value={row.lastPORate || ""} onChange={(e) => setForm((p) => { const rows = p.rows.map((r, i) => i === ri ? { ...r, lastPORate: e.target.value } : r); return { ...p, rows }; })} placeholder="0.00" className="w-full px-1.5 py-1 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-violet-300 text-right bg-white" />
                           }
                         </td>
 
@@ -680,9 +680,9 @@ export default function QuotationComparison() {
                                   ? <span className={`w-full text-right font-mono px-1 py-1 block ${v.rejected ? "text-gray-400 line-through" : isLowest ? "font-bold text-blue-700 text-sm" : "text-gray-700"}`}>
                                       {v.rate ? `₹${v.rate}` : "—"}
                                     </span>
-                                  : <input value={v.rate} onChange={(e) => updCell(ri, vi, "rate", e.target.value)} disabled={v.rejected} placeholder="Rate" className={`w-full px-1.5 py-1 text-xs border rounded focus:outline-none focus:ring-1 text-right ${v.rejected ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed" : isLowest ? "border-blue-300 bg-blue-50 focus:ring-blue-300 font-semibold" : "border-gray-200 bg-white focus:ring-blue-300"}`} />
+                                  : <input value={v.rate} onChange={(e) => updCell(ri, vi, "rate", e.target.value)} disabled={v.rejected} placeholder="Rate" className={`w-full px-1.5 py-1 text-xs border rounded focus:outline-none focus:ring-1 text-right ${v.rejected ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed" : isLowest ? "border-blue-300 bg-blue-50 focus:ring-violet-300 font-semibold" : "border-gray-200 bg-white focus:ring-violet-300"}`} />
                                 }
-                                {isLowest && !v.rejected && <Award size={11} className="text-blue-600 shrink-0" title="Lowest Rate" />}
+                                {isLowest && !v.rejected && <Award size={11} className="text-violet-600 shrink-0" title="Lowest Rate" />}
                               </div>
 
                               {/* Value (Rate × Qty) + Delivery Date — display only */}
@@ -692,7 +692,7 @@ export default function QuotationComparison() {
                               <div className="mb-1.5">
                                 {isReadOnly
                                   ? <span className="text-xs text-gray-500">{v.deliveryDate ? new Date(v.deliveryDate).toLocaleDateString("en-IN") : "—"}</span>
-                                  : <input type="date" value={v.deliveryDate} onChange={(e) => updCell(ri, vi, "deliveryDate", e.target.value)} disabled={v.rejected} className={`w-full px-1 py-0.5 text-xs border rounded focus:outline-none focus:ring-1 focus:ring-blue-300 ${v.rejected ? "bg-gray-100 border-gray-200 cursor-not-allowed" : "border-gray-200 bg-white"}`} />
+                                  : <input type="date" value={v.deliveryDate} onChange={(e) => updCell(ri, vi, "deliveryDate", e.target.value)} disabled={v.rejected} className={`w-full px-1 py-0.5 text-xs border rounded focus:outline-none focus:ring-1 focus:ring-violet-300 ${v.rejected ? "bg-gray-100 border-gray-200 cursor-not-allowed" : "border-gray-200 bg-white"}`} />
                                 }
                               </div>
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../../../components/Layout";
 import { Plus, Search, Edit2, Trash2 } from "lucide-react";
@@ -47,7 +47,7 @@ export default function ProductTypeList() {
           <h1 className="text-lg font-semibold text-gray-800">Product Type Master</h1>
           <button
             onClick={() => navigate("/masters/product-type/new")}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded shadow-sm"
+            className="flex items-center gap-2 bg-violet-700 hover:bg-violet-800 text-white text-sm px-4 py-2 rounded shadow-sm"
           >
             <Plus size={15} /> Add New
           </button>
@@ -61,7 +61,7 @@ export default function ProductTypeList() {
               placeholder="Search Type ID or Name..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-8 pr-3 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-400"
+              className="w-full pl-8 pr-3 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-violet-400"
             />
           </div>
           <span className="ml-auto text-xs text-gray-400">{filtered.length} of {records.length} record(s)</span>
@@ -73,7 +73,7 @@ export default function ProductTypeList() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm min-w-[480px]">
               <thead>
-                <tr className="bg-blue-600">
+                <tr className="bg-violet-700">
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">Type ID</th>
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">Name</th>
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">Status</th>
@@ -91,10 +91,10 @@ export default function ProductTypeList() {
                   paginated.map((r, i) => (
                     <tr
                       key={r.id}
-                      className={`border-b border-gray-200 hover:bg-blue-50/40 cursor-pointer transition-colors ${i % 2 !== 0 ? "bg-gray-50/50" : ""}`}
+                      className={`border-b border-gray-200 hover:bg-violet-50/40 cursor-pointer transition-colors ${i % 2 !== 0 ? "bg-gray-50/50" : ""}`}
                       onClick={() => navigate(`/masters/product-type/${r.id}`)}
                     >
-                      <td className="px-4 py-2.5 font-mono text-xs font-semibold text-blue-600">{r.typeId}</td>
+                      <td className="px-4 py-2.5 font-mono text-xs font-semibold text-violet-600">{r.typeId}</td>
                       <td className="px-4 py-2.5 font-medium text-gray-800">{r.name}</td>
                       <td className="px-4 py-2.5">
                         <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${r.isDeactivated ? "bg-red-50 text-red-600" : "bg-green-50 text-green-700"}`}>
@@ -103,7 +103,7 @@ export default function ProductTypeList() {
                       </td>
                       <td className="px-4 py-2.5">
                         <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
-                          <button onClick={() => navigate(`/masters/product-type/${r.id}`)} className="p-1.5 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded" title="Edit">
+                          <button onClick={() => navigate(`/masters/product-type/${r.id}`)} className="p-1.5 text-violet-500 hover:text-violet-700 hover:bg-violet-50 rounded" title="Edit">
                             <Edit2 size={13} />
                           </button>
                           <button onClick={() => handleDelete(r.id, r.name)} className="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded" title="Delete">
@@ -123,7 +123,7 @@ export default function ProductTypeList() {
               <div className="flex items-center gap-1">
                 <button onClick={() => setPage(p => p - 1)} disabled={page === 1} className="px-2.5 py-1 border border-gray-300 rounded text-gray-600 hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed">‹ Prev</button>
                 {Array.from({ length: pageCount }, (_, i) => i + 1).map(p => (
-                  <button key={p} onClick={() => setPage(p)} className={`px-2.5 py-1 border rounded ${p === page ? "bg-blue-600 text-white border-blue-600" : "border-gray-300 text-gray-600 hover:bg-white"}`}>{p}</button>
+                  <button key={p} onClick={() => setPage(p)} className={`px-2.5 py-1 border rounded ${p === page ? "bg-violet-700 text-white border-violet-700" : "border-gray-300 text-gray-600 hover:bg-white"}`}>{p}</button>
                 ))}
                 <button onClick={() => setPage(p => p + 1)} disabled={page === pageCount} className="px-2.5 py-1 border border-gray-300 rounded text-gray-600 hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed">Next ›</button>
               </div>

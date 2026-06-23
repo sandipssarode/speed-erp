@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../../components/Layout";
 import { Plus, Search, Edit2, Trash2, ChevronRight, Package } from "lucide-react";
@@ -118,7 +118,7 @@ const SEED_PRODUCTS = [
 
 // Type badge helpers
 const TYPE_BADGES = [
-  { key: "isSold",         label: "Sold",   color: "bg-blue-50 text-blue-600 border-blue-200" },
+  { key: "isSold",         label: "Sold",   color: "bg-blue-50 text-violet-600 border-blue-200" },
   { key: "isPurchase",     label: "Purch",  color: "bg-purple-50 text-purple-600 border-purple-200" },
   { key: "isService",      label: "SVC",    color: "bg-teal-50 text-teal-600 border-teal-200" },
   { key: "isStocked",      label: "Stock",  color: "bg-amber-50 text-amber-700 border-amber-200" },
@@ -191,7 +191,7 @@ export default function ProductList() {
           </div>
           <button
             onClick={() => navigate("/products/new")}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded shadow-sm"
+            className="flex items-center gap-2 bg-violet-700 hover:bg-violet-800 text-white text-sm px-4 py-2 rounded shadow-sm"
           >
             <Plus size={15} /> Add New Product
           </button>
@@ -206,11 +206,11 @@ export default function ProductList() {
               placeholder="Search Code, Name, Category, UOM..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-8 pr-3 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-400"
+              className="w-full pl-8 pr-3 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-violet-400"
             />
           </div>
           <select value={filterType} onChange={(e) => setFilterType(e.target.value)}
-            className="text-sm border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-400">
+            className="text-sm border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-violet-400">
             <option value="all">All Types</option>
             <option value="sold">Sold</option>
             <option value="purchase">Purchase</option>
@@ -219,12 +219,12 @@ export default function ProductList() {
             <option value="manufactured">Manufactured</option>
           </select>
           <select value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)}
-            className="text-sm border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-400">
+            className="text-sm border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-violet-400">
             <option value="all">All Categories</option>
             {categories.map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
           <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}
-            className="text-sm border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-400">
+            className="text-sm border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-violet-400">
             <option value="all">All Status</option>
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>
@@ -266,7 +266,7 @@ export default function ProductList() {
                     className={`border-b border-gray-100 hover:bg-blue-50/30 cursor-pointer transition-colors ${i % 2 !== 0 ? "bg-gray-50/40" : ""}`}
                     onClick={() => navigate(`/products/${p.id}`)}
                   >
-                    <td className="px-4 py-2.5 font-mono text-xs font-semibold text-blue-600">{p.code}</td>
+                    <td className="px-4 py-2.5 font-mono text-xs font-semibold text-violet-600">{p.code}</td>
                     <td className="px-4 py-2.5 font-medium text-gray-800">{p.name}</td>
                     <td className="px-4 py-2.5">
                       <span className="text-xs bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded font-mono">{p.categoryCode}</span>
@@ -293,7 +293,7 @@ export default function ProductList() {
                     <td className="px-4 py-2.5">
                       <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
                         <button onClick={() => navigate(`/products/${p.id}`)}
-                          className="p-1.5 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded" title="Edit">
+                          className="p-1.5 text-violet-500 hover:text-violet-700 hover:bg-violet-50 rounded" title="Edit">
                           <Edit2 size={13} />
                         </button>
                         <button onClick={() => handleDelete(p.id, p.name)}
