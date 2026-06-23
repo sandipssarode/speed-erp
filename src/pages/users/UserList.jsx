@@ -68,7 +68,7 @@ export default function UserList() {
                   <tr><td colSpan={8} className="text-center py-12 text-gray-400">No users found.</td></tr>
                 ) : filtered.map((u) => (
                   <tr key={u.id} className="border-b border-gray-200 hover:bg-gray-50">
-                    <td className="px-4 py-3 font-mono text-xs text-violet-600 font-semibold">{u.code}</td>
+                    <td className="px-4 py-3 font-mono text-xs text-brand-600 font-semibold">{u.code}</td>
                     <td className="px-4 py-3 font-medium text-gray-900">{u.name}</td>
                     <td className="px-4 py-3 text-gray-700">{u.mobile}</td>
                     <td className="px-4 py-3 text-gray-700">{u.email}</td>

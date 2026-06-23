@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import {
   LogOut, User, ChevronDown, ChevronUp, ShoppingCart, BarChart2,
   Package, DollarSign, Settings, LayoutDashboard, Menu, X, Database,
@@ -181,8 +181,8 @@ export default function Layout({ children }) {
         onClick={onLinkClick}
         className={`flex items-center gap-3 px-3 py-2.5 mx-2 my-1 rounded-xl text-sm font-semibold transition-all ${
           location.pathname === "/dashboard"
-            ? "bg-violet-700 text-white shadow-md shadow-violet-200"
-            : "text-gray-600 hover:bg-violet-50 hover:text-violet-700"
+            ? "bg-brand-600 text-white shadow-md shadow-brand-200"
+            : "text-gray-600 hover:bg-brand-50 hover:text-brand-600"
         }`}
       >
         <LayoutDashboard size={18} className="shrink-0" />
@@ -203,9 +203,9 @@ export default function Layout({ children }) {
               onClick={() => toggleModule(mod.label)}
               className={`flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all my-0.5 ${
                 isOpen
-                  ? "bg-violet-700 text-white"
+                  ? "bg-brand-600 text-white"
                   : hasActive
-                  ? "bg-violet-50 text-violet-700"
+                  ? "bg-brand-50 text-brand-600"
                   : "text-gray-600 hover:bg-gray-100 hover:text-gray-800"
               }`}
               style={{ width: "calc(100% - 16px)", marginLeft: 8 }}
@@ -214,7 +214,7 @@ export default function Layout({ children }) {
                 <ModIcon size={17} className="shrink-0" />
                 <span>{mod.label}</span>
               </span>
-              <span className={isOpen ? "text-violet-200" : "text-gray-400"}>
+              <span className={isOpen ? "text-brand-200" : "text-gray-400"}>
                 {isOpen ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
               </span>
             </button>
@@ -234,7 +234,7 @@ export default function Layout({ children }) {
                               ? "bg-red-50 text-red-600 font-semibold border-r-2 border-red-400"
                               : "text-red-400 hover:bg-red-50"
                             : location.pathname === link.path
-                            ? "bg-violet-100 text-violet-700 font-semibold border-r-2 border-violet-600"
+                            ? "bg-brand-100 text-brand-600 font-semibold border-r-2 border-brand-600"
                             : "text-gray-600 hover:bg-gray-100 hover:text-gray-700"
                         }`}
                       >
@@ -251,7 +251,7 @@ export default function Layout({ children }) {
                     <div key={section}>
                       <button
                         onClick={() => toggleSection(section)}
-                        className="w-full flex items-center justify-between px-4 py-2 text-[10px] font-bold text-gray-400 uppercase tracking-wider hover:text-violet-600 transition-colors"
+                        className="w-full flex items-center justify-between px-4 py-2 text-[10px] font-bold text-gray-400 uppercase tracking-wider hover:text-brand-600 transition-colors"
                       >
                         {section}
                         {openSection === section ? <ChevronUp size={10} /> : <ChevronDown size={10} />}
@@ -265,7 +265,7 @@ export default function Layout({ children }) {
                               onClick={onLinkClick}
                               className={`flex items-center gap-2 pl-8 pr-3 py-1.5 text-xs transition-colors ${
                                 location.pathname === link.path
-                                  ? "bg-violet-100 text-violet-700 font-semibold border-r-2 border-violet-600"
+                                  ? "bg-brand-100 text-brand-600 font-semibold border-r-2 border-brand-600"
                                   : "text-gray-600 hover:bg-gray-100 hover:text-gray-700"
                               }`}
                             >
@@ -302,8 +302,8 @@ export default function Layout({ children }) {
         title="Dashboard"
         className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
           location.pathname === "/dashboard"
-            ? "bg-violet-700 text-white shadow-md shadow-violet-200"
-            : "text-gray-400 hover:bg-violet-50 hover:text-violet-700"
+            ? "bg-brand-600 text-white shadow-md shadow-brand-200"
+            : "text-gray-400 hover:bg-brand-50 hover:text-brand-600"
         }`}
       >
         <LayoutDashboard size={18} />
@@ -324,10 +324,10 @@ export default function Layout({ children }) {
             onClick={() => toggleModule(mod.label)}
             className={`relative w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
               isOpen
-                ? "bg-violet-700 text-white shadow-md shadow-violet-200"
+                ? "bg-brand-600 text-white shadow-md shadow-brand-200"
                 : hasActive
-                ? "bg-violet-100 text-violet-700"
-                : "text-gray-400 hover:bg-violet-50 hover:text-violet-700"
+                ? "bg-brand-100 text-brand-600"
+                : "text-gray-400 hover:bg-brand-50 hover:text-brand-600"
             }`}
           >
             <ModIcon size={18} />
@@ -344,7 +344,7 @@ export default function Layout({ children }) {
       <button
         title={userName}
         onClick={handleLogoff}
-        className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-violet-700 flex items-center justify-center text-white text-sm font-bold shadow-sm hover:shadow-md transition-all"
+        className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-600 to-brand-800 flex items-center justify-center text-white text-sm font-bold shadow-sm hover:shadow-md transition-all"
       >
         {userInitial}
       </button>
@@ -352,17 +352,14 @@ export default function Layout({ children }) {
   );
 
   return (
-    <div
-      className="h-screen flex flex-col overflow-hidden bg-gradient-to-br from-violet-50 via-slate-50 to-indigo-100 text-gray-800"
-      style={{ fontFamily: "Inter, Arial, sans-serif" }}
-    >
+    <div className="h-screen flex flex-col overflow-hidden bg-gradient-to-br from-brand-50 via-[#f2f0ef] to-brand-100 text-gray-800">
       {/* ── TOP BAR ── */}
-      <header className="bg-white/90 backdrop-blur-sm border-b border-violet-100 flex items-center justify-between px-3 lg:px-4 py-2 shadow-sm shrink-0 z-30">
+      <header className="bg-white/90 backdrop-blur-sm border-b border-brand-200 flex items-center justify-between px-3 lg:px-4 py-2 shadow-sm shrink-0 z-30">
         <div className="flex items-center gap-2 lg:gap-3">
           {/* Mobile hamburger */}
           <button
             onClick={() => setMobileOpen(true)}
-            className="lg:hidden p-1.5 rounded-lg hover:bg-violet-50 text-gray-500"
+            className="lg:hidden p-1.5 rounded-lg hover:bg-brand-50 text-gray-500"
             aria-label="Open menu"
           >
             <Menu size={20} />
@@ -377,7 +374,7 @@ export default function Layout({ children }) {
           </div>
           <Link
             to="/profile"
-            className="flex items-center gap-1.5 text-xs border border-gray-200 px-2.5 py-1.5 rounded-lg text-gray-600 hover:bg-violet-50 hover:border-violet-200 hover:text-violet-700 transition-colors"
+            className="flex items-center gap-1.5 text-xs border border-gray-200 px-2.5 py-1.5 rounded-lg text-gray-600 hover:bg-brand-50 hover:border-brand-200 hover:text-brand-600 transition-colors"
           >
             <User size={13} /> <span className="hidden sm:inline">My Profile</span>
           </Link>
@@ -399,7 +396,7 @@ export default function Layout({ children }) {
 
         {/* ── MOBILE SIDEBAR (full overlay) ── */}
         <aside className={`
-          fixed inset-y-0 left-0 z-50 w-72 bg-white/98 backdrop-blur-md border-r border-violet-100 flex flex-col
+          fixed inset-y-0 left-0 z-50 w-72 bg-white/98 backdrop-blur-md border-r border-brand-200 flex flex-col
           transition-transform duration-300 ease-in-out shadow-2xl
           ${mobileOpen ? "translate-x-0" : "-translate-x-full"}
           lg:hidden
@@ -419,13 +416,13 @@ export default function Layout({ children }) {
         <div className="hidden lg:flex shrink-0 transition-all duration-300">
 
           {/* Icon rail (always visible) */}
-          <div className="w-14 bg-white/90 backdrop-blur-sm border-r border-violet-100 flex flex-col py-2 px-2 shrink-0">
+          <div className="w-14 bg-white/90 backdrop-blur-sm border-r border-brand-200 flex flex-col py-2 px-2 shrink-0">
             <IconRail />
             {/* Expand/collapse toggle at bottom of rail */}
             <button
               onClick={() => setExpanded(p => !p)}
               title={expanded ? "Collapse sidebar" : "Expand sidebar"}
-              className="w-10 h-8 rounded-xl flex items-center justify-center text-gray-400 hover:bg-violet-50 hover:text-violet-700 transition-colors mt-1 mx-auto"
+              className="w-10 h-8 rounded-xl flex items-center justify-center text-gray-400 hover:bg-brand-50 hover:text-brand-600 transition-colors mt-1 mx-auto"
             >
               {expanded ? <ChevronLeft size={15} /> : <ChevronRight size={15} />}
             </button>
@@ -435,7 +432,7 @@ export default function Layout({ children }) {
           <div className={`
             overflow-hidden transition-all duration-300 ease-in-out
             ${expanded ? "w-56" : "w-0"}
-            bg-white/95 backdrop-blur-sm border-r border-violet-100
+            bg-white/95 backdrop-blur-sm border-r border-brand-200
           `}>
             <div className="w-56 h-full overflow-hidden">
               <SidebarContent onLinkClick={() => {}} />
@@ -448,7 +445,7 @@ export default function Layout({ children }) {
       </div>
 
       {/* ── FOOTER ── */}
-      <footer className="bg-white/80 backdrop-blur-sm border-t border-violet-100 px-4 py-1.5 flex items-center justify-center flex-wrap gap-2 sm:gap-8 text-xs text-gray-400 shrink-0">
+      <footer className="bg-white/80 backdrop-blur-sm border-t border-brand-200 px-4 py-1.5 flex items-center justify-center flex-wrap gap-2 sm:gap-8 text-xs text-gray-400 shrink-0">
         <span>Version 1.0.0</span>
         <span className="hidden sm:inline">|</span>
         <span className="hidden sm:inline">Login: {new Date().toLocaleString()}</span>

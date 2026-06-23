@@ -64,7 +64,7 @@ export default function OrganisationList() {
           </div>
           <button
             onClick={() => navigate("/system/organisations/new")}
-            className="flex items-center gap-2 bg-violet-700 hover:bg-violet-800 text-white text-sm px-4 py-2 rounded shadow-sm"
+            className="flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white text-sm px-4 py-2 rounded shadow-sm"
           >
             <Plus size={15} /> Add New Organisation
           </button>
@@ -79,13 +79,13 @@ export default function OrganisationList() {
               placeholder="Search Code, Name, State, City..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full pl-8 pr-3 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-violet-400"
+              className="w-full pl-8 pr-3 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-brand-600"
             />
           </div>
           <select
             value={filterType}
             onChange={e => setFilterType(e.target.value)}
-            className="text-sm border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-violet-400"
+            className="text-sm border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-brand-600"
           >
             <option value="all">All Types</option>
             {allTypes.map(t => <option key={t} value={t}>{t}</option>)}
@@ -93,7 +93,7 @@ export default function OrganisationList() {
           <select
             value={filterState}
             onChange={e => setFilterState(e.target.value)}
-            className="text-sm border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-violet-400"
+            className="text-sm border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-brand-600"
           >
             <option value="all">All States</option>
             {allStates.map(s => <option key={s} value={s}>{s}</option>)}
@@ -101,7 +101,7 @@ export default function OrganisationList() {
           <select
             value={filterCurrency}
             onChange={e => setFilterCurrency(e.target.value)}
-            className="text-sm border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-violet-400"
+            className="text-sm border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-brand-600"
           >
             <option value="all">All Currencies</option>
             {allCurrencies.map(c => <option key={c} value={c}>{c}</option>)}
@@ -143,7 +143,7 @@ export default function OrganisationList() {
                     className={`border-b border-gray-100 hover:bg-blue-50/30 cursor-pointer transition-colors ${i % 2 !== 0 ? "bg-gray-50/40" : ""}`}
                     onClick={() => navigate(`/system/organisations/${o.id}`)}
                   >
-                    <td className="px-4 py-2.5 font-mono text-xs font-semibold text-violet-600">{o.companyCode}</td>
+                    <td className="px-4 py-2.5 font-mono text-xs font-semibold text-brand-600">{o.companyCode}</td>
                     <td className="px-4 py-2.5">
                       <div className="flex items-center gap-2">
                         {o.companyLogo ? (
@@ -161,7 +161,7 @@ export default function OrganisationList() {
                         o.type === "Head Office"
                           ? "bg-purple-50 text-purple-700 border-purple-200"
                           : o.type === "Branch"
-                          ? "bg-violet-50 text-violet-700 border-blue-200"
+                          ? "bg-brand-50 text-brand-600 border-blue-200"
                           : o.type === "Subsidiary"
                           ? "bg-teal-50 text-teal-700 border-teal-200"
                           : o.type === "Division"
@@ -181,7 +181,7 @@ export default function OrganisationList() {
                       <div className="flex items-center gap-1" onClick={e => e.stopPropagation()}>
                         <button
                           onClick={() => navigate(`/system/organisations/${o.id}`)}
-                          className="p-1.5 text-violet-500 hover:text-violet-700 hover:bg-violet-50 rounded"
+                          className="p-1.5 text-brand-500 hover:text-brand-600 hover:bg-brand-50 rounded"
                           title="Edit"
                         >
                           <Edit2 size={13} />

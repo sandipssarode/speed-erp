@@ -93,7 +93,7 @@ function generateCode(name, products) {
 // ─────────────────────────────────────────────────────────────
 const inputBase = (disabled, error) =>
   `w-full px-2.5 py-1.5 text-sm border rounded focus:outline-none focus:ring-1 transition-colors
-  ${error ? "border-red-300 focus:ring-red-300 bg-red-50/20" : "focus:ring-violet-400"}
+  ${error ? "border-red-300 focus:ring-red-300 bg-red-50/20" : "focus:ring-brand-600"}
   ${disabled ? "bg-gray-100 text-gray-500 cursor-not-allowed border-gray-200" : "bg-white border-gray-300 hover:border-gray-400"}`;
 
 function Field({ label, required, error, children, className = "" }) {
@@ -134,7 +134,7 @@ function TCheckbox({ checked, onChange, disabled, label }) {
   return (
     <label className={`flex items-center gap-2 text-sm select-none ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"}`}>
       <input type="checkbox" checked={!!checked} onChange={onChange} disabled={disabled}
-        className="w-3.5 h-3.5 rounded border-gray-300 text-violet-600 focus:ring-violet-400 focus:ring-1" />
+        className="w-3.5 h-3.5 rounded border-gray-300 text-brand-600 focus:ring-brand-600 focus:ring-1" />
       <span className="text-gray-700">{label}</span>
     </label>
   );
@@ -167,11 +167,11 @@ function TaxMultiSelect({ selected, onChange, disabled }) {
             <label key={opt} className="flex items-center gap-2 px-2 py-1.5 hover:bg-gray-50 rounded cursor-pointer text-sm">
               <input type="checkbox" checked={selected.includes(opt)}
                 onChange={(e) => { if (e.target.checked) onChange([...selected, opt]); else onChange(selected.filter((x) => x !== opt)); }}
-                className="w-3.5 h-3.5 text-violet-600" />
+                className="w-3.5 h-3.5 text-brand-600" />
               {opt}
             </label>
           ))}
-          <button onClick={() => setOpen(false)} className="w-full text-xs text-violet-600 text-center py-1.5 hover:bg-violet-50 rounded mt-1 border-t border-gray-100">Done</button>
+          <button onClick={() => setOpen(false)} className="w-full text-xs text-brand-600 text-center py-1.5 hover:bg-brand-50 rounded mt-1 border-t border-gray-100">Done</button>
         </div>
       )}
     </div>
@@ -202,7 +202,7 @@ function ProductTagSelect({ selected, onChange, allProducts, disabled, placehold
         {selected.map((code) => {
           const p = allProducts.find((x) => x.code === code);
           return (
-            <span key={code} className="inline-flex items-center gap-1 bg-violet-50 text-violet-700 text-xs px-2 py-0.5 rounded border border-blue-200">
+            <span key={code} className="inline-flex items-center gap-1 bg-brand-50 text-brand-600 text-xs px-2 py-0.5 rounded border border-blue-200">
               <span className="font-mono">{code}</span>{p ? ` — ${p.name}` : ""}
               {!disabled && <button type="button" onClick={() => onChange(selected.filter((c) => c !== code))} className="hover:text-red-500 ml-0.5 font-bold">×</button>}
             </span>
@@ -220,8 +220,8 @@ function ProductTagSelect({ selected, onChange, allProducts, disabled, placehold
           {suggestions.slice(0, 10).map((p) => (
             <button key={p.code} type="button"
               onClick={() => { onChange([...selected, p.code]); setQuery(""); setOpen(false); }}
-              className="w-full text-left px-3 py-2 text-sm hover:bg-violet-50 flex items-center gap-2.5 border-b border-gray-50">
-              <span className="font-mono text-xs text-violet-600 w-14 shrink-0">{p.code}</span>
+              className="w-full text-left px-3 py-2 text-sm hover:bg-brand-50 flex items-center gap-2.5 border-b border-gray-50">
+              <span className="font-mono text-xs text-brand-600 w-14 shrink-0">{p.code}</span>
               <span className="text-gray-700">{p.name}</span>
               <span className="ml-auto text-xs text-gray-400">{p.stockUOM}</span>
             </button>
@@ -287,7 +287,7 @@ function CategoryModal({ onSave, onClose, categories }) {
         </div>
         <div className="px-5 py-3 border-t border-gray-200 flex justify-end gap-2">
           <button onClick={onClose} className="px-4 py-1.5 text-sm border border-gray-300 text-gray-600 rounded hover:bg-gray-50">Cancel</button>
-          <button onClick={save} className="px-4 py-1.5 text-sm bg-violet-700 hover:bg-violet-800 text-white rounded flex items-center gap-1.5"><Save size={13} /> Save Category</button>
+          <button onClick={save} className="px-4 py-1.5 text-sm bg-brand-600 hover:bg-brand-700 text-white rounded flex items-center gap-1.5"><Save size={13} /> Save Category</button>
         </div>
       </div>
     </div>
@@ -467,8 +467,8 @@ export default function ProductForm() {
         {/* Breadcrumb */}
         <div className="flex items-center gap-1.5 text-xs text-gray-400">
           <span>Master</span><ChevronRight size={12} />
-          <button onClick={() => navigate("/products")} className="hover:text-violet-500 transition-colors">Product Master</button>
-          {form.code && <><ChevronRight size={12} /><span className="text-violet-600 font-medium">{form.code}</span></>}
+          <button onClick={() => navigate("/products")} className="hover:text-brand-500 transition-colors">Product Master</button>
+          {form.code && <><ChevronRight size={12} /><span className="text-brand-600 font-medium">{form.code}</span></>}
         </div>
 
         {/* Toast */}
@@ -514,7 +514,7 @@ export default function ProductForm() {
           <div className="w-px h-5 bg-gray-200 mx-1" />
           <button onClick={() => setShowChangelog(!showChangelog)}
             className={`flex items-center gap-1.5 text-xs px-3 py-1.5 border rounded font-medium transition-colors ${
-              showChangelog ? "border-blue-300 bg-blue-50 text-violet-600" : "border-gray-300 text-gray-600 hover:bg-gray-50"
+              showChangelog ? "border-blue-300 bg-blue-50 text-brand-600" : "border-gray-300 text-gray-600 hover:bg-gray-50"
             }`}>
             <FileText size={13} /> Changelog
           </button>
@@ -545,7 +545,7 @@ export default function ProductForm() {
                     <tr key={i} className="border-b border-gray-50">
                       <td className="py-1.5 text-gray-600">{new Date(c.timestamp).toLocaleString()}</td>
                       <td className="py-1.5 text-gray-600">{c.user}</td>
-                      <td className="py-1.5"><span className={`px-1.5 py-0.5 rounded text-xs ${c.action === "Created" ? "bg-green-50 text-green-600" : "bg-blue-50 text-violet-600"}`}>{c.action}</span></td>
+                      <td className="py-1.5"><span className={`px-1.5 py-0.5 rounded text-xs ${c.action === "Created" ? "bg-green-50 text-green-600" : "bg-blue-50 text-brand-600"}`}>{c.action}</span></td>
                       <td className="py-1.5 text-gray-600">{c.changes}</td>
                     </tr>
                   ))}
@@ -557,7 +557,7 @@ export default function ProductForm() {
 
         {/* ── HEADER SECTION ── */}
         <div className="bg-white border border-gray-200 rounded shadow-sm">
-          <div className="bg-gradient-to-r from-violet-900 to-violet-700 px-5 py-2.5 rounded-t flex items-center gap-4 text-white">
+          <div className="bg-gradient-to-r from-brand-900 to-brand-600 px-5 py-2.5 rounded-t flex items-center gap-4 text-white">
             <div className="w-8 h-8 bg-white/20 rounded flex items-center justify-center shrink-0">
               <Package size={16} className="text-white" />
             </div>
@@ -612,7 +612,7 @@ export default function ProductForm() {
             {TABS.map((tab) => (
               <button key={tab.id} onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-1.5 px-5 py-3 text-xs font-medium whitespace-nowrap border-b-2 transition-colors
-                  ${activeTab === tab.id ? "border-violet-700 text-violet-600 bg-blue-50/50" : "border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50"}`}>
+                  ${activeTab === tab.id ? "border-brand-600 text-brand-600 bg-blue-50/50" : "border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50"}`}>
                 {tab.label}
                 {tabHasError(tab.id) && <AlertCircle size={12} className="text-red-400" />}
               </button>
@@ -659,7 +659,7 @@ export default function ProductForm() {
                       <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Product Category</p>
                       {!isReadOnly && (
                         <button onClick={() => setShowCategoryModal(true)}
-                          className="flex items-center gap-1 text-xs px-2.5 py-1 bg-violet-700 hover:bg-violet-800 text-white rounded">
+                          className="flex items-center gap-1 text-xs px-2.5 py-1 bg-brand-600 hover:bg-brand-700 text-white rounded">
                           <Plus size={11} /> Add New
                         </button>
                       )}
@@ -734,7 +734,7 @@ export default function ProductForm() {
                     <p className="text-xs text-gray-400 mt-0.5">Each unique combination of attribute values creates one product variant record.</p>
                   </div>
                   {!isReadOnly && (
-                    <button onClick={addVariant} className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-violet-700 hover:bg-violet-800 text-white rounded">
+                    <button onClick={addVariant} className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-brand-600 hover:bg-brand-700 text-white rounded">
                       <Plus size={13} /> Add Attribute
                     </button>
                   )}
@@ -839,7 +839,7 @@ export default function ProductForm() {
                       <p className="text-xs text-gray-400 mt-0.5">Define conversion when Purchase UOM differs from Stock UOM.</p>
                     </div>
                     {!isReadOnly && (
-                      <button onClick={addConv} className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-violet-700 hover:bg-violet-800 text-white rounded">
+                      <button onClick={addConv} className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-brand-600 hover:bg-brand-700 text-white rounded">
                         <Plus size={13} /> Add Conversion
                       </button>
                     )}
@@ -929,9 +929,9 @@ export default function ProductForm() {
                 {(form.categoryCode) && (
                   <div className="bg-blue-50 border border-blue-100 rounded p-3 space-y-1">
                     <p className="text-xs font-semibold text-blue-700">Inherited from Category: {form.categoryCode} — {form.categoryName}</p>
-                    <p className="text-xs text-violet-600">Income: {form.catIncomeAccount || "Not set"}</p>
-                    <p className="text-xs text-violet-600">Expense: {form.catExpenseAccount || "Not set"}</p>
-                    <p className="text-xs text-violet-600">Cost Method: {form.costMethod || "Not set"}</p>
+                    <p className="text-xs text-brand-600">Income: {form.catIncomeAccount || "Not set"}</p>
+                    <p className="text-xs text-brand-600">Expense: {form.catExpenseAccount || "Not set"}</p>
+                    <p className="text-xs text-brand-600">Cost Method: {form.costMethod || "Not set"}</p>
                   </div>
                 )}
               </div>

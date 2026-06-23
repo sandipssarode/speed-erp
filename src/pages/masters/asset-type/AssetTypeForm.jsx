@@ -36,7 +36,7 @@ function Field({ label, required, error, children, className = "" }) {
 
 const inputBase = (disabled, error) =>
   `w-full px-2.5 py-1.5 text-sm border rounded focus:outline-none focus:ring-1 transition-colors
-  ${error ? "border-red-300 focus:ring-red-300 bg-red-50/20" : "focus:ring-violet-400"}
+  ${error ? "border-red-300 focus:ring-red-300 bg-red-50/20" : "focus:ring-brand-600"}
   ${disabled ? "bg-gray-100 text-gray-500 cursor-not-allowed border-gray-200" : "bg-white border-gray-300 hover:border-gray-400"}`;
 
 function TInput({ value, onChange, disabled, placeholder, maxLength, error }) {
@@ -180,8 +180,8 @@ export default function AssetTypeForm() {
         {/* Breadcrumb */}
         <div className="flex items-center gap-1.5 text-xs text-gray-400">
           <span>Masters</span><ChevronRight size={12} />
-          <button onClick={() => navigate("/masters/asset-type")} className="hover:text-violet-500 transition-colors">Asset Type</button>
-          {form.assetTypeId && <><ChevronRight size={12} /><span className="text-violet-600 font-medium">{form.assetTypeId}</span></>}
+          <button onClick={() => navigate("/masters/asset-type")} className="hover:text-brand-500 transition-colors">Asset Type</button>
+          {form.assetTypeId && <><ChevronRight size={12} /><span className="text-brand-600 font-medium">{form.assetTypeId}</span></>}
         </div>
 
         {/* Toast */}
@@ -232,7 +232,7 @@ export default function AssetTypeForm() {
           <button
             onClick={() => setShowChangelog(!showChangelog)}
             className={`flex items-center gap-1.5 text-xs px-3 py-1.5 border rounded font-medium transition-colors ${
-              showChangelog ? "border-blue-300 bg-blue-50 text-violet-600" : "border-gray-300 text-gray-600 hover:bg-gray-50"
+              showChangelog ? "border-blue-300 bg-blue-50 text-brand-600" : "border-gray-300 text-gray-600 hover:bg-gray-50"
             }`}
           >
             <FileText size={13} /> Changelog
@@ -270,7 +270,7 @@ export default function AssetTypeForm() {
                       <td className="py-1.5 text-gray-600">{new Date(c.timestamp).toLocaleString()}</td>
                       <td className="py-1.5 text-gray-600">{c.user}</td>
                       <td className="py-1.5">
-                        <span className={`px-1.5 py-0.5 rounded text-xs ${c.action === "Created" ? "bg-green-50 text-green-600" : "bg-blue-50 text-violet-600"}`}>{c.action}</span>
+                        <span className={`px-1.5 py-0.5 rounded text-xs ${c.action === "Created" ? "bg-green-50 text-green-600" : "bg-blue-50 text-brand-600"}`}>{c.action}</span>
                       </td>
                       <td className="py-1.5 text-gray-600">{c.changes}</td>
                     </tr>
@@ -283,7 +283,7 @@ export default function AssetTypeForm() {
 
         {/* Header card */}
         <div className="bg-white border border-gray-200 rounded shadow-sm">
-          <div className="bg-gradient-to-r from-violet-900 to-violet-700 px-5 py-2.5 rounded-t flex items-center gap-4 text-white">
+          <div className="bg-gradient-to-r from-brand-900 to-brand-600 px-5 py-2.5 rounded-t flex items-center gap-4 text-white">
             <span className="font-bold text-base tracking-wide">{form.assetTypeId || "NEW ASSET TYPE"}</span>
             <span className="text-blue-200 text-sm">{form.assetTypeName || "—"}</span>
             {form.category && (

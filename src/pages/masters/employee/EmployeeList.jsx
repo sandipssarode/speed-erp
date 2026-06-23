@@ -66,7 +66,7 @@ export default function EmployeeList() {
           <h1 className="text-lg font-semibold text-gray-800">Employee Registration Master</h1>
           <button
             onClick={() => navigate("/masters/employee/new")}
-            className="flex items-center gap-2 bg-violet-700 hover:bg-violet-800 text-white text-sm px-4 py-2 rounded shadow-sm"
+            className="flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white text-sm px-4 py-2 rounded shadow-sm"
           >
             <Plus size={15} /> Add New
           </button>
@@ -80,14 +80,14 @@ export default function EmployeeList() {
               placeholder="Search ID, Name or Email..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-8 pr-3 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-violet-400"
+              className="w-full pl-8 pr-3 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-brand-600"
             />
           </div>
-          <select value={filterDept} onChange={(e) => setFilterDept(e.target.value)} className="text-sm border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-violet-400">
+          <select value={filterDept} onChange={(e) => setFilterDept(e.target.value)} className="text-sm border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-brand-600">
             <option value="all">All Departments</option>
             {departments.map(d => <option key={d} value={d}>{d}</option>)}
           </select>
-          <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} className="text-sm border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-violet-400">
+          <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} className="text-sm border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-brand-600">
             <option value="all">All Statuses</option>
             <option value="Active">Active</option>
             <option value="On Leave">On Leave</option>
@@ -103,7 +103,7 @@ export default function EmployeeList() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm min-w-[740px]">
               <thead>
-                <tr className="bg-violet-700">
+                <tr className="bg-brand-600">
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">Emp ID</th>
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">Full Name</th>
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">Department</th>
@@ -124,10 +124,10 @@ export default function EmployeeList() {
                   paginated.map((r, i) => (
                     <tr
                       key={r.id}
-                      className={`border-b border-gray-200 hover:bg-violet-50/40 cursor-pointer transition-colors ${i % 2 !== 0 ? "bg-gray-50/50" : ""}`}
+                      className={`border-b border-gray-200 hover:bg-brand-50/40 cursor-pointer transition-colors ${i % 2 !== 0 ? "bg-gray-50/50" : ""}`}
                       onClick={() => navigate(`/masters/employee/${r.id}`)}
                     >
-                      <td className="px-4 py-2.5 font-mono text-xs font-semibold text-violet-600">{r.employeeId}</td>
+                      <td className="px-4 py-2.5 font-mono text-xs font-semibold text-brand-600">{r.employeeId}</td>
                       <td className="px-4 py-2.5 font-medium text-gray-800">{[r.firstName, r.lastName].filter(Boolean).join(" ") || "—"}</td>
                       <td className="px-4 py-2.5 text-gray-600 text-xs">{r.departmentName || "—"}</td>
                       <td className="px-4 py-2.5 text-gray-600 text-xs">{r.designationName || "—"}</td>
@@ -139,7 +139,7 @@ export default function EmployeeList() {
                       </td>
                       <td className="px-4 py-2.5">
                         <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
-                          <button onClick={() => navigate(`/masters/employee/${r.id}`)} className="p-1.5 text-violet-500 hover:text-violet-700 hover:bg-violet-50 rounded" title="Edit"><Edit2 size={13} /></button>
+                          <button onClick={() => navigate(`/masters/employee/${r.id}`)} className="p-1.5 text-brand-500 hover:text-brand-600 hover:bg-brand-50 rounded" title="Edit"><Edit2 size={13} /></button>
                           <button onClick={() => handleDelete(r.id, `${r.firstName} ${r.lastName}`)} className="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded" title="Delete"><Trash2 size={13} /></button>
                         </div>
                       </td>
@@ -155,7 +155,7 @@ export default function EmployeeList() {
               <div className="flex items-center gap-1">
                 <button onClick={() => setPage(p => p - 1)} disabled={page === 1} className="px-2.5 py-1 border border-gray-300 rounded text-gray-600 hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed">‹ Prev</button>
                 {Array.from({ length: pageCount }, (_, i) => i + 1).map(p => (
-                  <button key={p} onClick={() => setPage(p)} className={`px-2.5 py-1 border rounded ${p === page ? "bg-violet-700 text-white border-violet-700" : "border-gray-300 text-gray-600 hover:bg-white"}`}>{p}</button>
+                  <button key={p} onClick={() => setPage(p)} className={`px-2.5 py-1 border rounded ${p === page ? "bg-brand-600 text-white border-brand-600" : "border-gray-300 text-gray-600 hover:bg-white"}`}>{p}</button>
                 ))}
                 <button onClick={() => setPage(p => p + 1)} disabled={page === pageCount} className="px-2.5 py-1 border border-gray-300 rounded text-gray-600 hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed">Next ›</button>
               </div>

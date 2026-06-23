@@ -56,7 +56,7 @@ export default function AssetTypeList() {
           </div>
           <button
             onClick={() => navigate("/masters/asset-type/new")}
-            className="flex items-center gap-2 bg-violet-700 hover:bg-violet-800 text-white text-sm px-4 py-2 rounded shadow-sm"
+            className="flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white text-sm px-4 py-2 rounded shadow-sm"
           >
             <Plus size={15} /> Add New
           </button>
@@ -71,13 +71,13 @@ export default function AssetTypeList() {
               placeholder="Search Type ID, Name, Category..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-8 pr-3 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-violet-400"
+              className="w-full pl-8 pr-3 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-brand-600"
             />
           </div>
           <select
             value={filterCategory}
             onChange={(e) => setFilterCategory(e.target.value)}
-            className="text-sm border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-violet-400"
+            className="text-sm border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-brand-600"
           >
             <option value="all">All Categories</option>
             {categories.map((c) => (
@@ -119,14 +119,14 @@ export default function AssetTypeList() {
                       className={`border-b border-gray-100 hover:bg-blue-50/30 cursor-pointer transition-colors ${i % 2 !== 0 ? "bg-gray-50/40" : ""}`}
                       onClick={() => navigate(`/masters/asset-type/${r.id}`)}
                     >
-                      <td className="px-4 py-2.5 font-mono text-xs font-semibold text-violet-600">{r.assetTypeId}</td>
+                      <td className="px-4 py-2.5 font-mono text-xs font-semibold text-brand-600">{r.assetTypeId}</td>
                       <td className="px-4 py-2.5 font-medium text-gray-800">{r.assetTypeName}</td>
                       <td className="px-4 py-2.5 text-gray-600">{r.category || "—"}</td>
                       <td className="px-4 py-2.5">
                         <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
                           <button
                             onClick={() => navigate(`/masters/asset-type/${r.id}`)}
-                            className="p-1.5 text-violet-500 hover:text-violet-700 hover:bg-violet-50 rounded"
+                            className="p-1.5 text-brand-500 hover:text-brand-600 hover:bg-brand-50 rounded"
                             title="Edit"
                           >
                             <Edit2 size={13} />

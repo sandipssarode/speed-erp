@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import {
@@ -12,10 +12,10 @@ import {
 
 // ── Mock data ───────────────────────────────────────────────────
 const kpis = [
-  { label: "Open Purchase Orders", value: 20, trend: "+3", up: true,  color: "#7C3AED", Icon: ShoppingCart },
-  { label: "Open Sales Orders",    value: 15, trend: "+1", up: true,  color: "#0D9488", Icon: BarChart2    },
+  { label: "Open Purchase Orders", value: 20, trend: "+3", up: true,  color: "#6C698D", Icon: ShoppingCart },
+  { label: "Open Sales Orders",    value: 15, trend: "+1", up: true,  color: "#AA968A", Icon: BarChart2    },
   { label: "Pending GRNs",         value: 45, trend: "-5", up: false, color: "#D97706", Icon: Package      },
-  { label: "Total Employees",      value: 128, trend: "+2", up: true, color: "#2563EB", Icon: Users        },
+  { label: "Total Employees",      value: 128, trend: "+2", up: true, color: "#6E6A6F", Icon: Users        },
 ];
 
 const purchaseData = [
@@ -37,9 +37,9 @@ const salesData = [
 ];
 
 const donutData = [
-  { name: "Open POs",  value: 20, color: "#7C3AED" },
-  { name: "Open SOs",  value: 15, color: "#0D9488" },
-  { name: "Completed", value: 65, color: "#E5E7EB" },
+  { name: "Open POs",  value: 20, color: "#6C698D" },
+  { name: "Open SOs",  value: 15, color: "#AA968A" },
+  { name: "Completed", value: 65, color: "#E5E3E6" },
 ];
 
 const recentTransactions = [
@@ -88,7 +88,7 @@ const ChartTooltip = ({ active, payload, label }) => {
   return (
     <div className="bg-white shadow-lg rounded-xl px-3 py-2 text-xs border border-gray-100">
       <p className="font-semibold text-gray-700 mb-1">{label}</p>
-      <p className="text-violet-600 font-bold">{fmt(payload[0].value)}</p>
+      <p className="text-brand-600 font-bold">{fmt(payload[0].value)}</p>
     </div>
   );
 };
@@ -112,12 +112,12 @@ export default function Dashboard() {
           <div>
             <h1 className="text-xl font-bold text-gray-800 leading-tight">Dashboard</h1>
             <p className="text-xs text-gray-500 mt-0.5">
-              Welcome back, <span className="font-medium text-violet-600">{user.name || user.fullName || "User"}</span>
+              Welcome back, <span className="font-medium text-brand-600">{user.name || user.fullName || "User"}</span>
             </p>
           </div>
           <button
             onClick={() => setTicketOpen(v => !v)}
-            className="flex items-center gap-2 text-xs px-3 py-2 rounded-lg border border-violet-200 text-violet-600 hover:bg-violet-50 transition-colors"
+            className="flex items-center gap-2 text-xs px-3 py-2 rounded-lg border border-brand-200 text-brand-600 hover:bg-brand-50 transition-colors"
           >
             <Ticket size={13} />
             Support Tickets
@@ -157,9 +157,9 @@ export default function Dashboard() {
             </div>
             <div className="space-y-2.5">
               {[
-                { label: "Raise Purchase Order", path: "/purchase/requisition", color: "#7C3AED", Icon: ShoppingCart },
-                { label: "Create Sales Order",   path: "/sales/orders",         color: "#0D9488", Icon: BarChart2    },
-                { label: "Add Employee",          path: "/masters/employee/new", color: "#2563EB", Icon: Users        },
+                { label: "Raise Purchase Order", path: "/purchase/requisition", color: "#6C698D", Icon: ShoppingCart },
+                { label: "Create Sales Order",   path: "/sales/orders",         color: "#AA968A", Icon: BarChart2    },
+                { label: "Add Employee",          path: "/masters/employee/new", color: "#6E6A6F", Icon: Users        },
               ].map(({ label, path, color, Icon }) => (
                 <button
                   key={label}
@@ -231,7 +231,7 @@ export default function Dashboard() {
                 </div>
               ))}
             </div>
-            <button className="text-xs text-violet-600 hover:text-violet-800 font-medium flex items-center gap-1 mt-1">
+            <button className="text-xs text-brand-600 hover:text-brand-700 font-medium flex items-center gap-1 mt-1">
               View all <ChevronRight size={12} />
             </button>
           </div>
@@ -244,7 +244,7 @@ export default function Dashboard() {
           <div className={`${card} p-5 flex flex-col gap-3`}>
             <div className="flex items-center justify-between">
               <p className="text-sm font-semibold text-gray-800">Recent Transactions</p>
-              <button className="text-xs text-violet-600 hover:text-violet-800 font-medium flex items-center gap-1">
+              <button className="text-xs text-brand-600 hover:text-brand-700 font-medium flex items-center gap-1">
                 View All <ChevronRight size={12} />
               </button>
             </div>
@@ -252,8 +252,8 @@ export default function Dashboard() {
               {recentTransactions.map((t, i) => (
                 <div key={i} className="flex items-center gap-3 py-2 border-b border-gray-50 last:border-0">
                   <span className={`shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded ${
-                    t.type === "PO"  ? "bg-violet-100 text-violet-700" :
-                    t.type === "SO"  ? "bg-teal-100 text-teal-700"     :
+                    t.type === "PO"  ? "bg-brand-100 text-brand-600" :
+                    t.type === "SO"  ? "bg-brand-200 text-brand-500"  :
                                        "bg-amber-100 text-amber-700"
                   }`}>{t.type}</span>
                   <div className="flex-1 min-w-0">
@@ -281,8 +281,8 @@ export default function Dashboard() {
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
                   <XAxis dataKey="month" tick={{ fontSize: 10, fill: "#9CA3AF" }} axisLine={false} tickLine={false} />
                   <YAxis hide />
-                  <Tooltip content={<ChartTooltip />} cursor={{ fill: "#7C3AED08" }} />
-                  <Bar dataKey="amount" fill="#7C3AED" radius={[4, 4, 0, 0]} />
+                  <Tooltip content={<ChartTooltip />} cursor={{ fill: "#6C698D08" }} />
+                  <Bar dataKey="amount" fill="#6C698D" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -299,15 +299,15 @@ export default function Dashboard() {
                 <AreaChart data={salesData}>
                   <defs>
                     <linearGradient id="salesGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%"  stopColor="#0D9488" stopOpacity={0.25} />
-                      <stop offset="95%" stopColor="#0D9488" stopOpacity={0}    />
+                      <stop offset="5%"  stopColor="#AA968A" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="#AA968A" stopOpacity={0}   />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
                   <XAxis dataKey="month" tick={{ fontSize: 10, fill: "#9CA3AF" }} axisLine={false} tickLine={false} />
                   <YAxis hide />
                   <Tooltip content={<ChartTooltip />} />
-                  <Area type="monotone" dataKey="amount" stroke="#0D9488" strokeWidth={2.5} fill="url(#salesGrad)" dot={{ r: 3, fill: "#0D9488", strokeWidth: 0 }} />
+                  <Area type="monotone" dataKey="amount" stroke="#AA968A" strokeWidth={2.5} fill="url(#salesGrad)" dot={{ r: 3, fill: "#AA968A", strokeWidth: 0 }} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -319,7 +319,7 @@ export default function Dashboard() {
           <div className={`${card} p-5`}>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <Ticket size={16} className="text-violet-600" />
+                <Ticket size={16} className="text-brand-600" />
                 <p className="text-sm font-semibold text-gray-800">Support Tickets</p>
                 <span className="bg-red-100 text-red-600 text-[10px] font-bold px-2 py-0.5 rounded-full">
                   {openTickets} Open
@@ -328,7 +328,7 @@ export default function Dashboard() {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setRaiseOpen(v => !v)}
-                  className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-violet-700 hover:bg-violet-800 text-white rounded-lg"
+                  className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-brand-600 hover:bg-brand-700 text-white rounded-lg"
                 >
                   <Plus size={12} /> Raise Ticket
                 </button>
@@ -339,14 +339,14 @@ export default function Dashboard() {
             </div>
 
             {raiseOpen && (
-              <div className="mb-4 bg-violet-50/50 border border-violet-100 rounded-xl p-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="mb-4 bg-brand-50/50 border border-brand-200 rounded-xl p-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-medium text-gray-600 mb-1">Subject <span className="text-red-500">*</span></label>
                   <input
                     value={ticketForm.subject}
                     onChange={e => setTicketForm(f => ({...f, subject: e.target.value}))}
                     placeholder="Brief description of issue"
-                    className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-violet-400"
+                    className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-brand-600"
                   />
                 </div>
                 <div>
@@ -354,7 +354,7 @@ export default function Dashboard() {
                   <select
                     value={ticketForm.module}
                     onChange={e => setTicketForm(f => ({...f, module: e.target.value}))}
-                    className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-violet-400"
+                    className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-brand-600"
                   >
                     {["Purchase","Sales","Inventory","Finance","HR","System"].map(m => <option key={m}>{m}</option>)}
                   </select>
@@ -364,7 +364,7 @@ export default function Dashboard() {
                   <select
                     value={ticketForm.priority}
                     onChange={e => setTicketForm(f => ({...f, priority: e.target.value}))}
-                    className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-violet-400"
+                    className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-brand-600"
                   >
                     {["High","Medium","Low"].map(p => <option key={p}>{p}</option>)}
                   </select>
@@ -376,11 +376,11 @@ export default function Dashboard() {
                     onChange={e => setTicketForm(f => ({...f, description: e.target.value}))}
                     rows={2}
                     placeholder="Describe the issue in detail..."
-                    className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-violet-400 resize-none"
+                    className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-brand-600 resize-none"
                   />
                 </div>
                 <div className="sm:col-span-2 flex gap-2">
-                  <button className="text-xs px-4 py-1.5 bg-violet-700 hover:bg-violet-800 text-white rounded-lg">Submit Ticket</button>
+                  <button className="text-xs px-4 py-1.5 bg-brand-600 hover:bg-brand-700 text-white rounded-lg">Submit Ticket</button>
                   <button onClick={() => setRaiseOpen(false)} className="text-xs px-4 py-1.5 border border-gray-300 text-gray-600 hover:bg-gray-50 rounded-lg">Cancel</button>
                 </div>
               </div>
@@ -389,7 +389,7 @@ export default function Dashboard() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm min-w-[500px]">
                 <thead>
-                  <tr className="bg-violet-700">
+                  <tr className="bg-brand-600">
                     {["Ticket ID","Subject","Module","Priority","Status","Date"].map(h => (
                       <th key={h} className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">{h}</th>
                     ))}
@@ -397,8 +397,8 @@ export default function Dashboard() {
                 </thead>
                 <tbody>
                   {tickets.map((t, i) => (
-                    <tr key={t.id} className={`border-b border-gray-100 hover:bg-violet-50/40 transition-colors ${i % 2 !== 0 ? "bg-gray-50/40" : ""}`}>
-                      <td className="px-4 py-2.5 font-mono text-xs font-semibold text-violet-600">{t.id}</td>
+                    <tr key={t.id} className={`border-b border-gray-100 hover:bg-brand-50/40 transition-colors ${i % 2 !== 0 ? "bg-gray-50/40" : ""}`}>
+                      <td className="px-4 py-2.5 font-mono text-xs font-semibold text-brand-600">{t.id}</td>
                       <td className="px-4 py-2.5 text-gray-700">{t.subject}</td>
                       <td className="px-4 py-2.5 text-gray-600">{t.module}</td>
                       <td className="px-4 py-2.5">

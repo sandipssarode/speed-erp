@@ -136,7 +136,7 @@ function Field({ label, required, error, children, className = "" }) {
 
 const inputCls = (disabled, error) =>
   `w-full px-2.5 py-1.5 text-sm border rounded focus:outline-none focus:ring-1 transition-colors
-  ${error   ? "border-red-300 focus:ring-red-300 bg-red-50/20" : "focus:ring-violet-400"}
+  ${error   ? "border-red-300 focus:ring-red-300 bg-red-50/20" : "focus:ring-brand-600"}
   ${disabled ? "bg-gray-100 text-gray-500 cursor-not-allowed border-gray-200" : "bg-white border-gray-300 hover:border-gray-400"}`;
 
 function TInput({ value, onChange, disabled, placeholder, type = "text", error, min, rows }) {
@@ -155,7 +155,7 @@ function TSelect({ value, onChange, disabled, options, placeholder, error }) {
 }
 
 const cellCls = (err) =>
-  `w-full px-1.5 py-1 text-xs border-0 outline-none bg-transparent focus:bg-white focus:ring-1 focus:ring-violet-300 rounded
+  `w-full px-1.5 py-1 text-xs border-0 outline-none bg-transparent focus:bg-white focus:ring-1 focus:ring-brand-400 rounded
   ${err ? "bg-red-50 ring-1 ring-red-300" : ""}`;
 
 function Toast({ toast }) {
@@ -372,7 +372,7 @@ export default function PurchaseInquiry() {
         <div className="flex items-center gap-1.5 text-xs text-gray-400">
           <span>Purchase</span><ChevronRight size={12} /><span>Transaction</span><ChevronRight size={12} />
           <span className="text-gray-600 font-medium">Purchase Inquiry</span>
-          {form.number && <><ChevronRight size={12} /><span className="text-violet-600 font-medium">{form.number}</span></>}
+          {form.number && <><ChevronRight size={12} /><span className="text-brand-600 font-medium">{form.number}</span></>}
         </div>
 
         <Toast toast={toast} />
@@ -405,7 +405,7 @@ export default function PurchaseInquiry() {
 
           <div className="w-px h-5 bg-gray-200" />
 
-          <button onClick={handleSendToVendors} className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-violet-700 hover:bg-violet-800 text-white rounded font-medium">
+          <button onClick={handleSendToVendors} className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-brand-600 hover:bg-brand-700 text-white rounded font-medium">
             <Send size={13} /> Send to Vendors
           </button>
 
@@ -423,13 +423,13 @@ export default function PurchaseInquiry() {
           </button>
 
           <button onClick={() => setShowAttach((v) => !v)}
-            className={`flex items-center gap-1.5 text-xs px-3 py-1.5 border rounded font-medium transition-colors ${showAttach ? "border-blue-300 bg-blue-50 text-violet-600" : "border-gray-300 text-gray-600 hover:bg-gray-50"}`}>
+            className={`flex items-center gap-1.5 text-xs px-3 py-1.5 border rounded font-medium transition-colors ${showAttach ? "border-blue-300 bg-blue-50 text-brand-600" : "border-gray-300 text-gray-600 hover:bg-gray-50"}`}>
             <Paperclip size={13} /> Attachments
-            {(form.attachments?.length > 0) && <span className="bg-blue-100 text-violet-600 text-xs px-1.5 rounded-full">{form.attachments.length}</span>}
+            {(form.attachments?.length > 0) && <span className="bg-blue-100 text-brand-600 text-xs px-1.5 rounded-full">{form.attachments.length}</span>}
           </button>
 
           <button onClick={() => setShowSearch((v) => !v)}
-            className={`flex items-center gap-1.5 text-xs px-3 py-1.5 border rounded font-medium transition-colors ${showSearch ? "border-blue-300 bg-blue-50 text-violet-600" : "border-gray-300 text-gray-600 hover:bg-gray-50"}`}>
+            className={`flex items-center gap-1.5 text-xs px-3 py-1.5 border rounded font-medium transition-colors ${showSearch ? "border-blue-300 bg-blue-50 text-brand-600" : "border-gray-300 text-gray-600 hover:bg-gray-50"}`}>
             <Search size={13} /> Search
           </button>
 
@@ -445,7 +445,7 @@ export default function PurchaseInquiry() {
               <ChevronRight size={13} />
             </button>
             <button onClick={() => setShowList((v) => !v)}
-              className={`flex items-center gap-1.5 text-xs px-2.5 py-1.5 border rounded font-medium transition-colors ${showList ? "border-blue-300 bg-blue-50 text-violet-600" : "border-gray-300 text-gray-500 hover:bg-gray-50"}`}>
+              className={`flex items-center gap-1.5 text-xs px-2.5 py-1.5 border rounded font-medium transition-colors ${showList ? "border-blue-300 bg-blue-50 text-brand-600" : "border-gray-300 text-gray-500 hover:bg-gray-50"}`}>
               <List size={13} />
               {allPIs.length > 0 && <span className="text-gray-400">{currentIdx >= 0 ? `${currentIdx + 1} / ${allPIs.length}` : allPIs.length}</span>}
             </button>
@@ -465,7 +465,7 @@ export default function PurchaseInquiry() {
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-semibold text-gray-700 flex items-center gap-2"><Paperclip size={14} /> File Attachments</h3>
               {!isReadOnly && <>
-                <button onClick={() => fileRef.current?.click()} className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-violet-700 hover:bg-violet-800 text-white rounded">
+                <button onClick={() => fileRef.current?.click()} className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-brand-600 hover:bg-brand-700 text-white rounded">
                   <Upload size={13} /> Upload File
                 </button>
                 <input ref={fileRef} type="file" multiple className="hidden" onChange={handleFileChange} />
@@ -497,7 +497,7 @@ export default function PurchaseInquiry() {
               <button onClick={() => setShowSearch(false)} className="text-gray-400 hover:text-gray-600"><X size={14} /></button>
             </div>
             <div className="p-3 border-b border-gray-100">
-              <input value={searchQ} onChange={(e) => setSearchQ(e.target.value)} placeholder="Search by PI number, buyer, vendor, item, status…" className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-violet-400" />
+              <input value={searchQ} onChange={(e) => setSearchQ(e.target.value)} placeholder="Search by PI number, buyer, vendor, item, status…" className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-brand-600" />
             </div>
             <div className="overflow-x-auto max-h-64">
               <table className="w-full text-xs">
@@ -513,8 +513,8 @@ export default function PurchaseInquiry() {
                     const idx = allPIs.findIndex((p) => p.id === pi.id);
                     return (
                       <tr key={pi.id} onClick={() => { goTo(idx); setShowSearch(false); setSearchQ(""); }}
-                        className={`border-b border-gray-100 cursor-pointer hover:bg-violet-50/40 ${idx === currentIdx ? "bg-blue-50 border-l-2 border-l-blue-500" : ""}`}>
-                        <td className="px-3 py-2 font-mono font-semibold text-violet-600">{pi.number}</td>
+                        className={`border-b border-gray-100 cursor-pointer hover:bg-brand-50/40 ${idx === currentIdx ? "bg-blue-50 border-l-2 border-l-blue-500" : ""}`}>
+                        <td className="px-3 py-2 font-mono font-semibold text-brand-600">{pi.number}</td>
                         <td className="px-3 py-2 text-gray-600">{pi.date ? new Date(pi.date).toLocaleDateString("en-IN") : "—"}</td>
                         <td className="px-3 py-2 text-gray-600">{pi.buyer || "—"}</td>
                         <td className="px-3 py-2 text-gray-600">{pi.unit || "—"}</td>
@@ -522,7 +522,7 @@ export default function PurchaseInquiry() {
                         <td className="px-3 py-2 text-center">{pi.items?.length || 0}</td>
                         <td className="px-3 py-2 text-center">{pi.vendors?.length || 0}</td>
                         <td className="px-3 py-2"><StatusBadge status={pi.status} /></td>
-                        <td className="px-3 py-2 text-violet-500 font-medium">Open →</td>
+                        <td className="px-3 py-2 text-brand-500 font-medium">Open →</td>
                       </tr>
                     );
                   })}
@@ -554,8 +554,8 @@ export default function PurchaseInquiry() {
                 <tbody>
                   {allPIs.map((pi, i) => (
                     <tr key={pi.id} onClick={() => goTo(i)}
-                      className={`border-b border-gray-100 cursor-pointer hover:bg-violet-50/40 ${i === currentIdx ? "bg-blue-50 border-l-2 border-l-blue-500" : ""}`}>
-                      <td className="px-3 py-2 font-mono font-semibold text-violet-600">{pi.number}</td>
+                      className={`border-b border-gray-100 cursor-pointer hover:bg-brand-50/40 ${i === currentIdx ? "bg-blue-50 border-l-2 border-l-blue-500" : ""}`}>
+                      <td className="px-3 py-2 font-mono font-semibold text-brand-600">{pi.number}</td>
                       <td className="px-3 py-2 text-gray-600">{pi.date ? new Date(pi.date).toLocaleDateString("en-IN") : "—"}</td>
                       <td className="px-3 py-2 text-gray-600">{pi.buyer || "—"}</td>
                       <td className="px-3 py-2 text-gray-600">{pi.unit || "—"}</td>
@@ -563,7 +563,7 @@ export default function PurchaseInquiry() {
                       <td className="px-3 py-2 text-center">{pi.items?.length || 0}</td>
                       <td className="px-3 py-2 text-center">{pi.vendors?.length || 0}</td>
                       <td className="px-3 py-2"><StatusBadge status={pi.status} /></td>
-                      <td className="px-3 py-2 text-violet-500 font-medium">Open →</td>
+                      <td className="px-3 py-2 text-brand-500 font-medium">Open →</td>
                     </tr>
                   ))}
                 </tbody>
@@ -573,7 +573,7 @@ export default function PurchaseInquiry() {
         )}
 
         {/* ── Status Banner ── */}
-        <div className="bg-gradient-to-r from-violet-900 to-violet-700 rounded px-5 py-3 flex items-center gap-4 text-white shadow-sm">
+        <div className="bg-gradient-to-r from-brand-900 to-brand-600 rounded px-5 py-3 flex items-center gap-4 text-white shadow-sm">
           <FileText size={16} className="text-blue-200 shrink-0" />
           <span className="font-bold text-base tracking-wide">{form.number || "New Purchase Inquiry"}</span>
           {form.unit  && <span className="text-blue-200 text-sm">| {form.unit}</span>}
@@ -688,7 +688,7 @@ export default function PurchaseInquiry() {
             ].map((t) => (
               <button key={t.id} onClick={() => setActiveTab(t.id)}
                 className={`flex items-center gap-1.5 px-5 py-3 text-xs font-medium border-b-2 whitespace-nowrap transition-colors
-                  ${activeTab === t.id ? "border-violet-700 text-violet-600 bg-blue-50/50" : "border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50"}`}>
+                  ${activeTab === t.id ? "border-brand-600 text-brand-600 bg-blue-50/50" : "border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50"}`}>
                 {t.label}{t.hasErr && <AlertCircle size={12} className="text-red-400" />}
               </button>
             ))}
@@ -760,7 +760,7 @@ export default function PurchaseInquiry() {
                   </table>
                 </div>
                 {!isReadOnly && (
-                  <button onClick={addItem} className="flex items-center gap-1.5 text-xs text-violet-600 hover:text-blue-800 font-medium">
+                  <button onClick={addItem} className="flex items-center gap-1.5 text-xs text-brand-600 hover:text-blue-800 font-medium">
                     <Plus size={13} /> Add Item
                   </button>
                 )}
@@ -807,7 +807,7 @@ export default function PurchaseInquiry() {
                   </table>
                 </div>
                 {!isReadOnly && (
-                  <button onClick={addTerm} className="flex items-center gap-1.5 text-xs text-violet-600 hover:text-blue-800 font-medium">
+                  <button onClick={addTerm} className="flex items-center gap-1.5 text-xs text-brand-600 hover:text-blue-800 font-medium">
                     <Plus size={13} /> Add Term
                   </button>
                 )}
@@ -860,7 +860,7 @@ export default function PurchaseInquiry() {
                   </table>
                 </div>
                 {!isReadOnly && (
-                  <button onClick={addVendor} className="flex items-center gap-1.5 text-xs text-violet-600 hover:text-blue-800 font-medium">
+                  <button onClick={addVendor} className="flex items-center gap-1.5 text-xs text-brand-600 hover:text-blue-800 font-medium">
                     <Plus size={13} /> Add Vendor
                   </button>
                 )}
@@ -911,7 +911,7 @@ export default function PurchaseInquiry() {
                   </table>
                 </div>
                 {!isReadOnly && (
-                  <button onClick={addQuotation} className="flex items-center gap-1.5 text-xs text-violet-600 hover:text-blue-800 font-medium">
+                  <button onClick={addQuotation} className="flex items-center gap-1.5 text-xs text-brand-600 hover:text-blue-800 font-medium">
                     <Plus size={13} /> Add Quotation
                   </button>
                 )}
@@ -933,7 +933,7 @@ export default function PurchaseInquiry() {
                     <tbody>
                       {(form.followups || []).map((row) => (
                         <tr key={row.id} className="border-b border-gray-100 hover:bg-blue-50/20 cursor-pointer" onClick={() => openEditFollowup(row)}>
-                          <td className="px-3 py-2 font-mono text-violet-600">{row.ref}</td>
+                          <td className="px-3 py-2 font-mono text-brand-600">{row.ref}</td>
                           <td className="px-3 py-2 text-gray-600">{row.followupDate ? new Date(row.followupDate).toLocaleDateString("en-IN") : "—"}</td>
                           <td className="px-3 py-2 text-gray-600">{row.partyName}</td>
                           <td className="px-3 py-2 text-gray-600">{row.contactPerson}</td>
@@ -946,7 +946,7 @@ export default function PurchaseInquiry() {
                                                          "bg-gray-50  text-gray-600  border-gray-200"}`}>{row.status}</span>
                           </td>
                           <td className="px-2 py-1 text-center">
-                            <button onClick={(e) => { e.stopPropagation(); openEditFollowup(row); }} className="p-1 text-blue-400 hover:text-violet-600 hover:bg-violet-50 rounded">
+                            <button onClick={(e) => { e.stopPropagation(); openEditFollowup(row); }} className="p-1 text-blue-400 hover:text-brand-600 hover:bg-brand-50 rounded">
                               <Edit2 size={13} />
                             </button>
                           </td>
@@ -956,7 +956,7 @@ export default function PurchaseInquiry() {
                     </tbody>
                   </table>
                 </div>
-                <button onClick={openNewFollowup} className="flex items-center gap-1.5 text-xs text-violet-600 hover:text-blue-800 font-medium">
+                <button onClick={openNewFollowup} className="flex items-center gap-1.5 text-xs text-brand-600 hover:text-blue-800 font-medium">
                   <Plus size={13} /> Add Followup
                 </button>
               </div>
@@ -1042,7 +1042,7 @@ export default function PurchaseInquiry() {
                 { id: "revisions", label: "Show Revisions"     },
               ].map((t) => (
                 <button key={t.id} onClick={() => setFuTab(t.id)}
-                  className={`px-4 py-2.5 text-xs font-medium border-b-2 transition-colors ${fuTab === t.id ? "border-violet-700 text-violet-600" : "border-transparent text-gray-500 hover:text-gray-700"}`}>
+                  className={`px-4 py-2.5 text-xs font-medium border-b-2 transition-colors ${fuTab === t.id ? "border-brand-600 text-brand-600" : "border-transparent text-gray-500 hover:text-gray-700"}`}>
                   {t.label}
                 </button>
               ))}
@@ -1189,7 +1189,7 @@ export default function PurchaseInquiry() {
                         <tbody>
                           {form.followups.map((fu) => (
                             <tr key={fu.id} className="border-b border-gray-100 hover:bg-gray-50">
-                              <td className="px-3 py-2 font-mono text-violet-600">{fu.ref}</td>
+                              <td className="px-3 py-2 font-mono text-brand-600">{fu.ref}</td>
                               <td className="px-3 py-2 text-gray-600">{fu.followupDate ? new Date(fu.followupDate).toLocaleDateString("en-IN") : "—"}</td>
                               <td className="px-3 py-2 text-gray-600">{fu.partyName}</td>
                               <td className="px-3 py-2 text-gray-600">{fu.method}</td>

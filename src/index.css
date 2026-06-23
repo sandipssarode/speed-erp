@@ -1,1 +1,28 @@
 @import "tailwindcss";
+
+/* Force Tailwind to scan the gitignored UI-showcase design files so their
+   utility classes (grid-cols-4, w-7, etc.) are generated. Local-only preview. */
+@source "./pages/UIShowcase.jsx";
+@source "./components/design/*.jsx";
+
+@theme {
+  /* ── Ethereal Grays brand color scale ── */
+  --color-brand-50:  #f5f4f7;
+  --color-brand-100: #eceaed;
+  --color-brand-200: #d4d2d5;
+  --color-brand-300: #bfafa6;
+  --color-brand-400: #aa968a;
+  --color-brand-500: #6e6a6f;
+  --color-brand-600: #6c698d;
+  --color-brand-700: #5a576e;
+  --color-brand-800: #48455a;
+  --color-brand-900: #2d2b3a;
+
+  /* ── Typography ── */
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+}
+
+/* Apply font globally */
+*, *::before, *::after {
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+}
