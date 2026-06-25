@@ -2,6 +2,7 @@
 import {
   LogOut, ChevronDown, ChevronUp, ShoppingCart, BarChart2,
   Package, DollarSign, Settings, LayoutDashboard, Menu, X, Database,
+  ChevronLeft, ChevronRight,
 } from "lucide-react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import siLogo from "../../logo/si_logo_trans.png";
@@ -336,16 +337,6 @@ export default function Layout({ children }) {
           <Menu size={20} />
         </button>
 
-        {/* Desktop sidebar toggle */}
-        <button
-          onClick={() => setExpanded(p => !p)}
-          title={expanded ? "Collapse sidebar" : "Expand sidebar"}
-          aria-label="Toggle sidebar"
-          className="hidden lg:flex p-1.5 rounded-lg hover:bg-brand-50 text-gray-500 hover:text-brand-600 transition-colors"
-        >
-          <Menu size={20} />
-        </button>
-
         {/* Logo */}
         <img src={siLogo} alt="Speed Innovations" className="h-10 w-auto object-contain" />
       </header>
@@ -386,8 +377,17 @@ export default function Layout({ children }) {
             <SidebarContent onLinkClick={() => {}} collapsed={!expanded} />
           </div>
 
-          {/* Footer: user zone */}
+          {/* Footer: collapse toggle + user zone */}
           <div className="shrink-0 border-t border-brand-200 p-2">
+            <button
+              onClick={() => setExpanded(p => !p)}
+              title={expanded ? "Collapse sidebar" : "Expand sidebar"}
+              className={`h-8 rounded-lg flex items-center justify-center text-gray-400 hover:bg-brand-50 hover:text-brand-600 transition-colors mb-2 ${
+                expanded ? "w-8 ml-auto" : "w-10 mx-auto"
+              }`}
+            >
+              {expanded ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
+            </button>
             {expanded ? (
               <div className="flex items-center gap-2.5 px-1">
                 <div className="w-9 h-9 shrink-0 rounded-xl bg-gradient-to-br from-brand-600 to-brand-800 flex items-center justify-center text-white text-sm font-bold shadow-sm">
