@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../../../components/Layout";
-import { Plus, Search, Edit2, Trash2, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { Plus, Search, Edit2, Trash2, ChevronLeft, ChevronRight, X, SlidersHorizontal, ChevronsUpDown, MoreHorizontal } from "lucide-react";
 import { api } from "../../../lib/api.js";
 
-const PAGE_SIZE = 15;
+const PAGE_SIZE = 12;
 
 export default function CountryList() {
   const navigate = useNavigate();
@@ -12,6 +12,7 @@ export default function CountryList() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [sortDir, setSortDir] = useState("asc");
   const [page, setPage] = useState(1);
 
   useEffect(() => {
@@ -20,14 +21,19 @@ export default function CountryList() {
 
   useEffect(() => { setPage(1); }, [search, statusFilter]);
 
-  const filtered = records.filter((r) => {
-    const q = search.toLowerCase();
-    const matchSearch = !q || r.countryCode?.toLowerCase().includes(q) || r.countryName?.toLowerCase().includes(q) || r.dialCode?.toLowerCase().includes(q) || r.currency?.toLowerCase().includes(q);
-    const matchStatus = statusFilter === "all" || (statusFilter === "active" ? !r.isDeactivated : r.isDeactivated);
-    return matchSearch && matchStatus;
-  });
+  const filtered = records
+    .filter((r) => {
+      const q = search.toLowerCase();
+      const matchSearch = !q || r.countryCode?.toLowerCase().includes(q) || r.countryName?.toLowerCase().includes(q) || r.dialCode?.toLowerCase().includes(q) || r.currency?.toLowerCase().includes(q);
+      const matchStatus = statusFilter === "all" || (statusFilter === "active" ? !r.isDeactivated : r.isDeactivated);
+      return matchSearch && matchStatus;
+    })
+    .sort((a, b) => {
+      const r = (a.countryName || "").localeCompare(b.countryName || "");
+      return sortDir === "asc" ? r : -r;
+    });
 
-  const pageCount = Math.ceil(filtered.length / PAGE_SIZE);
+  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   const handleDelete = async (id, name) => {
@@ -36,48 +42,66 @@ export default function CountryList() {
     catch (err) { alert("Failed to delete: " + err.message); }
   };
 
-  const th = "text-left px-4 py-3 text-[11px] font-semibold text-white/90 uppercase tracking-wider";
+  const th = "text-left px-5 py-3.5 text-[11px] font-bold text-white/90 uppercase tracking-wider";
+  const actionBtn = "w-8 h-8 border border-gray-200 rounded-lg flex items-center justify-center text-gray-400 transition-colors";
 
   return (
     <Layout>
       <div className="max-w-6xl mx-auto space-y-4">
 
-        {/* Header */}
-        <div className="flex items-end justify-between gap-3 flex-wrap">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Country Master</h1>
-            <p className="text-sm text-gray-500 mt-0.5">Manage countries, dial codes &amp; currencies · {records.length} record{records.length !== 1 ? "s" : ""}</p>
+        {/* Heading */}
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Country Master</h1>
+          <p className="text-sm text-gray-500 mt-0.5">Manage countries, dial codes &amp; currencies</p>
+        </div>
+
+        {/* Toolbar */}
+        <div className="flex items-center gap-3 flex-wrap">
+          <div className="relative flex-1 min-w-[220px] max-w-sm">
+            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search countries…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pl-10 pr-9 py-2.5 text-sm bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100 transition-all"
+            />
+            {search && <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"><X size={15} /></button>}
           </div>
-          <div className="flex items-center gap-2">
-            <div className="relative">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search countries…"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-56 pl-9 pr-8 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100 transition-colors"
-              />
-              {search && <button onClick={() => setSearch("")} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"><X size={14} /></button>}
-            </div>
-            <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="text-sm border border-gray-300 rounded-md px-2.5 py-2 text-gray-600 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100">
-              <option value="all">All</option>
+
+          <div className="relative">
+            <SlidersHorizontal size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="appearance-none pl-10 pr-9 py-2.5 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100 cursor-pointer"
+            >
+              <option value="all">All status</option>
               <option value="active">Active</option>
               <option value="inactive">Inactive</option>
             </select>
-            <button onClick={() => navigate("/system/countries/new")} className="flex items-center justify-center gap-1.5 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold px-8 py-2.5 rounded-md shadow-sm transition-colors">
-              <Plus size={15} /> New
-            </button>
+            <ChevronRight size={15} className="absolute right-3 top-1/2 -translate-y-1/2 rotate-90 text-gray-400 pointer-events-none" />
           </div>
+
+          <button
+            onClick={() => navigate("/system/countries/new")}
+            className="flex items-center gap-2 bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl shadow-md shadow-brand-200 transition-all"
+          >
+            <Plus size={16} /> New Country
+          </button>
         </div>
 
-        {/* Table */}
-        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+        {/* Table card */}
+        <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-sm min-w-[640px]">
+            <table className="w-full text-sm min-w-[760px]">
               <thead>
                 <tr className="bg-gradient-to-r from-brand-800 to-brand-600">
-                  <th className={`${th} pl-5`}>Name</th>
+                  <th className={th}>
+                    <button onClick={() => setSortDir(d => d === "asc" ? "desc" : "asc")} className="inline-flex items-center gap-1.5 hover:text-white">
+                      Name <ChevronsUpDown size={13} className="opacity-70" />
+                    </button>
+                  </th>
                   <th className={th}>Code</th>
                   <th className={th}>Dial Code</th>
                   <th className={th}>Currency</th>
@@ -89,42 +113,52 @@ export default function CountryList() {
                 {loading ? (
                   <tr><td colSpan={6} className="text-center py-16 text-gray-400 text-sm">Loading…</td></tr>
                 ) : paginated.length === 0 ? (
-                  <tr><td colSpan={6} className="text-center py-16 text-gray-400 text-sm">{records.length === 0 ? 'No countries yet. Click "New" to add one.' : "No records match your search."}</td></tr>
-                ) : paginated.map((r) => {
-                  return (
-                    <tr key={r.id} className="group border-b border-gray-100 last:border-0 cursor-pointer transition-colors hover:bg-gray-50" onClick={() => navigate(`/system/countries/${r.id}`)}>
-                      <td className="px-4 py-3 pl-5"><span className="font-medium text-brand-600 hover:underline">{r.countryName}</span></td>
-                      <td className="px-4 py-3 font-mono text-xs text-gray-500">{r.countryCode}</td>
-                      <td className="px-4 py-3 text-gray-600">{r.dialCode || "—"}</td>
-                      <td className="px-4 py-3 text-gray-600">{r.currency || "—"}</td>
-                      <td className="px-4 py-3">
-                        <span className="inline-flex items-center gap-1.5 text-xs text-gray-600">
-                          <span className={`w-1.5 h-1.5 rounded-full ${r.isDeactivated ? "bg-red-400" : "bg-green-500"}`} />
-                          {r.isDeactivated ? "Inactive" : "Active"}
+                  <tr><td colSpan={6} className="text-center py-16 text-gray-400 text-sm">{records.length === 0 ? 'No countries yet. Click "New Country" to add one.' : "No records match your search."}</td></tr>
+                ) : paginated.map((r) => (
+                  <tr key={r.id} className="group border-b border-gray-100 last:border-0 hover:bg-brand-50/40 cursor-pointer transition-colors" onClick={() => navigate(`/system/countries/${r.id}`)}>
+                    <td className="px-5 py-3.5">
+                      <div className="flex items-center gap-3">
+                        <span className="w-9 h-9 rounded-lg bg-brand-50 ring-1 ring-brand-100 text-brand-700 flex items-center justify-center text-xs font-bold shrink-0">
+                          {(r.countryCode || "?").slice(0, 2).toUpperCase()}
                         </span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center justify-end gap-0.5 sm:opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => e.stopPropagation()}>
-                          <button onClick={() => navigate(`/system/countries/${r.id}`)} className="p-1.5 text-gray-400 hover:text-brand-600 hover:bg-brand-50 rounded" title="Edit"><Edit2 size={14} /></button>
-                          <button onClick={() => handleDelete(r.id, r.countryName)} className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded" title="Delete"><Trash2 size={14} /></button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
+                        <span className="font-semibold text-gray-800 group-hover:text-brand-600 transition-colors">{r.countryName}</span>
+                      </div>
+                    </td>
+                    <td className="px-5 py-3.5 font-mono text-xs text-gray-400">{r.countryCode}</td>
+                    <td className="px-5 py-3.5 text-gray-600">{r.dialCode || "—"}</td>
+                    <td className="px-5 py-3.5">
+                      {r.currency
+                        ? <span className="inline-block px-2 py-0.5 text-xs font-medium text-gray-600 bg-gray-50 border border-gray-200 rounded-md">{r.currency}</span>
+                        : <span className="text-gray-400">—</span>}
+                    </td>
+                    <td className="px-5 py-3.5">
+                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${r.isDeactivated ? "bg-red-50 text-red-600" : "bg-green-50 text-green-700"}`}>
+                        <span className={`w-1.5 h-1.5 rounded-full ${r.isDeactivated ? "bg-red-500" : "bg-green-500"}`} />
+                        {r.isDeactivated ? "Inactive" : "Active"}
+                      </span>
+                    </td>
+                    <td className="px-5 py-3.5">
+                      <div className="flex items-center justify-end gap-1.5" onClick={(e) => e.stopPropagation()}>
+                        <button onClick={() => navigate(`/system/countries/${r.id}`)} className={`${actionBtn} hover:bg-brand-50 hover:text-brand-600 hover:border-brand-200`} title="Edit"><Edit2 size={14} /></button>
+                        <button onClick={() => handleDelete(r.id, r.countryName)} className={`${actionBtn} hover:bg-red-50 hover:text-red-600 hover:border-red-200`} title="Delete"><Trash2 size={14} /></button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
 
-          {pageCount > 1 && (
-            <div className="flex items-center justify-between px-4 py-2.5 border-t border-gray-100 text-xs">
-              <span className="text-gray-500">Showing {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filtered.length)} of {filtered.length}</span>
-              <div className="flex items-center gap-1">
-                <button onClick={() => setPage(p => p - 1)} disabled={page === 1} className="w-7 h-7 flex items-center justify-center border border-gray-200 rounded text-gray-500 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"><ChevronLeft size={14} /></button>
+          {/* Footer */}
+          {!loading && filtered.length > 0 && (
+            <div className="flex items-center justify-between px-5 py-3.5 border-t border-gray-100 text-sm flex-wrap gap-3">
+              <span className="text-gray-500">Showing <span className="font-semibold text-gray-700">{(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filtered.length)}</span> of <span className="font-semibold text-gray-700">{filtered.length}</span> countries</span>
+              <div className="flex items-center gap-1.5">
+                <button onClick={() => setPage(p => p - 1)} disabled={page === 1} className="flex items-center gap-1 px-3 py-1.5 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed font-medium"><ChevronLeft size={15} /> Prev</button>
                 {Array.from({ length: pageCount }, (_, i) => i + 1).map(p => (
-                  <button key={p} onClick={() => setPage(p)} className={`w-7 h-7 rounded text-xs font-medium ${p === page ? "bg-brand-600 text-white" : "border border-gray-200 text-gray-500 hover:bg-gray-50"}`}>{p}</button>
+                  <button key={p} onClick={() => setPage(p)} className={`w-9 h-9 rounded-lg text-sm font-semibold transition-colors ${p === page ? "bg-brand-600 text-white shadow-sm" : "border border-gray-200 text-gray-600 hover:bg-gray-50"}`}>{p}</button>
                 ))}
-                <button onClick={() => setPage(p => p + 1)} disabled={page === pageCount} className="w-7 h-7 flex items-center justify-center border border-gray-200 rounded text-gray-500 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"><ChevronRight size={14} /></button>
+                <button onClick={() => setPage(p => p + 1)} disabled={page === pageCount} className="flex items-center gap-1 px-3 py-1.5 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed font-medium">Next <ChevronRight size={15} /></button>
               </div>
             </div>
           )}
