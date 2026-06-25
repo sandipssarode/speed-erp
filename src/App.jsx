@@ -52,6 +52,8 @@ import DesignationForm from "./pages/masters/designation/DesignationForm";
 import EmployeeList from "./pages/masters/employee/EmployeeList";
 import EmployeeForm from "./pages/masters/employee/EmployeeForm";
 import ModuleLanding from "./pages/ModuleLanding";
+import WorkOrderList from "./pages/asset-management/WorkOrderList";
+import WorkOrderForm from "./pages/asset-management/WorkOrderForm";
 
 function App() {
   return (
@@ -65,8 +67,14 @@ function App() {
         {/* Dashboard */}
         <Route path="/dashboard" element={<Dashboard />} />
 
+        {/* Asset Management */}
+        <Route path="/asset-management/work-order"     element={<WorkOrderList />} />
+        <Route path="/asset-management/work-order/new" element={<WorkOrderForm />} />
+        <Route path="/asset-management/work-order/:id" element={<WorkOrderForm />} />
+
         {/* Module landing pages */}
-        <Route path="/masters"   element={<ModuleLanding />} />
+        <Route path="/masters"          element={<ModuleLanding />} />
+        <Route path="/asset-management"  element={<ModuleLanding />} />
         <Route path="/purchase"  element={<ModuleLanding />} />
         <Route path="/sales"     element={<ModuleLanding />} />
         <Route path="/inventory" element={<ModuleLanding />} />

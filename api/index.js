@@ -570,6 +570,39 @@ export default async function handler(req, res) {
         break;
       }
 
+      // ── WORK ORDERS ───────────────────────────────────────────
+      case 'work-orders': {
+        if (id) {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM work_orders WHERE id=${id}`;
+            if (!rows.length) return res.status(404).json({ error: 'Not found' });
+            return res.json(rows[0].data);
+          }
+          if (req.method === 'PUT') {
+            const w = req.body;
+            await sql`UPDATE work_orders SET code=${w.workOrderId}, product_id=${w.productId||null}, status=${w.status||'Draft'}, data=${JSON.stringify(w)}, updated_at=${w.updatedAt} WHERE id=${id}`;
+            return res.json(w);
+          }
+          if (req.method === 'DELETE') {
+            await sql`DELETE FROM work_orders WHERE id=${id}`;
+            return res.json({ success: true });
+          }
+        } else {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM work_orders ORDER BY created_at ASC`;
+            return res.json(rows.map(r => r.data));
+          }
+          if (req.method === 'POST') {
+            const w = req.body;
+            const existing = await sql`SELECT id FROM work_orders WHERE code=${w.workOrderId}`;
+            if (existing.length) return res.status(409).json({ error: 'Work Order ID already exists.' });
+            await sql`INSERT INTO work_orders (id, code, product_id, status, data, created_at, updated_at) VALUES (${w.id}, ${w.workOrderId}, ${w.productId||null}, ${w.status||'Draft'}, ${JSON.stringify(w)}, ${w.createdAt}, ${w.updatedAt})`;
+            return res.status(201).json(w);
+          }
+        }
+        break;
+      }
+
       default:
         return res.status(404).json({ error: `Unknown resource: ${resource}` });
     }

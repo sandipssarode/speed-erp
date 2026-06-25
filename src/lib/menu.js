@@ -1,5 +1,5 @@
 import {
-  Database, Settings, ShoppingCart, BarChart2, Package, DollarSign,
+  Database, Settings, ShoppingCart, BarChart2, Package, DollarSign, Wrench,
 } from "lucide-react";
 
 // ─────────────────────────────────────────────────────────────
@@ -26,6 +26,14 @@ export const menu = [
       { label: "Asset Master",             path: "/masters/asset-master" },
       { label: "Maintenance Type",         path: "/masters/maintenance-type" },
     ],
+  },
+  {
+    label: "Asset Management", icon: Wrench, landing: "/asset-management",
+    children: {
+      Transaction: [
+        { label: "Work Order", path: "/asset-management/work-order" },
+      ],
+    },
   },
   {
     label: "Purchase", icon: ShoppingCart, landing: "/purchase",
