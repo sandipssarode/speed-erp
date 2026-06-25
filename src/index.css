@@ -26,3 +26,23 @@
 *, *::before, *::after {
   font-family: "Plus Jakarta Sans", system-ui, sans-serif;
 }
+
+/* ── Smooth animations ── */
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes flyoutIn { from { opacity: 0; transform: translateX(-6px) scale(.98); } to { opacity: 1; transform: none; } }
+
+.animate-page   { animation: fadeInUp .28s ease-out both; }
+.animate-flyout { animation: flyoutIn .15s ease-out both; transform-origin: left center; }
+
+/* smooth interactive feedback everywhere */
+button, a, input, select, textarea, [role="button"] {
+  transition: background-color .2s ease, color .2s ease, border-color .2s ease,
+              box-shadow .2s ease, transform .2s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}

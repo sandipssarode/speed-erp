@@ -95,7 +95,6 @@ const ChartTooltip = ({ active, payload, label }) => {
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
   const [ticketOpen, setTicketOpen] = useState(false);
   const [raiseOpen,  setRaiseOpen]  = useState(false);
   const [ticketForm, setTicketForm] = useState({ subject: "", module: "Purchase", priority: "Medium", description: "" });
@@ -111,9 +110,6 @@ export default function Dashboard() {
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div>
             <h1 className="text-xl font-bold text-gray-800 leading-tight">Dashboard</h1>
-            <p className="text-xs text-gray-500 mt-0.5">
-              Welcome back, <span className="font-medium text-brand-600">{user.name || user.fullName || "User"}</span>
-            </p>
           </div>
           <button
             onClick={() => setTicketOpen(v => !v)}

@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+﻿import { useState, useRef, useEffect } from "react";
 import {
   LogOut, ChevronDown, ChevronUp, ShoppingCart, BarChart2,
   Package, DollarSign, Settings, LayoutDashboard, Menu, X, Database,
@@ -31,20 +31,6 @@ const menu = [
       { label: "Asset Type",               path: "/masters/asset-type" },
       { label: "Asset Master",             path: "/masters/asset-master" },
       { label: "Maintenance Type",         path: "/masters/maintenance-type" },
-    ],
-  },
-  {
-    label: "System Setup", icon: Settings, flat: true,
-    links: [
-      { label: "User Master",                    path: "/system/users" },
-      { label: "Organisation Master",            path: "/system/organisations" },
-      { label: "Business Unit Master",           path: "/system/business-units" },
-      { label: "Warehouse Master",               path: "/system/warehouses" },
-      { label: "UoM",                            path: "/system/uom" },
-      { label: "Document Series",                path: "/system/document-series" },
-      { label: "Financial Year",                 path: "/system/financial-year" },
-      { label: "Email Configuration",            path: "/system/email-config" },
-      { label: "User Access Rights Management",  path: "/system/access-rights" },
     ],
   },
   {
@@ -120,6 +106,20 @@ const menu = [
       ],
     },
   },
+  {
+    label: "System Setup", icon: Settings, flat: true,
+    links: [
+      { label: "User Master",                    path: "/system/users" },
+      { label: "Organisation Master",            path: "/system/organisations" },
+      { label: "Business Unit Master",           path: "/system/business-units" },
+      { label: "Warehouse Master",               path: "/system/warehouses" },
+      { label: "UoM",                            path: "/system/uom" },
+      { label: "Document Series",                path: "/system/document-series" },
+      { label: "Financial Year",                 path: "/system/financial-year" },
+      { label: "Email Configuration",            path: "/system/email-config" },
+      { label: "User Access Rights Management",  path: "/system/access-rights" },
+    ],
+  },
 ];
 
 // ─────────────────────────────────────────────────────────────
@@ -157,77 +157,170 @@ export default function Layout({ children }) {
 
   const active = getActiveState(location.pathname);
   const [expanded,    setExpanded]    = useState(false);       // sidebar pinned open?
-  const [openModule,  setOpenModule]  = useState(active.module);
+  const [openModule,  setOpenModule]  = useState(null);        // open flyout / accordion
   const [openSection, setOpenSection] = useState(active.section);
   const [mobileOpen,  setMobileOpen]  = useState(false);
+  const asideRef = useRef(null);
 
   const handleLogoff = () => { localStorage.removeItem("loggedInUser"); navigate("/"); };
 
   const toggleModule = (label) => {
-    if (!expanded) setExpanded(true);           // auto-expand on click when collapsed
     setOpenModule(p => p === label ? null : label);
     setOpenSection(null);
   };
 
   const toggleSection = (sec) => setOpenSection(p => p === sec ? null : sec);
 
-  // ── Sidebar content (shared between desktop + mobile) ──────────────────────
-  // collapsed = icon-only rail (desktop narrow); otherwise full icon + label nav
-  const SidebarContent = ({ onLinkClick, collapsed = false }) => (
-    <div className={`flex flex-col h-full overflow-y-auto ${collapsed ? "items-center py-2 gap-1" : ""}`}>
+  // Close the desktop flyout on outside-click / Escape
+  useEffect(() => {
+    if (!openModule) return;
+    const onDown = (e) => {
+      if (asideRef.current && !asideRef.current.contains(e.target)) setOpenModule(null);
+    };
+    const onKey = (e) => { if (e.key === "Escape") setOpenModule(null); };
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [openModule]);
+
+  // ── Single flyout link (shared by flat grid + sectioned columns) ───────────
+  const FlyoutLink = ({ link }) => (
+    <Link
+      to={link.path}
+      onClick={() => setOpenModule(null)}
+      className={`block px-2.5 py-1.5 rounded-lg text-sm transition-colors ${
+        link.deprecated
+          ? location.pathname === link.path
+            ? "bg-red-50 text-red-600 font-semibold"
+            : "text-red-400 hover:bg-red-50"
+          : location.pathname === link.path
+          ? "bg-brand-50 text-brand-600 font-semibold"
+          : "text-gray-600 hover:bg-gray-100 hover:text-brand-600"
+      }`}
+    >
+      {link.label}
+      {link.deprecated && (
+        <span className="ml-1.5 align-middle text-[9px] bg-red-100 text-red-500 border border-red-200 px-1 py-0.5 rounded font-semibold uppercase">Old</span>
+      )}
+    </Link>
+  );
+
+  // ── Desktop flyout panel anchored to the right of a module row ──────────────
+  const FlyoutPanel = ({ mod, nearBottom }) => (
+    <div className={`absolute left-full ml-2 z-50 ${nearBottom ? "bottom-0" : "top-0"} animate-flyout`}>
+      <div className="bg-white rounded-2xl border border-brand-200 ring-1 ring-black/5 shadow-[0_16px_48px_-12px_rgba(45,43,58,0.45)] p-4 max-h-[78vh] overflow-y-auto">
+        <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2 px-1">{mod.label}</p>
+        {mod.flat ? (
+          <div className="grid grid-cols-3 gap-x-4 gap-y-0.5 min-w-[560px]">
+            {mod.links.map(link => <FlyoutLink key={link.path} link={link} />)}
+          </div>
+        ) : (
+          <div className="flex gap-8">
+            {Object.entries(mod.children).map(([section, links]) => (
+              <div key={section} className="min-w-[150px]">
+                <p className="text-[10px] font-bold text-brand-600 uppercase tracking-wider mb-1 px-2.5">{section}</p>
+                <div className="flex flex-col whitespace-nowrap">
+                  {links.map(link => <FlyoutLink key={link.path} link={link} />)}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
+  // ── Desktop nav: Dashboard + module rows (icon rail / icon+label) w/ flyout ─
+  const DesktopNav = () => (
+    <div className="flex flex-col flex-1 min-h-0 py-2 px-2 gap-1">
+
+      {/* Dashboard */}
+      <Link
+        to="/dashboard"
+        title={!expanded ? "Dashboard" : undefined}
+        className={`flex items-center rounded-xl transition-all ${
+          expanded ? "gap-3 px-3 py-2.5 text-sm font-semibold" : "w-10 h-10 justify-center mx-auto"
+        } ${
+          location.pathname === "/dashboard"
+            ? "bg-brand-600 text-white shadow-md shadow-brand-200"
+            : "text-gray-500 hover:bg-brand-50 hover:text-brand-600"
+        }`}
+      >
+        <LayoutDashboard size={18} className="shrink-0" />
+        {expanded && <span>Dashboard</span>}
+      </Link>
+
+      <div className={expanded ? "mx-2 border-t border-gray-100 my-1" : "w-6 mx-auto border-t border-gray-200 my-1"} />
+
+      {/* Modules */}
+      {menu.map((mod, i) => {
+        const ModIcon   = mod.icon;
+        const isOpen    = openModule === mod.label;
+        const hasActive = isModuleActive(mod, location.pathname);
+        const nearBottom = i >= menu.length - 2;
+
+        return (
+          <div key={mod.label} className="relative">
+            <button
+              onClick={() => toggleModule(mod.label)}
+              title={!expanded ? mod.label : undefined}
+              className={`relative flex items-center w-full rounded-xl transition-all ${
+                expanded ? "gap-3 px-3 py-2.5 text-sm font-medium justify-between" : "w-10 h-10 justify-center mx-auto"
+              } ${
+                isOpen
+                  ? "bg-brand-600 text-white shadow-md shadow-brand-200"
+                  : hasActive
+                  ? "bg-brand-100 text-brand-600"
+                  : "text-gray-500 hover:bg-brand-50 hover:text-brand-600"
+              }`}
+            >
+              <span className="flex items-center gap-3">
+                <ModIcon size={expanded ? 17 : 18} className="shrink-0" />
+                {expanded && <span>{mod.label}</span>}
+              </span>
+              {expanded && <ChevronRight size={14} className={isOpen ? "text-white/80" : "text-gray-400"} />}
+              {!expanded && hasActive && !isOpen && (
+                <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-violet-600 rounded-full" />
+              )}
+            </button>
+
+            {isOpen && <FlyoutPanel mod={mod} nearBottom={nearBottom} />}
+          </div>
+        );
+      })}
+
+      <div className="flex-1" />
+    </div>
+  );
+
+  // ── Mobile drawer nav: inline accordion (full width, no flyout) ─────────────
+  const SidebarContent = ({ onLinkClick }) => (
+    <div className="flex flex-col h-full overflow-y-auto">
 
       {/* Dashboard link */}
       <Link
         to="/dashboard"
         onClick={onLinkClick}
-        title={collapsed ? "Dashboard" : undefined}
-        className={
-          collapsed
-            ? `w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
-                location.pathname === "/dashboard"
-                  ? "bg-brand-600 text-white shadow-md shadow-brand-200"
-                  : "text-gray-400 hover:bg-brand-50 hover:text-brand-600"
-              }`
-            : `flex items-center gap-3 px-3 py-2.5 mx-2 my-1 rounded-xl text-sm font-semibold transition-all ${
-                location.pathname === "/dashboard"
-                  ? "bg-brand-600 text-white shadow-md shadow-brand-200"
-                  : "text-gray-600 hover:bg-brand-50 hover:text-brand-600"
-              }`
-        }
+        className={`flex items-center gap-3 px-3 py-2.5 mx-2 my-1 rounded-xl text-sm font-semibold transition-all ${
+          location.pathname === "/dashboard"
+            ? "bg-brand-600 text-white shadow-md shadow-brand-200"
+            : "text-gray-600 hover:bg-brand-50 hover:text-brand-600"
+        }`}
       >
         <LayoutDashboard size={18} className="shrink-0" />
-        {!collapsed && <span>Dashboard</span>}
+        <span>Dashboard</span>
       </Link>
 
-      <div className={collapsed ? "w-6 border-t border-gray-200 my-1" : "mx-4 border-t border-gray-100 my-1"} />
+      <div className="mx-4 border-t border-gray-100 my-1" />
 
       {/* Module items */}
       {menu.map((mod, i) => {
         const ModIcon = mod.icon;
         const isOpen   = openModule === mod.label;
         const hasActive = isModuleActive(mod, location.pathname);
-
-        if (collapsed) {
-          return (
-            <button
-              key={mod.label}
-              title={mod.label}
-              onClick={() => toggleModule(mod.label)}
-              className={`relative w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
-                isOpen
-                  ? "bg-brand-600 text-white shadow-md shadow-brand-200"
-                  : hasActive
-                  ? "bg-brand-100 text-brand-600"
-                  : "text-gray-400 hover:bg-brand-50 hover:text-brand-600"
-              }`}
-            >
-              <ModIcon size={18} />
-              {hasActive && !isOpen && (
-                <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-violet-600 rounded-full" />
-              )}
-            </button>
-          );
-        }
 
         return (
           <div key={mod.label}>
@@ -260,7 +353,7 @@ export default function Layout({ children }) {
                         key={link.path}
                         to={link.path}
                         onClick={onLinkClick}
-                        className={`flex items-center gap-2 pl-8 pr-3 py-1.5 text-xs transition-colors ${
+                        className={`block pl-6 pr-3 py-1.5 text-xs transition-colors ${
                           link.deprecated
                             ? location.pathname === link.path
                               ? "bg-red-50 text-red-600 font-semibold border-r-2 border-red-400"
@@ -270,10 +363,9 @@ export default function Layout({ children }) {
                             : "text-gray-600 hover:bg-gray-100 hover:text-gray-700"
                         }`}
                       >
-                        <span className="w-1 h-1 rounded-full bg-current opacity-50 shrink-0" />
                         {link.label}
                         {link.deprecated && (
-                          <span className="ml-auto text-[9px] bg-red-100 text-red-500 border border-red-200 px-1 py-0.5 rounded font-semibold uppercase">Old</span>
+                          <span className="ml-1.5 text-[9px] bg-red-100 text-red-500 border border-red-200 px-1 py-0.5 rounded font-semibold uppercase">Old</span>
                         )}
                       </Link>
                     ))}
@@ -295,13 +387,12 @@ export default function Layout({ children }) {
                               key={link.path}
                               to={link.path}
                               onClick={onLinkClick}
-                              className={`flex items-center gap-2 pl-8 pr-3 py-1.5 text-xs transition-colors ${
+                              className={`block pl-6 pr-3 py-1.5 text-xs transition-colors ${
                                 location.pathname === link.path
                                   ? "bg-brand-100 text-brand-600 font-semibold border-r-2 border-brand-600"
                                   : "text-gray-600 hover:bg-gray-100 hover:text-gray-700"
                               }`}
                             >
-                              <span className="w-1 h-1 rounded-full bg-current opacity-50 shrink-0" />
                               {link.label}
                             </Link>
                           ))}
@@ -368,14 +459,13 @@ export default function Layout({ children }) {
 
         {/* ── DESKTOP SIDEBAR: single unified collapsible column ── */}
         <aside
-          className={`hidden lg:flex flex-col shrink-0 bg-white/90 backdrop-blur-sm border-r border-brand-200 transition-all duration-300 ease-in-out ${
+          ref={asideRef}
+          className={`hidden lg:flex flex-col shrink-0 relative z-20 bg-white/90 backdrop-blur-sm border-r border-brand-200 transition-all duration-300 ease-in-out ${
             expanded ? "w-64" : "w-16"
           }`}
         >
-          {/* Nav (scrollable) */}
-          <div className="flex-1 overflow-hidden pt-2">
-            <SidebarContent onLinkClick={() => {}} collapsed={!expanded} />
-          </div>
+          {/* Nav + flyout */}
+          <DesktopNav />
 
           {/* Footer: collapse toggle + user zone */}
           <div className="shrink-0 border-t border-brand-200 p-2">
@@ -418,7 +508,7 @@ export default function Layout({ children }) {
         </aside>
 
         {/* ── MAIN CONTENT ── */}
-        <main className="flex-1 overflow-y-auto p-3 lg:p-5">{children}</main>
+        <main key={location.pathname} className="flex-1 overflow-y-auto p-3 lg:p-5 animate-page">{children}</main>
       </div>
 
       {/* ── FOOTER ── */}
