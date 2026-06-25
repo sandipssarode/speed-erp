@@ -48,7 +48,6 @@ const emptyForm = () => ({
   bom: "", quantityToProduce: "", floorName: "", assignedToId: "", assignedToName: "",
   priority: "Medium", startTime: "", endTime: "", status: "Draft", remarks: "",
   materials: [],
-  actualStart: "", actualEnd: "", actualQtyProduced: "",
   attachmentFileNames: [],
   createdAt: "", updatedAt: "", createdBy: "", updatedBy: "", changelog: [],
 });
@@ -164,12 +163,6 @@ export default function WorkOrderForm() {
   const handleSave = async (statusOverride) => {
     const next = statusOverride ? { ...form, status: statusOverride } : form;
     const errs = validate(next);
-    // extra rules for lifecycle transitions
-    if (statusOverride === "In Progress" && !next.actualStart) errs.actualStart = "Actual Start is required to start production.";
-    if (statusOverride === "Completed") {
-      if (next.actualQtyProduced === "" || Number(next.actualQtyProduced) < 0) errs.actualQtyProduced = "Actual Quantity Produced is required to complete.";
-      if (!next.actualEnd) errs.actualEnd = "Actual End is required to complete.";
-    }
     if (Object.keys(errs).length) { setErrors(errs); showToast("Please correct the highlighted fields.", "error"); return; }
     await persist(next);
   };
@@ -274,7 +267,7 @@ export default function WorkOrderForm() {
                 <Field label="Quantity to Produce" required error={errors.quantityToProduce}>
                   <TInput type="number" value={form.quantityToProduce} onChange={e => setField("quantityToProduce", e.target.value)} disabled={isReadOnly} placeholder="e.g. 100" error={errors.quantityToProduce} />
                 </Field>
-                <Field label="Floor / Work Centre" hint="Work Centre master — coming soon">
+                <Field label="Floor Name" hint="Work Centre master — coming soon">
                   <TInput value={form.floorName} onChange={e => setField("floorName", e.target.value)} disabled={isReadOnly} placeholder="e.g. Production Line 1" />
                 </Field>
                 <Field label="Assigned To">
@@ -337,22 +330,6 @@ export default function WorkOrderForm() {
                     ))}
                   </tbody>
                 </table>
-              </div>
-            </div>
-
-            {/* Execution tracking */}
-            <div className="bg-gray-50 border border-gray-200 rounded p-4 space-y-4">
-              <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Execution (Actual)</p>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <Field label="Actual Start" error={errors.actualStart}>
-                  <TInput type="datetime-local" value={form.actualStart} onChange={e => setField("actualStart", e.target.value)} disabled={isReadOnly} error={errors.actualStart} />
-                </Field>
-                <Field label="Actual End" error={errors.actualEnd}>
-                  <TInput type="datetime-local" value={form.actualEnd} onChange={e => setField("actualEnd", e.target.value)} disabled={isReadOnly} error={errors.actualEnd} />
-                </Field>
-                <Field label="Actual Qty Produced" error={errors.actualQtyProduced}>
-                  <TInput type="number" value={form.actualQtyProduced} onChange={e => setField("actualQtyProduced", e.target.value)} disabled={isReadOnly} error={errors.actualQtyProduced} />
-                </Field>
               </div>
             </div>
 
