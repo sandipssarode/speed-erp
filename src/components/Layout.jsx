@@ -1,8 +1,7 @@
 ﻿import { useState } from "react";
 import {
-  LogOut, User, ChevronDown, ChevronUp, ShoppingCart, BarChart2,
+  LogOut, ChevronDown, ChevronUp, ShoppingCart, BarChart2,
   Package, DollarSign, Settings, LayoutDashboard, Menu, X, Database,
-  ChevronRight, ChevronLeft,
 } from "lucide-react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import siLogo from "../../logo/si_logo_trans.png";
@@ -327,36 +326,28 @@ export default function Layout({ children }) {
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-gradient-to-br from-brand-50 via-[#f2f0ef] to-brand-100 text-gray-800">
       {/* ── TOP BAR ── */}
-      <header className="bg-white/90 backdrop-blur-sm border-b border-brand-200 flex items-center justify-between px-3 lg:px-4 py-2 shadow-sm shrink-0 z-30">
-        <div className="flex items-center gap-2 lg:gap-3">
-          {/* Mobile hamburger */}
-          <button
-            onClick={() => setMobileOpen(true)}
-            className="lg:hidden p-1.5 rounded-lg hover:bg-brand-50 text-gray-500"
-            aria-label="Open menu"
-          >
-            <Menu size={20} />
-          </button>
-        </div>
+      <header className="bg-white/90 backdrop-blur-sm border-b border-brand-200 flex items-center gap-2 lg:gap-3 px-3 lg:px-4 py-2.5 shadow-sm shrink-0 z-30">
+        {/* Mobile hamburger */}
+        <button
+          onClick={() => setMobileOpen(true)}
+          className="lg:hidden p-1.5 rounded-lg hover:bg-brand-50 text-gray-500"
+          aria-label="Open menu"
+        >
+          <Menu size={20} />
+        </button>
 
-        <div className="flex items-center gap-2">
-          <div className="text-right mr-1 hidden sm:block">
-            <p className="text-xs font-semibold text-gray-700">{userName}</p>
-            <p className="text-[10px] text-gray-400">Speed IT Innovations</p>
-          </div>
-          <Link
-            to="/profile"
-            className="flex items-center gap-1.5 text-xs border border-gray-200 px-2.5 py-1.5 rounded-lg text-gray-600 hover:bg-brand-50 hover:border-brand-200 hover:text-brand-600 transition-colors"
-          >
-            <User size={13} /> <span className="hidden sm:inline">My Profile</span>
-          </Link>
-          <button
-            onClick={handleLogoff}
-            className="flex items-center gap-1.5 text-xs border border-gray-200 px-2.5 py-1.5 rounded-lg text-gray-600 hover:bg-red-50 hover:border-red-200 hover:text-red-600 transition-colors"
-          >
-            <LogOut size={13} /> <span className="hidden sm:inline">Log Off</span>
-          </button>
-        </div>
+        {/* Desktop sidebar toggle */}
+        <button
+          onClick={() => setExpanded(p => !p)}
+          title={expanded ? "Collapse sidebar" : "Expand sidebar"}
+          aria-label="Toggle sidebar"
+          className="hidden lg:flex p-1.5 rounded-lg hover:bg-brand-50 text-gray-500 hover:text-brand-600 transition-colors"
+        >
+          <Menu size={20} />
+        </button>
+
+        {/* Logo */}
+        <img src={siLogo} alt="Speed Innovations" className="h-10 w-auto object-contain" />
       </header>
 
       <div className="flex flex-1 overflow-hidden relative">
@@ -390,62 +381,13 @@ export default function Layout({ children }) {
             expanded ? "w-64" : "w-16"
           }`}
         >
-          {/* Logo header (aligned to top-bar height) */}
-          <div
-            className={`h-14 shrink-0 flex items-center border-b border-brand-200 ${
-              expanded ? "px-3" : "justify-center"
-            }`}
-          >
-            {expanded ? (
-              <>
-                <img
-                  src={siLogo}
-                  alt="Speed Innovations"
-                  className="h-7 w-auto object-contain"
-                />
-                <button
-                  onClick={() => setExpanded(false)}
-                  title="Collapse sidebar"
-                  className="ml-auto w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:bg-brand-50 hover:text-brand-600 transition-colors"
-                >
-                  <ChevronLeft size={16} />
-                </button>
-              </>
-            ) : (
-              <button
-                onClick={() => setExpanded(true)}
-                title="Expand sidebar"
-                className="h-9 px-1.5 flex items-center justify-center rounded-lg hover:bg-brand-50 transition-colors"
-              >
-                {/* crop to the left "speed-lines" mark of the wordmark */}
-                <span className="h-6 overflow-hidden flex items-center" style={{ width: 22 }}>
-                  <img
-                    src={siLogo}
-                    alt="Speed Innovations"
-                    className="h-6 max-w-none"
-                    style={{ width: "auto" }}
-                  />
-                </span>
-              </button>
-            )}
-          </div>
-
           {/* Nav (scrollable) */}
-          <div className="flex-1 overflow-hidden">
+          <div className="flex-1 overflow-hidden pt-2">
             <SidebarContent onLinkClick={() => {}} collapsed={!expanded} />
           </div>
 
-          {/* Footer: collapsed expand toggle + user zone */}
+          {/* Footer: user zone */}
           <div className="shrink-0 border-t border-brand-200 p-2">
-            {!expanded && (
-              <button
-                onClick={() => setExpanded(true)}
-                title="Expand sidebar"
-                className="w-10 h-8 mx-auto mb-1 rounded-xl flex items-center justify-center text-gray-400 hover:bg-brand-50 hover:text-brand-600 transition-colors"
-              >
-                <ChevronRight size={15} />
-              </button>
-            )}
             {expanded ? (
               <div className="flex items-center gap-2.5 px-1">
                 <div className="w-9 h-9 shrink-0 rounded-xl bg-gradient-to-br from-brand-600 to-brand-800 flex items-center justify-center text-white text-sm font-bold shadow-sm">
