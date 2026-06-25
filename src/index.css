@@ -20,6 +20,13 @@
 
   /* ── Typography ── */
   --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+
+  /* ── Richer text grays (default Tailwind grays read dull/washed) ── */
+  --color-gray-400: #7b8493;   /* was #9ca3af — icons / placeholders */
+  --color-gray-500: #545d6b;   /* was #6b7280 — secondary text */
+  --color-gray-600: #3c4452;   /* was #4b5563 — body labels / values */
+  --color-gray-700: #2b323d;   /* was #374151 — strong text */
+  --color-gray-800: #1c222b;   /* was #1f2937 — headings */
 }
 
 /* Apply font globally */
@@ -34,7 +41,7 @@ html {
   text-rendering: optimizeLegibility;
 }
 body {
-  color: #1f2937;        /* solid base text colour, not faded */
+  color: #111827;        /* rich near-black base text, not dull */
   font-weight: 450;      /* slightly stronger default so text reads crisply */
   letter-spacing: -0.005em;
 }
