@@ -2,7 +2,7 @@
 import {
   LogOut, ChevronDown, ChevronUp, ShoppingCart, BarChart2,
   Package, DollarSign, Settings, LayoutDashboard, Menu, X, Database,
-  ChevronLeft, ChevronRight, Search, Bell, User,
+  ChevronRight, Search, Bell, User,
 } from "lucide-react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import siLogo from "../../logo/si_logo_trans.png";
@@ -10,9 +10,9 @@ import siLogo from "../../logo/si_logo_trans.png";
 // ─────────────────────────────────────────────────────────────
 // MENU CONFIG  (icon = component ref, not JSX)
 // ─────────────────────────────────────────────────────────────
-const menu = [
+export const menu = [
   {
-    label: "Masters", icon: Database, flat: true,
+    label: "Masters", icon: Database, flat: true, landing: "/masters",
     links: [
       { label: "Country Master",           path: "/system/countries" },
       { label: "State Master",             path: "/system/states" },
@@ -34,7 +34,7 @@ const menu = [
     ],
   },
   {
-    label: "Purchase", icon: ShoppingCart,
+    label: "Purchase", icon: ShoppingCart, landing: "/purchase",
     children: {
       Transaction: [
         { label: "Purchase Requisition",  path: "/purchase/requisition" },
@@ -54,7 +54,7 @@ const menu = [
     },
   },
   {
-    label: "Sales", icon: BarChart2,
+    label: "Sales", icon: BarChart2, landing: "/sales",
     children: {
       Transaction: [
         { label: "Sales Quotation",    path: "/sales/quotation" },
@@ -72,7 +72,7 @@ const menu = [
     },
   },
   {
-    label: "Inventory", icon: Package,
+    label: "Inventory", icon: Package, landing: "/inventory",
     children: {
       Transaction: [
         { label: "Material Receipt (GRN)", path: "/inventory/grn" },
@@ -89,7 +89,7 @@ const menu = [
     },
   },
   {
-    label: "Finance", icon: DollarSign,
+    label: "Finance", icon: DollarSign, landing: "/finance",
     children: {
       Transaction: [
         { label: "Journal Entry",    path: "/finance/journal" },
@@ -107,7 +107,7 @@ const menu = [
     },
   },
   {
-    label: "System Setup", icon: Settings, flat: true,
+    label: "System Setup", icon: Settings, flat: true, landing: "/system",
     links: [
       { label: "User Master",                    path: "/system/users" },
       { label: "Organisation Master",            path: "/system/organisations" },
@@ -125,7 +125,8 @@ const menu = [
 // ─────────────────────────────────────────────────────────────
 // Helpers
 // ─────────────────────────────────────────────────────────────
-function isModuleActive(mod, pathname) {
+export function isModuleActive(mod, pathname) {
+  if (pathname === mod.landing) return true;
   if (mod.flat) return mod.links.some(l => pathname.startsWith(l.path));
   return Object.values(mod.children).flat().some(l => pathname.startsWith(l.path));
 }
@@ -156,7 +157,6 @@ export default function Layout({ children }) {
   const userInitial = userName[0].toUpperCase();
 
   const active = getActiveState(location.pathname);
-  const [expanded,    setExpanded]    = useState(false);       // sidebar pinned open?
   const [openModule,  setOpenModule]  = useState(null);        // open flyout / accordion
   const [openSection, setOpenSection] = useState(active.section);
   const [mobileOpen,  setMobileOpen]  = useState(false);
@@ -227,7 +227,7 @@ export default function Layout({ children }) {
 
   // ── Desktop flyout panel anchored to the right of a module row ──────────────
   const FlyoutPanel = ({ mod, nearBottom }) => (
-    <div className={`absolute left-full ml-2 z-50 ${nearBottom ? "bottom-0" : "top-0"} animate-flyout`}>
+    <div className={`absolute left-full pl-2 z-50 ${nearBottom ? "bottom-0" : "top-0"} animate-flyout`}>
       <div className="bg-white rounded-2xl border border-brand-200 ring-1 ring-black/5 shadow-[0_16px_48px_-12px_rgba(45,43,58,0.45)] p-4 max-h-[78vh] overflow-y-auto">
         <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2 px-1">{mod.label}</p>
         {mod.flat ? (
@@ -250,27 +250,24 @@ export default function Layout({ children }) {
     </div>
   );
 
-  // ── Desktop nav: Dashboard + module rows (icon rail / icon+label) w/ flyout ─
+  // ── Desktop nav: Dashboard + module rows (icon + label) with flyout ─────────
   const DesktopNav = () => (
-    <div className="flex flex-col flex-1 min-h-0 py-2 px-2 gap-1">
+    <div className="flex flex-col flex-1 min-h-0 py-3 px-2 gap-1">
 
       {/* Dashboard */}
       <Link
         to="/dashboard"
-        title={!expanded ? "Dashboard" : undefined}
-        className={`flex items-center rounded-xl transition-all ${
-          expanded ? "gap-3 px-3 py-2.5 text-sm font-semibold" : "w-10 h-10 justify-center mx-auto"
-        } ${
+        className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all ${
           location.pathname === "/dashboard"
             ? "bg-brand-600 text-white shadow-md shadow-brand-200"
             : "text-gray-500 hover:bg-brand-50 hover:text-brand-600"
         }`}
       >
         <LayoutDashboard size={18} className="shrink-0" />
-        {expanded && <span>Dashboard</span>}
+        <span>Dashboard</span>
       </Link>
 
-      <div className={expanded ? "mx-2 border-t border-gray-100 my-1" : "w-6 mx-auto border-t border-gray-200 my-1"} />
+      <div className="mx-2 border-t border-gray-100 my-1" />
 
       {/* Modules */}
       {menu.map((mod, i) => {
@@ -279,30 +276,28 @@ export default function Layout({ children }) {
         const hasActive = isModuleActive(mod, location.pathname);
         const nearBottom = i >= menu.length - 2;
 
+        const highlight = isOpen || hasActive;
         return (
-          <div key={mod.label} className="relative">
-            <button
-              onClick={() => toggleModule(mod.label)}
-              title={!expanded ? mod.label : undefined}
-              className={`relative flex items-center w-full rounded-xl transition-all ${
-                expanded ? "gap-3 px-3 py-2.5 text-sm font-medium justify-between" : "w-10 h-10 justify-center mx-auto"
-              } ${
-                isOpen
+          <div
+            key={mod.label}
+            className="relative"
+            onMouseEnter={() => setOpenModule(mod.label)}
+            onMouseLeave={() => setOpenModule(null)}
+          >
+            <Link
+              to={mod.landing}
+              className={`relative flex items-center justify-between w-full gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                highlight
                   ? "bg-brand-600 text-white shadow-md shadow-brand-200"
-                  : hasActive
-                  ? "bg-brand-100 text-brand-600"
                   : "text-gray-500 hover:bg-brand-50 hover:text-brand-600"
               }`}
             >
               <span className="flex items-center gap-3">
-                <ModIcon size={expanded ? 17 : 18} className="shrink-0" />
-                {expanded && <span>{mod.label}</span>}
+                <ModIcon size={17} className="shrink-0" />
+                <span>{mod.label}</span>
               </span>
-              {expanded && <ChevronRight size={14} className={isOpen ? "text-white/80" : "text-gray-400"} />}
-              {!expanded && hasActive && !isOpen && (
-                <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-coral rounded-full" />
-              )}
-            </button>
+              <ChevronRight size={14} className={highlight ? "text-white/80" : "text-gray-400"} />
+            </Link>
 
             {isOpen && <FlyoutPanel mod={mod} nearBottom={nearBottom} />}
           </div>
@@ -435,7 +430,7 @@ export default function Layout({ children }) {
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-[#f3f4fb] text-gray-800">
       {/* ── TOP BAR ── */}
-      <header className="bg-white/90 backdrop-blur-sm border-b border-brand-200 flex items-center gap-2 lg:gap-4 px-3 lg:px-4 py-2 shadow-sm shrink-0 z-30">
+      <header className="bg-white/90 backdrop-blur-sm border-b border-brand-200 flex items-center gap-2 lg:gap-0 pl-3 lg:pl-0 pr-3 lg:pr-4 py-2 shadow-sm shrink-0 z-30">
         {/* Mobile hamburger */}
         <button
           onClick={() => setMobileOpen(true)}
@@ -445,11 +440,13 @@ export default function Layout({ children }) {
           <Menu size={20} />
         </button>
 
-        {/* Logo */}
-        <img src={siLogo} alt="Speed Innovations" className="h-14 w-auto object-contain shrink-0" />
+        {/* Logo zone (aligns with the fixed sidebar width) */}
+        <div className="flex items-center shrink-0 lg:w-64 lg:px-4">
+          <img src={siLogo} alt="Speed Innovations" className="h-14 w-auto object-contain" />
+        </div>
 
-        {/* Search */}
-        <div className="hidden md:flex items-center gap-2 flex-1 max-w-md bg-brand-50/70 border border-brand-100 rounded-xl px-3 py-2 focus-within:ring-2 focus-within:ring-brand-200 transition-all">
+        {/* Search (aligned with the dashboard content) */}
+        <div className="hidden md:flex items-center gap-2 flex-1 max-w-md lg:ml-5 bg-brand-50/70 border border-brand-100 rounded-xl px-3 py-2 focus-within:ring-2 focus-within:ring-brand-200 transition-all">
           <Search size={16} className="text-gray-400 shrink-0" />
           <input
             type="text"
@@ -497,13 +494,10 @@ export default function Layout({ children }) {
           <div className="relative">
             <button
               onClick={() => { setProfileOpen(v => !v); setNotifOpen(false); }}
-              className="flex items-center gap-2 p-1 pr-2 rounded-xl hover:bg-brand-50 transition-colors"
+              aria-label="Profile"
+              className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-600 to-brand-800 flex items-center justify-center text-white text-sm font-bold shadow-sm hover:shadow-md transition-shadow"
             >
-              <span className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-600 to-brand-800 flex items-center justify-center text-white text-sm font-bold shadow-sm">
-                {userInitial}
-              </span>
-              <span className="hidden sm:block text-xs font-semibold text-gray-700 max-w-[120px] truncate">{userName}</span>
-              <ChevronDown size={14} className="hidden sm:block text-gray-400" />
+              {userInitial}
             </button>
             {profileOpen && (
               <div className="absolute right-0 mt-2 w-52 z-40 animate-flyout bg-white rounded-2xl border border-brand-200 ring-1 ring-black/5 shadow-[0_16px_48px_-12px_rgba(45,43,58,0.45)] overflow-hidden">
@@ -555,54 +549,13 @@ export default function Layout({ children }) {
           </div>
         </aside>
 
-        {/* ── DESKTOP SIDEBAR: single unified collapsible column ── */}
+        {/* ── DESKTOP SIDEBAR: fixed column with flyout menus ── */}
         <aside
           ref={asideRef}
-          className={`hidden lg:flex flex-col shrink-0 relative z-20 bg-white/90 backdrop-blur-sm border-r border-brand-200 transition-all duration-300 ease-in-out ${
-            expanded ? "w-64" : "w-16"
-          }`}
+          className="hidden lg:flex flex-col shrink-0 relative z-20 w-64 bg-white/90 backdrop-blur-sm border-r border-brand-200"
         >
           {/* Nav + flyout */}
           <DesktopNav />
-
-          {/* Footer: collapse toggle + user zone */}
-          <div className="shrink-0 border-t border-brand-200 p-2">
-            <button
-              onClick={() => setExpanded(p => !p)}
-              title={expanded ? "Collapse sidebar" : "Expand sidebar"}
-              className={`h-8 rounded-lg flex items-center justify-center text-gray-400 hover:bg-brand-50 hover:text-brand-600 transition-colors mb-2 ${
-                expanded ? "w-8 ml-auto" : "w-10 mx-auto"
-              }`}
-            >
-              {expanded ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
-            </button>
-            {expanded ? (
-              <div className="flex items-center gap-2.5 px-1">
-                <div className="w-9 h-9 shrink-0 rounded-xl bg-gradient-to-br from-brand-600 to-brand-800 flex items-center justify-center text-white text-sm font-bold shadow-sm">
-                  {userInitial}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs font-semibold text-gray-700 truncate">{userName}</p>
-                  <p className="text-[10px] text-gray-400 truncate">Speed IT Innovations</p>
-                </div>
-                <button
-                  onClick={handleLogoff}
-                  title="Log Off"
-                  className="w-8 h-8 shrink-0 rounded-lg flex items-center justify-center text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors"
-                >
-                  <LogOut size={15} />
-                </button>
-              </div>
-            ) : (
-              <button
-                title={userName}
-                onClick={handleLogoff}
-                className="w-10 h-10 mx-auto rounded-xl bg-gradient-to-br from-brand-600 to-brand-800 flex items-center justify-center text-white text-sm font-bold shadow-sm hover:shadow-md transition-all"
-              >
-                {userInitial}
-              </button>
-            )}
-          </div>
         </aside>
 
         {/* ── MAIN CONTENT ── */}

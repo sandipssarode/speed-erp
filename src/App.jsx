@@ -51,6 +51,8 @@ import DesignationList from "./pages/masters/designation/DesignationList";
 import DesignationForm from "./pages/masters/designation/DesignationForm";
 import EmployeeList from "./pages/masters/employee/EmployeeList";
 import EmployeeForm from "./pages/masters/employee/EmployeeForm";
+import UIShowcase from "./pages/UIShowcase";
+import ModuleLanding from "./pages/ModuleLanding";
 
 function App() {
   return (
@@ -63,6 +65,14 @@ function App() {
 
         {/* Dashboard */}
         <Route path="/dashboard" element={<Dashboard />} />
+
+        {/* Module landing pages */}
+        <Route path="/masters"   element={<ModuleLanding />} />
+        <Route path="/purchase"  element={<ModuleLanding />} />
+        <Route path="/sales"     element={<ModuleLanding />} />
+        <Route path="/inventory" element={<ModuleLanding />} />
+        <Route path="/finance"   element={<ModuleLanding />} />
+        <Route path="/system"    element={<ModuleLanding />} />
 
         {/* System Setup */}
         <Route path="/system/organisations" element={<OrganisationList />} />
@@ -185,6 +195,7 @@ function App() {
 
         {/* Profile */}
         <Route path="/profile" element={<WorkInProgress />} />
+        <Route path="/ui-showcase" element={<UIShowcase />} />
 
 
       </Routes>
