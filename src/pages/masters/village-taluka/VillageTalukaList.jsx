@@ -1,10 +1,19 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../../../components/Layout";
-import { Plus, Search, Edit2, Trash2 } from "lucide-react";
+import {
+  Plus,
+  Search,
+  Edit2,
+  Trash2,
+  ChevronLeft,
+  ChevronRight,
+  X,
+  ChevronsUpDown,
+} from "lucide-react";
 import { api } from "../../../lib/api.js";
 
-const PAGE_SIZE = 25;
+const PAGE_SIZE = 12;
 
 export default function VillageTalukaList() {
   const navigate = useNavigate();
@@ -12,6 +21,7 @@ export default function VillageTalukaList() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [filterDistrict, setFilterDistrict] = useState("all");
+  const [sortDir, setSortDir] = useState("asc");
   const [page, setPage] = useState(1);
 
   useEffect(() => {
@@ -25,19 +35,24 @@ export default function VillageTalukaList() {
 
   const districts = [...new Set(records.map((r) => r.districtName).filter(Boolean))].sort();
 
-  const filtered = records.filter((r) => {
-    const q = search.toLowerCase();
-    const matchSearch =
-      !q ||
-      r.villageCode?.toLowerCase().includes(q) ||
-      r.villageName?.toLowerCase().includes(q) ||
-      r.districtName?.toLowerCase().includes(q) ||
-      r.pinCode?.toLowerCase().includes(q);
-    const matchDistrict = filterDistrict === "all" || r.districtName === filterDistrict;
-    return matchSearch && matchDistrict;
-  });
+  const filtered = records
+    .filter((r) => {
+      const q = search.toLowerCase();
+      const matchSearch =
+        !q ||
+        r.villageCode?.toLowerCase().includes(q) ||
+        r.villageName?.toLowerCase().includes(q) ||
+        r.districtName?.toLowerCase().includes(q) ||
+        r.pinCode?.toLowerCase().includes(q);
+      const matchDistrict = filterDistrict === "all" || r.districtName === filterDistrict;
+      return matchSearch && matchDistrict;
+    })
+    .sort((a, b) => {
+      const r = (a.villageName || "").localeCompare(b.villageName || "");
+      return sortDir === "asc" ? r : -r;
+    });
 
-  const pageCount = Math.ceil(filtered.length / PAGE_SIZE);
+  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   const handleDelete = async (id, name) => {
@@ -50,94 +65,160 @@ export default function VillageTalukaList() {
     }
   };
 
+  const th =
+    "text-left px-5 py-3.5 text-[11px] font-bold text-white/90 uppercase tracking-wider";
+  const actionBtn =
+    "w-8 h-8 border border-gray-200 rounded-lg flex items-center justify-center text-gray-400 transition-colors";
+
   return (
     <Layout>
-      <div className="space-y-4">
-        <div className="flex items-center justify-between flex-wrap gap-3">
-          <h1 className="text-lg font-semibold text-gray-800">Village / Taluka Master</h1>
+      <div className="max-w-6xl mx-auto space-y-4">
+        {/* Heading */}
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
+            Village / Taluka Master
+          </h1>
+          <p className="text-sm text-gray-500 mt-0.5">
+            Manage villages, talukas &amp; PIN codes
+          </p>
+        </div>
+
+        {/* Toolbar */}
+        <div className="flex items-center gap-3 flex-wrap">
+          <div className="relative flex-1 min-w-[220px] max-w-sm">
+            <Search
+              size={16}
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"
+            />
+            <input
+              type="text"
+              placeholder="Search villages / talukas…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pl-10 pr-9 py-2.5 text-sm bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100 transition-all"
+            />
+            {search && (
+              <button
+                onClick={() => setSearch("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                <X size={15} />
+              </button>
+            )}
+          </div>
+
+          <div className="relative">
+            <select
+              value={filterDistrict}
+              onChange={(e) => setFilterDistrict(e.target.value)}
+              className="appearance-none pl-4 pr-9 py-2.5 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100 cursor-pointer"
+            >
+              <option value="all">All Districts</option>
+              {districts.map((d) => (
+                <option key={d} value={d}>{d}</option>
+              ))}
+            </select>
+            <ChevronRight
+              size={15}
+              className="absolute right-3 top-1/2 -translate-y-1/2 rotate-90 text-gray-400 pointer-events-none"
+            />
+          </div>
+
           <button
             onClick={() => navigate("/masters/village-taluka/new")}
-            className="flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white text-sm px-4 py-2 rounded shadow-sm"
+            className="ml-auto flex items-center gap-2 bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl shadow-md shadow-brand-200 transition-all"
           >
-            <Plus size={15} /> Add New
+            <Plus size={16} /> New Village
           </button>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded p-3 flex items-center gap-3 flex-wrap">
-          <div className="relative flex-1 min-w-[220px] max-w-sm">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search Code, Name, District, PIN..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-8 pr-3 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-brand-600"
-            />
-          </div>
-          <select
-            value={filterDistrict}
-            onChange={(e) => setFilterDistrict(e.target.value)}
-            className="text-sm border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-brand-600"
-          >
-            <option value="all">All Districts</option>
-            {districts.map((d) => (
-              <option key={d} value={d}>{d}</option>
-            ))}
-          </select>
-          <span className="ml-auto text-xs text-gray-400">
-            {filtered.length} of {records.length} record(s)
-          </span>
-        </div>
-
-        {loading && <p className="text-center text-sm text-gray-400 py-6">Loading...</p>}
-
-        <div className="bg-white border border-gray-200 rounded overflow-hidden">
+        {/* Table card */}
+        <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-sm min-w-[600px]">
+            <table className="w-full text-sm min-w-[760px]">
               <thead>
-                <tr className="bg-brand-600">
-                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">Code</th>
-                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">Village / Taluka Name</th>
-                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">District</th>
-                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">PIN Code</th>
-                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-white uppercase tracking-wide">Actions</th>
+                <tr className="bg-gradient-to-r from-brand-800 to-brand-600">
+                  <th className={th}>
+                    <button
+                      onClick={() =>
+                        setSortDir((d) => (d === "asc" ? "desc" : "asc"))
+                      }
+                      className="inline-flex items-center gap-1.5 hover:text-white"
+                    >
+                      Name <ChevronsUpDown size={13} className="opacity-70" />
+                    </button>
+                  </th>
+                  <th className={th}>Code</th>
+                  <th className={th}>District</th>
+                  <th className={th}>PIN Code</th>
+                  <th className={`${th} text-right`}>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {paginated.length === 0 ? (
+                {loading ? (
                   <tr>
-                    <td colSpan={5} className="text-center py-16 text-gray-400 text-sm">
+                    <td
+                      colSpan={5}
+                      className="text-center py-16 text-gray-400 text-sm"
+                    >
+                      Loading…
+                    </td>
+                  </tr>
+                ) : paginated.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={5}
+                      className="text-center py-16 text-gray-400 text-sm"
+                    >
                       {records.length === 0
-                        ? 'No villages / talukas yet. Click "Add New" to get started.'
+                        ? 'No villages / talukas yet. Click "New Village" to add one.'
                         : "No records match your search."}
                     </td>
                   </tr>
                 ) : (
-                  paginated.map((r, i) => (
+                  paginated.map((r) => (
                     <tr
                       key={r.id}
-                      className={`border-b border-gray-200 hover:bg-brand-50/40 cursor-pointer transition-colors ${i % 2 !== 0 ? "bg-gray-50/50" : ""}`}
+                      className="group border-b border-gray-100 last:border-0 hover:bg-brand-50/40 cursor-pointer transition-colors"
                       onClick={() => navigate(`/masters/village-taluka/${r.id}`)}
                     >
-                      <td className="px-4 py-2.5 font-mono text-xs font-semibold text-brand-600">{r.villageCode}</td>
-                      <td className="px-4 py-2.5 font-medium text-gray-800">{r.villageName}</td>
-                      <td className="px-4 py-2.5 text-gray-600">{r.districtName || "—"}</td>
-                      <td className="px-4 py-2.5 text-gray-600">{r.pinCode || "—"}</td>
-                      <td className="px-4 py-2.5">
-                        <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+                      <td className="px-5 py-3.5">
+                        <div className="flex items-center gap-3">
+                          <span className="w-9 h-9 rounded-lg bg-brand-50 ring-1 ring-brand-100 text-brand-700 flex items-center justify-center text-xs font-bold shrink-0">
+                            {(r.villageCode || "?").slice(0, 2).toUpperCase()}
+                          </span>
+                          <span className="font-semibold text-gray-800 group-hover:text-brand-600 transition-colors">
+                            {r.villageName}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-5 py-3.5 font-mono text-xs text-gray-400">
+                        {r.villageCode}
+                      </td>
+                      <td className="px-5 py-3.5 text-gray-600">
+                        {r.districtName || "—"}
+                      </td>
+                      <td className="px-5 py-3.5 text-gray-600">
+                        {r.pinCode || "—"}
+                      </td>
+                      <td className="px-5 py-3.5">
+                        <div
+                          className="flex items-center justify-end gap-1.5"
+                          onClick={(e) => e.stopPropagation()}
+                        >
                           <button
                             onClick={() => navigate(`/masters/village-taluka/${r.id}`)}
-                            className="p-1.5 text-brand-500 hover:text-brand-600 hover:bg-brand-50 rounded"
+                            className={`${actionBtn} hover:bg-brand-50 hover:text-brand-600 hover:border-brand-200`}
                             title="Edit"
                           >
-                            <Edit2 size={13} />
+                            <Edit2 size={14} />
                           </button>
                           <button
                             onClick={() => handleDelete(r.id, r.villageName)}
-                            className="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded"
+                            className={`${actionBtn} hover:bg-red-50 hover:text-red-600 hover:border-red-200`}
                             title="Delete"
                           >
-                            <Trash2 size={13} />
+                            <Trash2 size={14} />
                           </button>
                         </div>
                       </td>
@@ -147,34 +228,50 @@ export default function VillageTalukaList() {
               </tbody>
             </table>
           </div>
-          {pageCount > 1 && (
-            <div className="flex items-center justify-between px-4 py-2.5 border-t border-gray-200 bg-gray-50 text-xs">
+
+          {/* Footer */}
+          {!loading && filtered.length > 0 && (
+            <div className="flex items-center justify-between px-5 py-3.5 border-t border-gray-100 text-sm flex-wrap gap-3">
               <span className="text-gray-500">
-                Showing {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filtered.length)} of {filtered.length} records
+                Showing{" "}
+                <span className="font-semibold text-gray-700">
+                  {(page - 1) * PAGE_SIZE + 1}–
+                  {Math.min(page * PAGE_SIZE, filtered.length)}
+                </span>{" "}
+                of{" "}
+                <span className="font-semibold text-gray-700">
+                  {filtered.length}
+                </span>{" "}
+                villages
               </span>
-              <div className="flex items-center gap-1">
-                <button onClick={() => setPage(p => p - 1)} disabled={page === 1}
-                  className="px-2.5 py-1 border border-gray-300 rounded text-gray-600 hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed">
-                  ‹ Prev
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={() => setPage((p) => p - 1)}
+                  disabled={page === 1}
+                  className="flex items-center gap-1 px-3 py-1.5 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed font-medium"
+                >
+                  <ChevronLeft size={15} /> Prev
                 </button>
-                {Array.from({ length: pageCount }, (_, i) => i + 1).map(p => (
-                  <button key={p} onClick={() => setPage(p)}
-                    className={`px-2.5 py-1 border rounded ${p === page ? "bg-brand-600 text-white border-brand-600" : "border-gray-300 text-gray-600 hover:bg-white"}`}>
+                {Array.from({ length: pageCount }, (_, i) => i + 1).map((p) => (
+                  <button
+                    key={p}
+                    onClick={() => setPage(p)}
+                    className={`w-9 h-9 rounded-lg text-sm font-semibold transition-colors ${p === page ? "bg-brand-600 text-white shadow-sm" : "border border-gray-200 text-gray-600 hover:bg-gray-50"}`}
+                  >
                     {p}
                   </button>
                 ))}
-                <button onClick={() => setPage(p => p + 1)} disabled={page === pageCount}
-                  className="px-2.5 py-1 border border-gray-300 rounded text-gray-600 hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed">
-                  Next ›
+                <button
+                  onClick={() => setPage((p) => p + 1)}
+                  disabled={page === pageCount}
+                  className="flex items-center gap-1 px-3 py-1.5 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed font-medium"
+                >
+                  Next <ChevronRight size={15} />
                 </button>
               </div>
             </div>
           )}
         </div>
-
-        {pageCount <= 1 && filtered.length > 0 && (
-          <p className="text-xs text-gray-400 text-right px-1">Showing {filtered.length} record(s)</p>
-        )}
       </div>
     </Layout>
   );

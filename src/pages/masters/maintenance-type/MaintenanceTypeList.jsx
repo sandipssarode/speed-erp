@@ -1,8 +1,19 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../../../components/Layout";
-import { Plus, Search, Edit2, Trash2, ChevronRight } from "lucide-react";
+import {
+  Plus,
+  Search,
+  Edit2,
+  Trash2,
+  ChevronLeft,
+  ChevronRight,
+  X,
+  ChevronsUpDown,
+} from "lucide-react";
 import { api } from "../../../lib/api.js";
+
+const PAGE_SIZE = 12;
 
 const PRIORITY_BADGE = {
   Critical: "bg-red-50 text-red-600 border-red-200",
@@ -17,6 +28,8 @@ export default function MaintenanceTypeList() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [filterPriority, setFilterPriority] = useState("all");
+  const [sortDir, setSortDir] = useState("asc");
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     api.get("/api/maintenance-types")
@@ -25,16 +38,26 @@ export default function MaintenanceTypeList() {
       .finally(() => setLoading(false));
   }, []);
 
-  const filtered = records.filter((r) => {
-    const q = search.toLowerCase();
-    const matchSearch =
-      !q ||
-      r.typeId?.toLowerCase().includes(q) ||
-      r.maintenanceName?.toLowerCase().includes(q) ||
-      r.priority?.toLowerCase().includes(q);
-    const matchPriority = filterPriority === "all" || r.priority === filterPriority;
-    return matchSearch && matchPriority;
-  });
+  useEffect(() => { setPage(1); }, [search, filterPriority]);
+
+  const filtered = records
+    .filter((r) => {
+      const q = search.toLowerCase();
+      const matchSearch =
+        !q ||
+        r.typeId?.toLowerCase().includes(q) ||
+        r.maintenanceName?.toLowerCase().includes(q) ||
+        r.priority?.toLowerCase().includes(q);
+      const matchPriority = filterPriority === "all" || r.priority === filterPriority;
+      return matchSearch && matchPriority;
+    })
+    .sort((a, b) => {
+      const r = (a.maintenanceName || "").localeCompare(b.maintenanceName || "");
+      return sortDir === "asc" ? r : -r;
+    });
+
+  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   const handleDelete = async (id, name) => {
     if (!window.confirm(`Delete maintenance type "${name}"? This cannot be undone.`)) return;
@@ -46,111 +69,167 @@ export default function MaintenanceTypeList() {
     }
   };
 
+  const th =
+    "text-left px-5 py-3.5 text-[11px] font-bold text-white/90 uppercase tracking-wider";
+  const actionBtn =
+    "w-8 h-8 border border-gray-200 rounded-lg flex items-center justify-center text-gray-400 transition-colors";
+
   return (
     <Layout>
-      <div className="space-y-4">
-        {/* Header */}
-        <div className="flex items-center justify-between flex-wrap gap-3">
-          <div>
-            <div className="flex items-center gap-1.5 text-xs text-gray-400 mb-1">
-              <span>Masters</span>
-              <ChevronRight size={12} />
-              <span className="text-gray-600 font-medium">Maintenance Type</span>
-            </div>
-            <h1 className="text-lg font-semibold text-gray-800">Maintenance Type</h1>
+      <div className="max-w-6xl mx-auto space-y-4">
+        {/* Heading */}
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
+            Maintenance Type
+          </h1>
+          <p className="text-sm text-gray-500 mt-0.5">
+            Manage maintenance types, priorities &amp; durations
+          </p>
+        </div>
+
+        {/* Toolbar */}
+        <div className="flex items-center gap-3 flex-wrap">
+          <div className="relative flex-1 min-w-[220px] max-w-sm">
+            <Search
+              size={16}
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"
+            />
+            <input
+              type="text"
+              placeholder="Search maintenance types…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pl-10 pr-9 py-2.5 text-sm bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100 transition-all"
+            />
+            {search && (
+              <button
+                onClick={() => setSearch("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                <X size={15} />
+              </button>
+            )}
           </div>
+
+          <div className="relative">
+            <select
+              value={filterPriority}
+              onChange={(e) => setFilterPriority(e.target.value)}
+              className="appearance-none pl-4 pr-9 py-2.5 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100 cursor-pointer"
+            >
+              <option value="all">All Priorities</option>
+              <option value="Critical">Critical</option>
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </select>
+            <ChevronRight
+              size={15}
+              className="absolute right-3 top-1/2 -translate-y-1/2 rotate-90 text-gray-400 pointer-events-none"
+            />
+          </div>
+
           <button
             onClick={() => navigate("/masters/maintenance-type/new")}
-            className="flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white text-sm px-4 py-2 rounded shadow-sm"
+            className="ml-auto flex items-center gap-2 bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl shadow-md shadow-brand-200 transition-all"
           >
-            <Plus size={15} /> Add New
+            <Plus size={16} /> New Maintenance Type
           </button>
         </div>
 
-        {/* Filter bar */}
-        <div className="bg-white border border-gray-200 rounded p-3 flex items-center gap-3 flex-wrap">
-          <div className="relative flex-1 min-w-[220px] max-w-sm">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search Type ID, Name, Priority..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-8 pr-3 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-brand-600"
-            />
-          </div>
-          <select
-            value={filterPriority}
-            onChange={(e) => setFilterPriority(e.target.value)}
-            className="text-sm border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-brand-600"
-          >
-            <option value="all">All Priorities</option>
-            <option value="Critical">Critical</option>
-            <option value="High">High</option>
-            <option value="Medium">Medium</option>
-            <option value="Low">Low</option>
-          </select>
-          <span className="ml-auto text-xs text-gray-400">
-            {filtered.length} of {records.length} record(s)
-          </span>
-        </div>
-
-        {loading && <p className="text-center text-sm text-gray-400 py-6">Loading...</p>}
-
-        {/* Table */}
-        <div className="bg-white border border-gray-200 rounded overflow-hidden">
+        {/* Table card */}
+        <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-sm min-w-[500px]">
+            <table className="w-full text-sm min-w-[760px]">
               <thead>
-                <tr className="bg-gray-50 border-b border-gray-200">
-                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">Type ID</th>
-                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">Maintenance Name</th>
-                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">Priority</th>
-                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">Duration (hrs)</th>
-                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">Actions</th>
+                <tr className="bg-gradient-to-r from-brand-800 to-brand-600">
+                  <th className={th}>
+                    <button
+                      onClick={() =>
+                        setSortDir((d) => (d === "asc" ? "desc" : "asc"))
+                      }
+                      className="inline-flex items-center gap-1.5 hover:text-white"
+                    >
+                      Name <ChevronsUpDown size={13} className="opacity-70" />
+                    </button>
+                  </th>
+                  <th className={th}>Type ID</th>
+                  <th className={th}>Priority</th>
+                  <th className={th}>Duration (hrs)</th>
+                  <th className={`${th} text-right`}>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {filtered.length === 0 ? (
+                {loading ? (
                   <tr>
-                    <td colSpan={5} className="text-center py-16 text-gray-400 text-sm">
+                    <td
+                      colSpan={5}
+                      className="text-center py-16 text-gray-400 text-sm"
+                    >
+                      Loading…
+                    </td>
+                  </tr>
+                ) : paginated.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={5}
+                      className="text-center py-16 text-gray-400 text-sm"
+                    >
                       {records.length === 0
-                        ? 'No maintenance types yet. Click "Add New" to get started.'
+                        ? 'No maintenance types yet. Click "New Maintenance Type" to add one.'
                         : "No records match your search."}
                     </td>
                   </tr>
                 ) : (
-                  filtered.map((r, i) => (
+                  paginated.map((r) => (
                     <tr
                       key={r.id}
-                      className={`border-b border-gray-100 hover:bg-blue-50/30 cursor-pointer transition-colors ${i % 2 !== 0 ? "bg-gray-50/40" : ""}`}
+                      className="group border-b border-gray-100 last:border-0 hover:bg-brand-50/40 cursor-pointer transition-colors"
                       onClick={() => navigate(`/masters/maintenance-type/${r.id}`)}
                     >
-                      <td className="px-4 py-2.5 font-mono text-xs font-semibold text-brand-600">{r.typeId}</td>
-                      <td className="px-4 py-2.5 font-medium text-gray-800">{r.maintenanceName}</td>
-                      <td className="px-4 py-2.5">
-                        {r.priority && (
+                      <td className="px-5 py-3.5">
+                        <div className="flex items-center gap-3">
+                          <span className="w-9 h-9 rounded-lg bg-brand-50 ring-1 ring-brand-100 text-brand-700 flex items-center justify-center text-xs font-bold shrink-0">
+                            {(r.typeId || "?").slice(0, 2).toUpperCase()}
+                          </span>
+                          <span className="font-semibold text-gray-800 group-hover:text-brand-600 transition-colors">
+                            {r.maintenanceName}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-5 py-3.5 font-mono text-xs text-gray-400">
+                        {r.typeId}
+                      </td>
+                      <td className="px-5 py-3.5">
+                        {r.priority ? (
                           <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border ${PRIORITY_BADGE[r.priority] || "bg-gray-50 text-gray-600 border-gray-200"}`}>
                             {r.priority}
                           </span>
+                        ) : (
+                          <span className="text-gray-400">—</span>
                         )}
                       </td>
-                      <td className="px-4 py-2.5 text-gray-600">{r.duration != null ? `${r.duration} hrs` : "—"}</td>
-                      <td className="px-4 py-2.5">
-                        <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+                      <td className="px-5 py-3.5 text-gray-600">
+                        {r.duration != null ? `${r.duration} hrs` : "—"}
+                      </td>
+                      <td className="px-5 py-3.5">
+                        <div
+                          className="flex items-center justify-end gap-1.5"
+                          onClick={(e) => e.stopPropagation()}
+                        >
                           <button
                             onClick={() => navigate(`/masters/maintenance-type/${r.id}`)}
-                            className="p-1.5 text-brand-500 hover:text-brand-600 hover:bg-brand-50 rounded"
+                            className={`${actionBtn} hover:bg-brand-50 hover:text-brand-600 hover:border-brand-200`}
                             title="Edit"
                           >
-                            <Edit2 size={13} />
+                            <Edit2 size={14} />
                           </button>
                           <button
                             onClick={() => handleDelete(r.id, r.maintenanceName)}
-                            className="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded"
+                            className={`${actionBtn} hover:bg-red-50 hover:text-red-600 hover:border-red-200`}
                             title="Delete"
                           >
-                            <Trash2 size={13} />
+                            <Trash2 size={14} />
                           </button>
                         </div>
                       </td>
@@ -160,13 +239,50 @@ export default function MaintenanceTypeList() {
               </tbody>
             </table>
           </div>
-        </div>
 
-        {filtered.length > 0 && (
-          <p className="text-xs text-gray-400 text-right px-1">
-            Showing {filtered.length} record(s)
-          </p>
-        )}
+          {/* Footer */}
+          {!loading && filtered.length > 0 && (
+            <div className="flex items-center justify-between px-5 py-3.5 border-t border-gray-100 text-sm flex-wrap gap-3">
+              <span className="text-gray-500">
+                Showing{" "}
+                <span className="font-semibold text-gray-700">
+                  {(page - 1) * PAGE_SIZE + 1}–
+                  {Math.min(page * PAGE_SIZE, filtered.length)}
+                </span>{" "}
+                of{" "}
+                <span className="font-semibold text-gray-700">
+                  {filtered.length}
+                </span>{" "}
+                maintenance types
+              </span>
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={() => setPage((p) => p - 1)}
+                  disabled={page === 1}
+                  className="flex items-center gap-1 px-3 py-1.5 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed font-medium"
+                >
+                  <ChevronLeft size={15} /> Prev
+                </button>
+                {Array.from({ length: pageCount }, (_, i) => i + 1).map((p) => (
+                  <button
+                    key={p}
+                    onClick={() => setPage(p)}
+                    className={`w-9 h-9 rounded-lg text-sm font-semibold transition-colors ${p === page ? "bg-brand-600 text-white shadow-sm" : "border border-gray-200 text-gray-600 hover:bg-gray-50"}`}
+                  >
+                    {p}
+                  </button>
+                ))}
+                <button
+                  onClick={() => setPage((p) => p + 1)}
+                  disabled={page === pageCount}
+                  className="flex items-center gap-1 px-3 py-1.5 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed font-medium"
+                >
+                  Next <ChevronRight size={15} />
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </Layout>
   );
