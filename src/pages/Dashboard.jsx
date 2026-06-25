@@ -12,10 +12,10 @@ import {
 
 // ── Mock data ───────────────────────────────────────────────────
 const kpis = [
-  { label: "Open Purchase Orders", value: 20, trend: "+3", up: true,  color: "#6C698D", Icon: ShoppingCart },
-  { label: "Open Sales Orders",    value: 15, trend: "+1", up: true,  color: "#AA968A", Icon: BarChart2    },
-  { label: "Pending GRNs",         value: 45, trend: "-5", up: false, color: "#D97706", Icon: Package      },
-  { label: "Total Employees",      value: 128, trend: "+2", up: true, color: "#6E6A6F", Icon: Users        },
+  { label: "Open Purchase Orders", value: 20, trend: "+3", up: true,  gradient: "from-[#4b49ac] to-[#6d6bd6]", Icon: ShoppingCart },
+  { label: "Open Sales Orders",    value: 15, trend: "+1", up: true,  gradient: "from-[#7da0fa] to-[#5b86f5]", Icon: BarChart2    },
+  { label: "Pending GRNs",         value: 45, trend: "-5", up: false, gradient: "from-[#7978e9] to-[#9b9af0]", Icon: Package      },
+  { label: "Total Employees",      value: 128, trend: "+2", up: true, gradient: "from-[#f3797e] to-[#f59ca0]", Icon: Users        },
 ];
 
 const purchaseData = [
@@ -37,9 +37,9 @@ const salesData = [
 ];
 
 const donutData = [
-  { name: "Open POs",  value: 20, color: "#6C698D" },
-  { name: "Open SOs",  value: 15, color: "#AA968A" },
-  { name: "Completed", value: 65, color: "#E5E3E6" },
+  { name: "Open POs",  value: 20, color: "#4b49ac" },
+  { name: "Open SOs",  value: 15, color: "#7da0fa" },
+  { name: "Completed", value: 65, color: "#e3e3f7" },
 ];
 
 const recentTransactions = [
@@ -125,16 +125,16 @@ export default function Dashboard() {
 
         {/* ── KPI Cards ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {kpis.map(({ label, value, trend, up, color, Icon }) => (
-            <div key={label} className={`${card} p-5 flex items-center gap-4`}>
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" style={{ background: color + "18" }}>
-                <Icon size={22} style={{ color }} />
+          {kpis.map(({ label, value, trend, up, gradient, Icon }) => (
+            <div key={label} className={`bg-gradient-to-br ${gradient} text-white rounded-2xl shadow-lg p-5 flex items-center gap-4`}>
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 bg-white/20">
+                <Icon size={22} className="text-white" />
               </div>
               <div className="min-w-0">
-                <p className="text-2xl font-bold text-gray-800 leading-none">{value}</p>
-                <p className="text-xs text-gray-500 mt-1 leading-tight">{label}</p>
+                <p className="text-2xl font-bold text-white leading-none">{value}</p>
+                <p className="text-xs text-white/80 mt-1 leading-tight">{label}</p>
               </div>
-              <div className={`ml-auto flex items-center gap-0.5 text-xs font-semibold px-2 py-1 rounded-full shrink-0 ${up ? "bg-green-50 text-green-600" : "bg-red-50 text-red-500"}`}>
+              <div className="ml-auto flex items-center gap-0.5 text-xs font-semibold px-2 py-1 rounded-full shrink-0 bg-white/20 text-white">
                 {up ? <TrendingUp size={11} /> : <TrendingDown size={11} />}
                 {trend}
               </div>
@@ -153,9 +153,9 @@ export default function Dashboard() {
             </div>
             <div className="space-y-2.5">
               {[
-                { label: "Raise Purchase Order", path: "/purchase/requisition", color: "#6C698D", Icon: ShoppingCart },
-                { label: "Create Sales Order",   path: "/sales/orders",         color: "#AA968A", Icon: BarChart2    },
-                { label: "Add Employee",          path: "/masters/employee/new", color: "#6E6A6F", Icon: Users        },
+                { label: "Raise Purchase Order", path: "/purchase/requisition", color: "#4b49ac", Icon: ShoppingCart },
+                { label: "Create Sales Order",   path: "/sales/orders",         color: "#7da0fa", Icon: BarChart2    },
+                { label: "Add Employee",          path: "/masters/employee/new", color: "#7978e9", Icon: Users        },
               ].map(({ label, path, color, Icon }) => (
                 <button
                   key={label}
@@ -277,8 +277,8 @@ export default function Dashboard() {
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
                   <XAxis dataKey="month" tick={{ fontSize: 10, fill: "#9CA3AF" }} axisLine={false} tickLine={false} />
                   <YAxis hide />
-                  <Tooltip content={<ChartTooltip />} cursor={{ fill: "#6C698D08" }} />
-                  <Bar dataKey="amount" fill="#6C698D" radius={[4, 4, 0, 0]} />
+                  <Tooltip content={<ChartTooltip />} cursor={{ fill: "#4b49ac08" }} />
+                  <Bar dataKey="amount" fill="#4b49ac" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -295,15 +295,15 @@ export default function Dashboard() {
                 <AreaChart data={salesData}>
                   <defs>
                     <linearGradient id="salesGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%"  stopColor="#AA968A" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="#AA968A" stopOpacity={0}   />
+                      <stop offset="5%"  stopColor="#7978e9" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="#7978e9" stopOpacity={0}   />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
                   <XAxis dataKey="month" tick={{ fontSize: 10, fill: "#9CA3AF" }} axisLine={false} tickLine={false} />
                   <YAxis hide />
                   <Tooltip content={<ChartTooltip />} />
-                  <Area type="monotone" dataKey="amount" stroke="#AA968A" strokeWidth={2.5} fill="url(#salesGrad)" dot={{ r: 3, fill: "#AA968A", strokeWidth: 0 }} />
+                  <Area type="monotone" dataKey="amount" stroke="#7978e9" strokeWidth={2.5} fill="url(#salesGrad)" dot={{ r: 3, fill: "#7978e9", strokeWidth: 0 }} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>

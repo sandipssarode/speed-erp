@@ -84,7 +84,7 @@ export default function Signup() {
               type="text"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-300"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-300"
               placeholder="John Doe"
               required
             />
@@ -100,7 +100,7 @@ export default function Signup() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-300"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-300"
               placeholder="you@example.com"
               required
             />
@@ -119,7 +119,7 @@ export default function Signup() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-300"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-300"
               placeholder="Enter a password"
               required
             />
@@ -138,7 +138,7 @@ export default function Signup() {
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-300"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-300"
               placeholder="Confirm your password"
               required
             />
@@ -146,7 +146,7 @@ export default function Signup() {
 
           <button
             type="submit"
-            className="w-full py-2 rounded-md bg-gray-900 text-white text-sm font-medium"
+            className="w-full py-2 rounded-md bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium transition-colors"
           >
             Sign Up
           </button>
@@ -154,7 +154,7 @@ export default function Signup() {
 
         <div className="mt-4 text-center text-sm text-gray-600">
           Already have an account?
-          <Link to="/" className="text-gray-900 hover:underline ml-1">
+          <Link to="/" className="text-brand-600 font-medium hover:underline ml-1">
             Login
           </Link>
         </div>

@@ -55,7 +55,7 @@ export default function Login() {
           <div className="mb-4">
             <label className="block text-sm text-gray-700 mb-2" htmlFor="email">Email</label>
             <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-300"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-300"
               placeholder="you@example.com" required />
           </div>
 
@@ -65,21 +65,21 @@ export default function Login() {
               <Link to="/forgot-password" className="text-xs text-gray-700 hover:underline">Forgot password?</Link>
             </div>
             <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-300"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-300"
               placeholder="Enter your password" required />
           </div>
 
           {error && <p className="text-sm text-red-600 mb-3 bg-red-50 border border-red-200 rounded px-3 py-2">{error}</p>}
 
           <button type="submit" disabled={loading}
-            className="w-full py-2 rounded-md bg-gray-900 text-white text-sm font-medium disabled:opacity-60 disabled:cursor-not-allowed">
+            className="w-full py-2 rounded-md bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
             {loading ? "Logging in..." : "Log In"}
           </button>
         </form>
 
         <div className="mt-4 text-center text-sm text-gray-600">
           Don't have an account?
-          <Link to="/signup" className="ml-1 text-gray-900 hover:underline">Sign up</Link>
+          <Link to="/signup" className="ml-1 text-brand-600 font-medium hover:underline">Sign up</Link>
         </div>
       </div>
     </div>

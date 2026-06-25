@@ -2,7 +2,7 @@
 import {
   LogOut, ChevronDown, ChevronUp, ShoppingCart, BarChart2,
   Package, DollarSign, Settings, LayoutDashboard, Menu, X, Database,
-  ChevronLeft, ChevronRight,
+  ChevronLeft, ChevronRight, Search, Bell, User,
 } from "lucide-react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import siLogo from "../../logo/si_logo_trans.png";
@@ -160,7 +160,10 @@ export default function Layout({ children }) {
   const [openModule,  setOpenModule]  = useState(null);        // open flyout / accordion
   const [openSection, setOpenSection] = useState(active.section);
   const [mobileOpen,  setMobileOpen]  = useState(false);
-  const asideRef = useRef(null);
+  const [notifOpen,   setNotifOpen]   = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const asideRef   = useRef(null);
+  const topMenuRef = useRef(null);
 
   const handleLogoff = () => { localStorage.removeItem("loggedInUser"); navigate("/"); };
 
@@ -185,6 +188,20 @@ export default function Layout({ children }) {
       document.removeEventListener("keydown", onKey);
     };
   }, [openModule]);
+
+  // Close the top-bar dropdowns on outside-click / Escape
+  useEffect(() => {
+    if (!notifOpen && !profileOpen) return;
+    const close = () => { setNotifOpen(false); setProfileOpen(false); };
+    const onDown = (e) => { if (topMenuRef.current && !topMenuRef.current.contains(e.target)) close(); };
+    const onKey  = (e) => { if (e.key === "Escape") close(); };
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [notifOpen, profileOpen]);
 
   // ── Single flyout link (shared by flat grid + sectioned columns) ───────────
   const FlyoutLink = ({ link }) => (
@@ -283,7 +300,7 @@ export default function Layout({ children }) {
               </span>
               {expanded && <ChevronRight size={14} className={isOpen ? "text-white/80" : "text-gray-400"} />}
               {!expanded && hasActive && !isOpen && (
-                <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-violet-600 rounded-full" />
+                <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-coral rounded-full" />
               )}
             </button>
 
@@ -416,9 +433,9 @@ export default function Layout({ children }) {
   );
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden bg-gradient-to-br from-brand-50 via-[#f2f0ef] to-brand-100 text-gray-800">
+    <div className="h-screen flex flex-col overflow-hidden bg-[#f3f4fb] text-gray-800">
       {/* ── TOP BAR ── */}
-      <header className="bg-white/90 backdrop-blur-sm border-b border-brand-200 flex items-center gap-2 lg:gap-3 px-3 lg:px-4 py-2 shadow-sm shrink-0 z-30">
+      <header className="bg-white/90 backdrop-blur-sm border-b border-brand-200 flex items-center gap-2 lg:gap-4 px-3 lg:px-4 py-2 shadow-sm shrink-0 z-30">
         {/* Mobile hamburger */}
         <button
           onClick={() => setMobileOpen(true)}
@@ -429,7 +446,88 @@ export default function Layout({ children }) {
         </button>
 
         {/* Logo */}
-        <img src={siLogo} alt="Speed Innovations" className="h-14 w-auto object-contain" />
+        <img src={siLogo} alt="Speed Innovations" className="h-14 w-auto object-contain shrink-0" />
+
+        {/* Search */}
+        <div className="hidden md:flex items-center gap-2 flex-1 max-w-md bg-brand-50/70 border border-brand-100 rounded-xl px-3 py-2 focus-within:ring-2 focus-within:ring-brand-200 transition-all">
+          <Search size={16} className="text-gray-400 shrink-0" />
+          <input
+            type="text"
+            placeholder="Search…"
+            className="bg-transparent outline-none text-sm w-full placeholder:text-gray-400"
+          />
+        </div>
+
+        {/* Actions: notification + profile */}
+        <div ref={topMenuRef} className="flex items-center gap-1.5 ml-auto">
+
+          {/* Notification */}
+          <div className="relative">
+            <button
+              onClick={() => { setNotifOpen(v => !v); setProfileOpen(false); }}
+              aria-label="Notifications"
+              className="relative p-2 rounded-xl text-gray-500 hover:bg-brand-50 hover:text-brand-600 transition-colors"
+            >
+              <Bell size={19} />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-coral ring-2 ring-white" />
+            </button>
+            {notifOpen && (
+              <div className="absolute right-0 mt-2 w-72 z-40 animate-flyout bg-white rounded-2xl border border-brand-200 ring-1 ring-black/5 shadow-[0_16px_48px_-12px_rgba(45,43,58,0.45)] overflow-hidden">
+                <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
+                  <p className="text-sm font-semibold text-gray-700">Notifications</p>
+                  <span className="text-[10px] font-bold text-white bg-coral rounded-full px-2 py-0.5">3 new</span>
+                </div>
+                <div className="max-h-72 overflow-y-auto">
+                  {[
+                    { t: "Purchase Order #PO-0245 awaiting approval", d: "10 min ago" },
+                    { t: "GRN pending for PO #PO-0231", d: "1 hour ago" },
+                    { t: "New sales quotation SQ-0089 received", d: "Today" },
+                  ].map((n, i) => (
+                    <div key={i} className="px-4 py-2.5 hover:bg-brand-50 transition-colors cursor-pointer border-b border-gray-50 last:border-0">
+                      <p className="text-xs text-gray-700 leading-snug">{n.t}</p>
+                      <p className="text-[10px] text-gray-400 mt-0.5">{n.d}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Profile */}
+          <div className="relative">
+            <button
+              onClick={() => { setProfileOpen(v => !v); setNotifOpen(false); }}
+              className="flex items-center gap-2 p-1 pr-2 rounded-xl hover:bg-brand-50 transition-colors"
+            >
+              <span className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-600 to-brand-800 flex items-center justify-center text-white text-sm font-bold shadow-sm">
+                {userInitial}
+              </span>
+              <span className="hidden sm:block text-xs font-semibold text-gray-700 max-w-[120px] truncate">{userName}</span>
+              <ChevronDown size={14} className="hidden sm:block text-gray-400" />
+            </button>
+            {profileOpen && (
+              <div className="absolute right-0 mt-2 w-52 z-40 animate-flyout bg-white rounded-2xl border border-brand-200 ring-1 ring-black/5 shadow-[0_16px_48px_-12px_rgba(45,43,58,0.45)] overflow-hidden">
+                <div className="px-4 py-3 border-b border-gray-100">
+                  <p className="text-sm font-semibold text-gray-700 truncate">{userName}</p>
+                  <p className="text-[10px] text-gray-400">Speed IT Innovations</p>
+                </div>
+                <Link
+                  to="/profile"
+                  onClick={() => setProfileOpen(false)}
+                  className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-600 hover:bg-brand-50 hover:text-brand-600 transition-colors"
+                >
+                  <User size={15} /> My Profile
+                </Link>
+                <button
+                  onClick={handleLogoff}
+                  className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-600 hover:bg-red-50 hover:text-red-600 transition-colors border-t border-gray-100"
+                >
+                  <LogOut size={15} /> Log Off
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
       </header>
 
       <div className="flex flex-1 overflow-hidden relative">

@@ -6,17 +6,22 @@
 @source "./components/design/*.jsx";
 
 @theme {
-  /* ── Ethereal Grays brand color scale ── */
-  --color-brand-50:  #f5f4f7;
-  --color-brand-100: #eceaed;
-  --color-brand-200: #d4d2d5;
-  --color-brand-300: #bfafa6;
-  --color-brand-400: #aa968a;
-  --color-brand-500: #6e6a6f;
-  --color-brand-600: #6c698d;
-  --color-brand-700: #5a576e;
-  --color-brand-800: #48455a;
-  --color-brand-900: #2d2b3a;
+  /* ── Indigo brand color scale (Skydash) ── */
+  --color-brand-50:  #f1f1fb;
+  --color-brand-100: #e3e3f7;
+  --color-brand-200: #c6c5ef;
+  --color-brand-300: #a3a2e6;
+  --color-brand-400: #7978e9;
+  --color-brand-500: #605ecf;
+  --color-brand-600: #4b49ac;   /* primary */
+  --color-brand-700: #3e3c8d;
+  --color-brand-800: #302e6e;
+  --color-brand-900: #21204c;
+
+  /* ── Supporting accents ── */
+  --color-accent-blue: #7da0fa;  /* periwinkle */
+  --color-accent-sky:  #98bdff;  /* light sky   */
+  --color-coral:       #f3797e;  /* coral        */
 
   /* ── Typography ── */
   --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;

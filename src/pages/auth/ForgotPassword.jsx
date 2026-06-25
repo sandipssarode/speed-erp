@@ -49,7 +49,7 @@ export default function ForgotPassword() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-300"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-300"
               placeholder="you@example.com"
               required
             />
@@ -57,14 +57,14 @@ export default function ForgotPassword() {
 
           <button
             type="submit"
-            className="w-full py-2 rounded-md bg-gray-900 text-white text-sm font-medium"
+            className="w-full py-2 rounded-md bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium transition-colors"
           >
             Send Reset Link
           </button>
         </form>
 
         <div className="mt-4 text-center text-sm text-gray-600">
-          <Link to="/" className="text-gray-900 hover:underline">
+          <Link to="/" className="text-brand-600 font-medium hover:underline">
             ← Back to Login
           </Link>
         </div>
