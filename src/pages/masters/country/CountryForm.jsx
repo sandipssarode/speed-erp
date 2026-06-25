@@ -105,7 +105,7 @@ export default function CountryForm() {
 
   return (
     <Layout>
-      <div className="max-w-3xl mx-auto space-y-3">
+      <div className="w-full space-y-3">
 
         <button onClick={() => navigate("/system/countries")} className="flex items-center gap-1 text-xs text-gray-500 hover:text-brand-600 transition-colors">
           <ChevronLeft size={14} /> Country Master
