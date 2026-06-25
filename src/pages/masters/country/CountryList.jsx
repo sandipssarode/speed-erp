@@ -74,7 +74,7 @@ export default function CountryList() {
         {/* Table */}
         <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-sm min-w-[640px]">
+            <table className="w-full text-sm min-w-[640px] [&_th]:border-r [&_td]:border-r [&_th]:border-gray-100 [&_td]:border-gray-100 [&_th:last-child]:border-r-0 [&_td:last-child]:border-r-0">
               <thead>
                 <tr className="border-b border-gray-200 bg-gray-50/60">
                   <th className={`${th} pl-5`}>Name</th>
