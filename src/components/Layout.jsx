@@ -90,7 +90,6 @@ export default function Layout({ children }) {
   const FlyoutPanel = ({ mod, nearBottom }) => (
     <div className={`absolute left-full pl-2 z-50 ${nearBottom ? "bottom-0" : "top-0"} animate-flyout`}>
       <div className="bg-white rounded-2xl border border-brand-200 ring-1 ring-black/5 shadow-[0_16px_48px_-12px_rgba(45,43,58,0.45)] p-4 max-h-[78vh] overflow-y-auto">
-        <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2 px-1">{mod.label}</p>
         {mod.flat ? (
           <div className="grid grid-cols-[repeat(3,max-content)] gap-x-6 gap-y-0.5">
             {mod.links.map(link => <FlyoutLink key={link.path} link={link} />)}
