@@ -1,10 +1,5 @@
 @import "tailwindcss";
 
-/* Force Tailwind to scan the gitignored UI-showcase design files so their
-   utility classes (grid-cols-4, w-7, etc.) are generated. Local-only preview. */
-@source "./pages/UIShowcase.jsx";
-@source "./components/design/*.jsx";
-
 @theme {
   /* ── Indigo brand color scale (Skydash) ── */
   --color-brand-50:  #f1f1fb;

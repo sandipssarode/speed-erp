@@ -51,7 +51,6 @@ import DesignationList from "./pages/masters/designation/DesignationList";
 import DesignationForm from "./pages/masters/designation/DesignationForm";
 import EmployeeList from "./pages/masters/employee/EmployeeList";
 import EmployeeForm from "./pages/masters/employee/EmployeeForm";
-import UIShowcase from "./pages/UIShowcase";
 import ModuleLanding from "./pages/ModuleLanding";
 
 function App() {
@@ -195,7 +194,6 @@ function App() {
 
         {/* Profile */}
         <Route path="/profile" element={<WorkInProgress />} />
-        <Route path="/ui-showcase" element={<UIShowcase />} />
 
 
       </Routes>
