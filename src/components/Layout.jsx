@@ -171,31 +171,63 @@ export default function Layout({ children }) {
 
   const toggleSection = (sec) => setOpenSection(p => p === sec ? null : sec);
 
-  // ── Sidebar content (shared between desktop expanded + mobile) ──────────────
-  const SidebarContent = ({ onLinkClick }) => (
-    <div className="flex flex-col h-full overflow-y-auto">
+  // ── Sidebar content (shared between desktop + mobile) ──────────────────────
+  // collapsed = icon-only rail (desktop narrow); otherwise full icon + label nav
+  const SidebarContent = ({ onLinkClick, collapsed = false }) => (
+    <div className={`flex flex-col h-full overflow-y-auto ${collapsed ? "items-center py-2 gap-1" : ""}`}>
 
       {/* Dashboard link */}
       <Link
         to="/dashboard"
         onClick={onLinkClick}
-        className={`flex items-center gap-3 px-3 py-2.5 mx-2 my-1 rounded-xl text-sm font-semibold transition-all ${
-          location.pathname === "/dashboard"
-            ? "bg-brand-600 text-white shadow-md shadow-brand-200"
-            : "text-gray-600 hover:bg-brand-50 hover:text-brand-600"
-        }`}
+        title={collapsed ? "Dashboard" : undefined}
+        className={
+          collapsed
+            ? `w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
+                location.pathname === "/dashboard"
+                  ? "bg-brand-600 text-white shadow-md shadow-brand-200"
+                  : "text-gray-400 hover:bg-brand-50 hover:text-brand-600"
+              }`
+            : `flex items-center gap-3 px-3 py-2.5 mx-2 my-1 rounded-xl text-sm font-semibold transition-all ${
+                location.pathname === "/dashboard"
+                  ? "bg-brand-600 text-white shadow-md shadow-brand-200"
+                  : "text-gray-600 hover:bg-brand-50 hover:text-brand-600"
+              }`
+        }
       >
         <LayoutDashboard size={18} className="shrink-0" />
-        <span>Dashboard</span>
+        {!collapsed && <span>Dashboard</span>}
       </Link>
 
-      <div className="mx-4 border-t border-gray-100 my-1" />
+      <div className={collapsed ? "w-6 border-t border-gray-200 my-1" : "mx-4 border-t border-gray-100 my-1"} />
 
       {/* Module items */}
       {menu.map((mod, i) => {
         const ModIcon = mod.icon;
         const isOpen   = openModule === mod.label;
         const hasActive = isModuleActive(mod, location.pathname);
+
+        if (collapsed) {
+          return (
+            <button
+              key={mod.label}
+              title={mod.label}
+              onClick={() => toggleModule(mod.label)}
+              className={`relative w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
+                isOpen
+                  ? "bg-brand-600 text-white shadow-md shadow-brand-200"
+                  : hasActive
+                  ? "bg-brand-100 text-brand-600"
+                  : "text-gray-400 hover:bg-brand-50 hover:text-brand-600"
+              }`}
+            >
+              <ModIcon size={18} />
+              {hasActive && !isOpen && (
+                <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-violet-600 rounded-full" />
+              )}
+            </button>
+          );
+        }
 
         return (
           <div key={mod.label}>
@@ -292,65 +324,6 @@ export default function Layout({ children }) {
     </div>
   );
 
-  // ── Icon-only rail (collapsed desktop) ──────────────────────
-  const IconRail = () => (
-    <div className="flex flex-col items-center py-2 gap-1 h-full overflow-y-auto">
-
-      {/* Dashboard */}
-      <Link
-        to="/dashboard"
-        title="Dashboard"
-        className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
-          location.pathname === "/dashboard"
-            ? "bg-brand-600 text-white shadow-md shadow-brand-200"
-            : "text-gray-400 hover:bg-brand-50 hover:text-brand-600"
-        }`}
-      >
-        <LayoutDashboard size={18} />
-      </Link>
-
-      <div className="w-6 border-t border-gray-200 my-1" />
-
-      {/* Module icons */}
-      {menu.map(mod => {
-        const ModIcon = mod.icon;
-        const isOpen    = openModule === mod.label;
-        const hasActive = isModuleActive(mod, location.pathname);
-
-        return (
-          <button
-            key={mod.label}
-            title={mod.label}
-            onClick={() => toggleModule(mod.label)}
-            className={`relative w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
-              isOpen
-                ? "bg-brand-600 text-white shadow-md shadow-brand-200"
-                : hasActive
-                ? "bg-brand-100 text-brand-600"
-                : "text-gray-400 hover:bg-brand-50 hover:text-brand-600"
-            }`}
-          >
-            <ModIcon size={18} />
-            {hasActive && !isOpen && (
-              <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-violet-600 rounded-full" />
-            )}
-          </button>
-        );
-      })}
-
-      <div className="flex-1" />
-
-      {/* User avatar */}
-      <button
-        title={userName}
-        onClick={handleLogoff}
-        className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-600 to-brand-800 flex items-center justify-center text-white text-sm font-bold shadow-sm hover:shadow-md transition-all"
-      >
-        {userInitial}
-      </button>
-    </div>
-  );
-
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-gradient-to-br from-brand-50 via-[#f2f0ef] to-brand-100 text-gray-800">
       {/* ── TOP BAR ── */}
@@ -364,7 +337,6 @@ export default function Layout({ children }) {
           >
             <Menu size={20} />
           </button>
-          <img src={siLogo} alt="Speed Innovations" className="h-8 w-auto max-w-[160px] object-contain" />
         </div>
 
         <div className="flex items-center gap-2">
@@ -412,33 +384,96 @@ export default function Layout({ children }) {
           </div>
         </aside>
 
-        {/* ── DESKTOP SIDEBAR: icon rail (always) + expanded panel (conditional) ── */}
-        <div className="hidden lg:flex shrink-0 transition-all duration-300">
-
-          {/* Icon rail (always visible) */}
-          <div className="w-14 bg-white/90 backdrop-blur-sm border-r border-brand-200 flex flex-col py-2 px-2 shrink-0">
-            <IconRail />
-            {/* Expand/collapse toggle at bottom of rail */}
-            <button
-              onClick={() => setExpanded(p => !p)}
-              title={expanded ? "Collapse sidebar" : "Expand sidebar"}
-              className="w-10 h-8 rounded-xl flex items-center justify-center text-gray-400 hover:bg-brand-50 hover:text-brand-600 transition-colors mt-1 mx-auto"
-            >
-              {expanded ? <ChevronLeft size={15} /> : <ChevronRight size={15} />}
-            </button>
+        {/* ── DESKTOP SIDEBAR: single unified collapsible column ── */}
+        <aside
+          className={`hidden lg:flex flex-col shrink-0 bg-white/90 backdrop-blur-sm border-r border-brand-200 transition-all duration-300 ease-in-out ${
+            expanded ? "w-64" : "w-16"
+          }`}
+        >
+          {/* Logo header (aligned to top-bar height) */}
+          <div
+            className={`h-14 shrink-0 flex items-center border-b border-brand-200 ${
+              expanded ? "px-3" : "justify-center"
+            }`}
+          >
+            {expanded ? (
+              <>
+                <img
+                  src={siLogo}
+                  alt="Speed Innovations"
+                  className="h-7 w-auto object-contain"
+                />
+                <button
+                  onClick={() => setExpanded(false)}
+                  title="Collapse sidebar"
+                  className="ml-auto w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:bg-brand-50 hover:text-brand-600 transition-colors"
+                >
+                  <ChevronLeft size={16} />
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => setExpanded(true)}
+                title="Expand sidebar"
+                className="h-9 px-1.5 flex items-center justify-center rounded-lg hover:bg-brand-50 transition-colors"
+              >
+                {/* crop to the left "speed-lines" mark of the wordmark */}
+                <span className="h-6 overflow-hidden flex items-center" style={{ width: 22 }}>
+                  <img
+                    src={siLogo}
+                    alt="Speed Innovations"
+                    className="h-6 max-w-none"
+                    style={{ width: "auto" }}
+                  />
+                </span>
+              </button>
+            )}
           </div>
 
-          {/* Expanded panel */}
-          <div className={`
-            overflow-hidden transition-all duration-300 ease-in-out
-            ${expanded ? "w-56" : "w-0"}
-            bg-white/95 backdrop-blur-sm border-r border-brand-200
-          `}>
-            <div className="w-56 h-full overflow-hidden">
-              <SidebarContent onLinkClick={() => {}} />
-            </div>
+          {/* Nav (scrollable) */}
+          <div className="flex-1 overflow-hidden">
+            <SidebarContent onLinkClick={() => {}} collapsed={!expanded} />
           </div>
-        </div>
+
+          {/* Footer: collapsed expand toggle + user zone */}
+          <div className="shrink-0 border-t border-brand-200 p-2">
+            {!expanded && (
+              <button
+                onClick={() => setExpanded(true)}
+                title="Expand sidebar"
+                className="w-10 h-8 mx-auto mb-1 rounded-xl flex items-center justify-center text-gray-400 hover:bg-brand-50 hover:text-brand-600 transition-colors"
+              >
+                <ChevronRight size={15} />
+              </button>
+            )}
+            {expanded ? (
+              <div className="flex items-center gap-2.5 px-1">
+                <div className="w-9 h-9 shrink-0 rounded-xl bg-gradient-to-br from-brand-600 to-brand-800 flex items-center justify-center text-white text-sm font-bold shadow-sm">
+                  {userInitial}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-semibold text-gray-700 truncate">{userName}</p>
+                  <p className="text-[10px] text-gray-400 truncate">Speed IT Innovations</p>
+                </div>
+                <button
+                  onClick={handleLogoff}
+                  title="Log Off"
+                  className="w-8 h-8 shrink-0 rounded-lg flex items-center justify-center text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors"
+                >
+                  <LogOut size={15} />
+                </button>
+              </div>
+            ) : (
+              <button
+                title={userName}
+                onClick={handleLogoff}
+                className="w-10 h-10 mx-auto rounded-xl bg-gradient-to-br from-brand-600 to-brand-800 flex items-center justify-center text-white text-sm font-bold shadow-sm hover:shadow-md transition-all"
+              >
+                {userInitial}
+              </button>
+            )}
+          </div>
+        </aside>
 
         {/* ── MAIN CONTENT ── */}
         <main className="flex-1 overflow-y-auto p-3 lg:p-5">{children}</main>
