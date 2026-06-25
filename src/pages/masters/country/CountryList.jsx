@@ -36,7 +36,7 @@ export default function CountryList() {
     catch (err) { alert("Failed to delete: " + err.message); }
   };
 
-  const th = "text-left px-4 py-2.5 text-[11px] font-semibold text-gray-500 uppercase tracking-wider";
+  const th = "text-left px-4 py-3 text-[11px] font-semibold text-white/90 uppercase tracking-wider";
 
   return (
     <Layout>
@@ -65,7 +65,7 @@ export default function CountryList() {
               <option value="active">Active</option>
               <option value="inactive">Inactive</option>
             </select>
-            <button onClick={() => navigate("/system/countries/new")} className="flex items-center gap-1.5 bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium px-3.5 py-2 rounded-md shadow-sm transition-colors">
+            <button onClick={() => navigate("/system/countries/new")} className="flex items-center justify-center gap-1.5 bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium px-8 py-2 rounded-md shadow-sm transition-colors">
               <Plus size={15} /> New
             </button>
           </div>
@@ -74,9 +74,9 @@ export default function CountryList() {
         {/* Table */}
         <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-sm min-w-[640px] [&_th]:border-r [&_td]:border-r [&_th]:border-gray-100 [&_td]:border-gray-100 [&_th:last-child]:border-r-0 [&_td:last-child]:border-r-0">
+            <table className="w-full text-sm min-w-[640px]">
               <thead>
-                <tr className="border-b border-gray-200 bg-gray-50/60">
+                <tr className="bg-gradient-to-r from-brand-800 to-brand-600">
                   <th className={`${th} pl-5`}>Name</th>
                   <th className={th}>Code</th>
                   <th className={th}>Dial Code</th>
