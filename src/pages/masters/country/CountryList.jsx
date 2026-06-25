@@ -13,7 +13,6 @@ export default function CountryList() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [page, setPage] = useState(1);
-  const [selected, setSelected] = useState(() => new Set());
 
   useEffect(() => {
     api.get("/api/countries").then(setRecords).catch(console.error).finally(() => setLoading(false));
@@ -31,18 +30,9 @@ export default function CountryList() {
   const pageCount = Math.ceil(filtered.length / PAGE_SIZE);
   const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
-  const allOnPageSelected = paginated.length > 0 && paginated.every(r => selected.has(r.id));
-  const toggleAll = () => setSelected(prev => {
-    const next = new Set(prev);
-    if (allOnPageSelected) paginated.forEach(r => next.delete(r.id));
-    else paginated.forEach(r => next.add(r.id));
-    return next;
-  });
-  const toggleOne = (id) => setSelected(prev => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n; });
-
   const handleDelete = async (id, name) => {
     if (!window.confirm(`Delete country "${name}"? This cannot be undone.`)) return;
-    try { await api.del(`/api/countries/${id}`); setRecords(prev => prev.filter(r => r.id !== id)); setSelected(prev => { const n = new Set(prev); n.delete(id); return n; }); }
+    try { await api.del(`/api/countries/${id}`); setRecords(prev => prev.filter(r => r.id !== id)); }
     catch (err) { alert("Failed to delete: " + err.message); }
   };
 
@@ -83,18 +73,11 @@ export default function CountryList() {
 
         {/* Table */}
         <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-          {selected.size > 0 && (
-            <div className="flex items-center gap-3 px-4 py-2 bg-brand-50 border-b border-brand-100 text-xs text-brand-700">
-              <span className="font-medium">{selected.size} selected</span>
-              <button onClick={() => setSelected(new Set())} className="text-gray-500 hover:text-gray-700">Clear</button>
-            </div>
-          )}
           <div className="overflow-x-auto">
             <table className="w-full text-sm min-w-[640px]">
               <thead>
                 <tr className="border-b border-gray-200 bg-gray-50/60">
-                  <th className="w-10 px-4 py-2.5"><input type="checkbox" checked={allOnPageSelected} onChange={toggleAll} className="w-4 h-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500" /></th>
-                  <th className={th}>Name</th>
+                  <th className={`${th} pl-5`}>Name</th>
                   <th className={th}>Code</th>
                   <th className={th}>Dial Code</th>
                   <th className={th}>Currency</th>
@@ -104,17 +87,13 @@ export default function CountryList() {
               </thead>
               <tbody>
                 {loading ? (
-                  <tr><td colSpan={7} className="text-center py-16 text-gray-400 text-sm">Loading…</td></tr>
+                  <tr><td colSpan={6} className="text-center py-16 text-gray-400 text-sm">Loading…</td></tr>
                 ) : paginated.length === 0 ? (
-                  <tr><td colSpan={7} className="text-center py-16 text-gray-400 text-sm">{records.length === 0 ? 'No countries yet. Click "New" to add one.' : "No records match your search."}</td></tr>
+                  <tr><td colSpan={6} className="text-center py-16 text-gray-400 text-sm">{records.length === 0 ? 'No countries yet. Click "New" to add one.' : "No records match your search."}</td></tr>
                 ) : paginated.map((r) => {
-                  const isSel = selected.has(r.id);
                   return (
-                    <tr key={r.id} className={`group border-b border-gray-100 last:border-0 cursor-pointer transition-colors ${isSel ? "bg-brand-50/60" : "hover:bg-gray-50"}`} onClick={() => navigate(`/system/countries/${r.id}`)}>
-                      <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
-                        <input type="checkbox" checked={isSel} onChange={() => toggleOne(r.id)} className="w-4 h-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500" />
-                      </td>
-                      <td className="px-4 py-3"><span className="font-medium text-brand-600 hover:underline">{r.countryName}</span></td>
+                    <tr key={r.id} className="group border-b border-gray-100 last:border-0 cursor-pointer transition-colors hover:bg-gray-50" onClick={() => navigate(`/system/countries/${r.id}`)}>
+                      <td className="px-4 py-3 pl-5"><span className="font-medium text-brand-600 hover:underline">{r.countryName}</span></td>
                       <td className="px-4 py-3 font-mono text-xs text-gray-500">{r.countryCode}</td>
                       <td className="px-4 py-3 text-gray-600">{r.dialCode || "—"}</td>
                       <td className="px-4 py-3 text-gray-600">{r.currency || "—"}</td>
