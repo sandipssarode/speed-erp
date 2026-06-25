@@ -1,8 +1,8 @@
-﻿import { useState, useEffect } from "react";
+﻿import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Layout from "../../../components/Layout";
 import { api } from "../../../lib/api.js";
-import { Save, X, Trash2, Edit2, FileText, CheckCircle, AlertCircle, ChevronRight, ArrowLeft } from "lucide-react";
+import { Save, X, Trash2, Edit2, FileText, CheckCircle, AlertCircle, ChevronRight, ArrowLeft, Paperclip, Image as ImageIcon } from "lucide-react";
 
 function Field({ label, required, error, children, className = "" }) {
   return (
@@ -45,6 +45,8 @@ const emptyForm = () => ({
   reorderLevel: "",
   description: "",
   isAsset: "No",
+  photoFileName: "",
+  attachmentFileNames: [],
   isDeactivated: false,
   createdAt: "", updatedAt: "", createdBy: "", updatedBy: "",
   changelog: [],
@@ -76,6 +78,8 @@ export default function ProductMasterForm() {
   const [allRecords, setAllRecords] = useState([]);
   const [productTypes, setProductTypes] = useState([]);
   const [allSubtypes, setAllSubtypes] = useState([]);
+  const photoRef = useRef(null);
+  const attachRef = useRef(null);
 
   const user = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
   const isReadOnly = mode === "view";
@@ -253,6 +257,83 @@ export default function ProductMasterForm() {
                   className={`w-full px-2.5 py-1.5 text-sm border rounded focus:outline-none focus:ring-1 focus:ring-brand-600 resize-none transition-colors ${isReadOnly ? "bg-gray-100 text-gray-500 cursor-not-allowed border-gray-200" : "bg-white border-gray-300 hover:border-gray-400"}`}
                 />
               </Field>
+            </div>
+
+            {/* Documents & Photo */}
+            <div className="bg-gray-50 border border-gray-200 rounded p-4 space-y-4">
+              <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Documents & Photo</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* Product photo */}
+                <Field label="Product Photo">
+                  <div className="flex items-center gap-3">
+                    <div className="w-14 h-14 rounded-lg border border-gray-200 bg-gray-100 flex items-center justify-center shrink-0 overflow-hidden">
+                      {form.photoFileName
+                        ? <span className="text-xs text-gray-500 text-center px-1 leading-tight break-all">{form.photoFileName}</span>
+                        : <ImageIcon size={22} className="text-gray-400" />}
+                    </div>
+                    <div className="flex-1">
+                      <input
+                        ref={photoRef}
+                        type="file"
+                        accept=".jpg,.jpeg,.png"
+                        disabled={isReadOnly}
+                        onChange={e => { if (e.target.files[0]) setField("photoFileName", e.target.files[0].name); }}
+                        className="hidden"
+                      />
+                      {!isReadOnly ? (
+                        <div className="flex items-center gap-2">
+                          <button type="button" onClick={() => photoRef.current?.click()} className="text-xs px-3 py-1.5 border border-gray-300 rounded hover:bg-gray-100 text-gray-600 font-medium">
+                            Choose Photo
+                          </button>
+                          {form.photoFileName && (
+                            <button type="button" onClick={() => setField("photoFileName", "")} className="text-xs text-red-400 hover:text-red-600">Remove</button>
+                          )}
+                        </div>
+                      ) : (
+                        <span className="text-xs text-gray-400">{form.photoFileName || "No photo uploaded"}</span>
+                      )}
+                      <p className="text-[11px] text-gray-400 mt-1">JPG, JPEG, PNG — max 2 MB</p>
+                    </div>
+                  </div>
+                </Field>
+
+                {/* Attachments */}
+                <Field label="Attachments">
+                  <div>
+                    <input
+                      ref={attachRef}
+                      type="file"
+                      accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png"
+                      multiple
+                      disabled={isReadOnly}
+                      onChange={e => {
+                        const names = Array.from(e.target.files).map(f => f.name);
+                        setField("attachmentFileNames", [...(form.attachmentFileNames || []), ...names]);
+                        e.target.value = "";
+                      }}
+                      className="hidden"
+                    />
+                    {!isReadOnly && (
+                      <button type="button" onClick={() => attachRef.current?.click()} className="flex items-center gap-1.5 text-xs px-3 py-1.5 border border-gray-300 rounded hover:bg-gray-100 text-gray-600 font-medium">
+                        <Paperclip size={12} /> Add Files
+                      </button>
+                    )}
+                    {form.attachmentFileNames?.length > 0 ? (
+                      <ul className="mt-2 space-y-1">
+                        {form.attachmentFileNames.map((name, i) => (
+                          <li key={i} className="flex items-center gap-1.5 text-xs text-gray-600">
+                            <Paperclip size={11} className="text-gray-400 shrink-0" /><span className="truncate">{name}</span>
+                            {!isReadOnly && <button type="button" onClick={() => setField("attachmentFileNames", form.attachmentFileNames.filter((_, j) => j !== i))} className="ml-auto text-red-400 hover:text-red-600 shrink-0"><X size={11} /></button>}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-xs text-gray-400 mt-1.5">No attachments uploaded.</p>
+                    )}
+                    <p className="text-[11px] text-gray-400 mt-1">PDF, DOC, DOCX, XLS, XLSX, JPG, JPEG, PNG — max 10 MB each</p>
+                  </div>
+                </Field>
+              </div>
             </div>
 
             <div className="flex items-center gap-2">
