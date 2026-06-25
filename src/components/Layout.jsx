@@ -423,14 +423,6 @@ export default function Layout({ children }) {
         <main key={location.pathname} className="flex-1 overflow-y-auto p-3 lg:p-5 animate-page">{children}</main>
       </div>
 
-      {/* ── FOOTER ── */}
-      <footer className="bg-white/80 backdrop-blur-sm border-t border-brand-200 px-4 py-1.5 flex items-center justify-center flex-wrap gap-2 sm:gap-8 text-xs text-gray-400 shrink-0">
-        <span>Version 1.0.0</span>
-        <span className="hidden sm:inline">|</span>
-        <span className="hidden sm:inline">Login: {new Date().toLocaleString()}</span>
-        <span className="hidden sm:inline">|</span>
-        <span className="hidden sm:inline">Duration: 0h 0m</span>
-      </footer>
     </div>
   );
 }
