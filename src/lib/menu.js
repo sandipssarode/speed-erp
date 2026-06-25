@@ -21,7 +21,6 @@ export const menu = [
       { label: "Employee Master",          path: "/masters/employee" },
       { label: "Vendor Master",            path: "/vendors" },
       { label: "Customer Master",          path: "/sales/customers" },
-      { label: "Product Master (Old)",     path: "/products", deprecated: true },
       { label: "Asset Structure",          path: "/masters/asset-structure" },
       { label: "Asset Type",               path: "/masters/asset-type" },
       { label: "Asset Master",             path: "/masters/asset-master" },
