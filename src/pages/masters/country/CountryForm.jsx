@@ -121,8 +121,8 @@ export default function CountryForm() {
           {/* Header */}
           <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between gap-3 flex-wrap">
             <div>
-              <h1 className="text-lg font-semibold text-gray-800">{isNew ? "New Country" : (form.countryName || "Country")}</h1>
-              {!isNew && <p className="text-xs text-gray-400 mt-0.5 font-mono">{form.countryCode}</p>}
+              <h1 className="text-2xl font-bold text-gray-900 tracking-tight">{isNew ? "New Country" : (form.countryName || "Country")}</h1>
+              <p className="text-sm text-gray-500 mt-0.5">{isNew ? "Add a new country to the master" : <span className="font-mono">{form.countryCode}</span>}</p>
             </div>
             <div className="flex items-center gap-2">
               {!isNew && (
@@ -172,8 +172,8 @@ export default function CountryForm() {
           {/* Footer actions */}
           {editing && (
             <div className="px-6 py-3 border-t border-gray-100 bg-gray-50/60 flex items-center gap-2">
-              <button onClick={handleSave} className="flex items-center gap-1.5 text-sm px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-md font-medium shadow-sm transition-colors"><Save size={14} /> Save</button>
-              <button onClick={handleDiscard} className="text-sm px-4 py-2 border border-gray-300 text-gray-600 hover:bg-white rounded-md font-medium transition-colors">Cancel</button>
+              <button onClick={handleSave} className="flex items-center gap-1.5 text-sm px-6 py-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-md font-semibold shadow-sm transition-colors"><Save size={14} /> Save</button>
+              <button onClick={handleDiscard} className="text-sm px-5 py-2.5 border border-gray-300 text-gray-700 hover:bg-white rounded-md font-semibold transition-colors">Cancel</button>
             </div>
           )}
         </div>

@@ -43,10 +43,10 @@ export default function CountryList() {
       <div className="max-w-6xl mx-auto space-y-4">
 
         {/* Header */}
-        <div className="flex items-center justify-between gap-3 flex-wrap">
-          <div className="flex items-baseline gap-2">
-            <h1 className="text-xl font-semibold text-gray-800">Country Master</h1>
-            <span className="text-xs text-gray-400">· {records.length} record{records.length !== 1 ? "s" : ""}</span>
+        <div className="flex items-end justify-between gap-3 flex-wrap">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Country Master</h1>
+            <p className="text-sm text-gray-500 mt-0.5">Manage countries, dial codes &amp; currencies · {records.length} record{records.length !== 1 ? "s" : ""}</p>
           </div>
           <div className="flex items-center gap-2">
             <div className="relative">
@@ -65,7 +65,7 @@ export default function CountryList() {
               <option value="active">Active</option>
               <option value="inactive">Inactive</option>
             </select>
-            <button onClick={() => navigate("/system/countries/new")} className="flex items-center justify-center gap-1.5 bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium px-8 py-2 rounded-md shadow-sm transition-colors">
+            <button onClick={() => navigate("/system/countries/new")} className="flex items-center justify-center gap-1.5 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold px-8 py-2.5 rounded-md shadow-sm transition-colors">
               <Plus size={15} /> New
             </button>
           </div>

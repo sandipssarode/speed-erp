@@ -19,7 +19,7 @@
   --color-coral:       #f3797e;  /* coral        */
 
   /* ── Typography ── */
-  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
 
   /* ── Richer text grays (default Tailwind grays read dull/washed) ── */
   --color-gray-400: #7b8493;   /* was #9ca3af — icons / placeholders */
@@ -31,7 +31,15 @@
 
 /* Apply font globally */
 *, *::before, *::after {
-  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+/* ── Global typographic hierarchy (bold headings, strong buttons) ── */
+@layer base {
+  h1 { font-weight: 700; letter-spacing: -0.02em; color: #0f172a; }
+  h2 { font-weight: 700; letter-spacing: -0.015em; color: #0f172a; }
+  h3 { font-weight: 600; letter-spacing: -0.01em; color: #0f172a; }
+  button { font-weight: 600; }
 }
 
 /* Crisp, fully-legible text rendering (Plus Jakarta Sans renders light at 400) */
