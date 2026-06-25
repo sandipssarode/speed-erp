@@ -327,7 +327,7 @@ export default function Layout({ children }) {
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-gradient-to-br from-brand-50 via-[#f2f0ef] to-brand-100 text-gray-800">
       {/* ── TOP BAR ── */}
-      <header className="bg-white/90 backdrop-blur-sm border-b border-brand-200 flex items-center gap-2 lg:gap-3 px-3 lg:px-4 py-2.5 shadow-sm shrink-0 z-30">
+      <header className="bg-white/90 backdrop-blur-sm border-b border-brand-200 flex items-center gap-2 lg:gap-3 px-3 lg:px-4 py-2 shadow-sm shrink-0 z-30">
         {/* Mobile hamburger */}
         <button
           onClick={() => setMobileOpen(true)}
@@ -338,7 +338,7 @@ export default function Layout({ children }) {
         </button>
 
         {/* Logo */}
-        <img src={siLogo} alt="Speed Innovations" className="h-10 w-auto object-contain" />
+        <img src={siLogo} alt="Speed Innovations" className="h-14 w-auto object-contain" />
       </header>
 
       <div className="flex flex-1 overflow-hidden relative">
