@@ -46,13 +46,9 @@ export default function ModuleLanding() {
                   to={link.path}
                   className="group flex items-center gap-3 bg-white border border-brand-100 rounded-xl px-4 py-3.5 shadow-sm hover:shadow-md hover:border-brand-300 hover:-translate-y-0.5 transition-all"
                 >
-                  <span className={`w-2 h-2 rounded-full shrink-0 ${link.deprecated ? "bg-coral" : "bg-brand-500"}`} />
-                  <span className={`text-sm font-medium ${link.deprecated ? "text-red-500" : "text-gray-700 group-hover:text-brand-600"}`}>
+                  <span className="text-sm font-medium text-gray-700 group-hover:text-brand-600">
                     {link.label}
                   </span>
-                  {link.deprecated && (
-                    <span className="text-[9px] bg-red-100 text-red-500 border border-red-200 px-1 py-0.5 rounded font-semibold uppercase">Old</span>
-                  )}
                   <ChevronRight size={16} className="ml-auto text-gray-300 group-hover:text-brand-500 transition-colors" />
                 </Link>
               ))}

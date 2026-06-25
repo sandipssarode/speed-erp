@@ -69,7 +69,7 @@ export default function Layout({ children }) {
     <Link
       to={link.path}
       onClick={() => setOpenModule(null)}
-      className={`block px-2.5 py-1.5 rounded-lg text-sm transition-colors ${
+      className={`block whitespace-nowrap px-2.5 py-1.5 rounded-lg text-sm transition-colors ${
         link.deprecated
           ? location.pathname === link.path
             ? "bg-red-50 text-red-600 font-semibold"
@@ -92,7 +92,7 @@ export default function Layout({ children }) {
       <div className="bg-white rounded-2xl border border-brand-200 ring-1 ring-black/5 shadow-[0_16px_48px_-12px_rgba(45,43,58,0.45)] p-4 max-h-[78vh] overflow-y-auto">
         <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2 px-1">{mod.label}</p>
         {mod.flat ? (
-          <div className="grid grid-cols-3 gap-x-4 gap-y-0.5 min-w-[560px]">
+          <div className="grid grid-cols-[repeat(3,max-content)] gap-x-6 gap-y-0.5">
             {mod.links.map(link => <FlyoutLink key={link.path} link={link} />)}
           </div>
         ) : (
