@@ -2,7 +2,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import Layout from "../../../components/Layout";
 import { api } from "../../../lib/api.js";
-import { Save, X, Trash2, Edit2, FileText, CheckCircle, AlertCircle, ChevronRight, ArrowLeft, KeyRound, Paperclip, User } from "lucide-react";
+import { Save, X, Trash2, Edit2, FileText, CheckCircle, AlertCircle, ChevronLeft, KeyRound, Paperclip, User } from "lucide-react";
 
 const LEVEL_OPTIONS = [
   { value: "L1",  label: "L1 — Top Management (Director / CEO / MD / CXO)" },
@@ -39,9 +39,10 @@ function Field({ label, required, error, children, className = "" }) {
 }
 
 const inputBase = (disabled, error) =>
-  `w-full px-2.5 py-1.5 text-sm border rounded focus:outline-none focus:ring-1 transition-colors
-  ${error ? "border-red-300 focus:ring-red-300 bg-red-50/20" : "focus:ring-brand-600"}
-  ${disabled ? "bg-gray-100 text-gray-500 cursor-not-allowed border-gray-200" : "bg-white border-gray-300 hover:border-gray-400"}`;
+  `w-full px-3.5 py-2.5 text-sm border rounded-xl shadow-sm transition-all focus:outline-none
+  ${error ? "border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100"
+          : "border-gray-200 focus:border-brand-400 focus:ring-2 focus:ring-brand-100"}
+  ${disabled ? "bg-gray-50 text-gray-500 cursor-not-allowed" : "bg-white hover:border-gray-300"}`;
 
 function TInput({ value, onChange, disabled, placeholder, maxLength, type = "text", error }) {
   return <input type={type} value={value ?? ""} onChange={onChange} disabled={disabled} placeholder={placeholder} maxLength={maxLength} className={inputBase(disabled, error)} />;
@@ -251,71 +252,64 @@ export default function EmployeeForm() {
 
   const fullName = [form.firstName, form.middleName, form.lastName].filter(Boolean).join(" ");
 
+  const headerBtn = "flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg font-medium border border-white/25 text-white hover:bg-white/15 transition-colors";
+
   return (
     <Layout>
-      <div className="space-y-3 max-w-4xl mx-auto">
-        <div className="flex items-center gap-1.5 text-xs text-gray-400">
-          <span>Masters</span><ChevronRight size={12} />
-          <button onClick={() => navigate("/masters/employee")} className="hover:text-brand-500 transition-colors">Employee</button>
-          {form.employeeId && <><ChevronRight size={12} /><span className="text-brand-600 font-medium">{form.employeeId}</span></>}
-        </div>
+      <div className="max-w-5xl mx-auto space-y-4">
+
+        <button onClick={() => navigate("/masters/employee")} className="flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600 transition-colors font-medium">
+          <ChevronLeft size={15} /> Employee
+        </button>
 
         {toast && (
-          <div className={`flex items-center gap-2 px-4 py-2.5 rounded text-sm border ${toast.type === "error" ? "bg-red-50 border-red-200 text-red-700" : "bg-green-50 border-green-200 text-green-700"}`}>
+          <div className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm border ${toast.type === "error" ? "bg-red-50 border-red-200 text-red-700" : "bg-green-50 border-green-200 text-green-700"}`}>
             {toast.type === "error" ? <AlertCircle size={15} /> : <CheckCircle size={15} />}{toast.msg}
           </div>
         )}
 
-        <div className="bg-white border border-gray-200 rounded px-4 py-2.5 flex items-center gap-2 flex-wrap shadow-sm">
-          <button onClick={() => navigate("/masters/employee")} className="flex items-center gap-1.5 text-xs px-3 py-1.5 border border-gray-300 text-gray-600 hover:bg-gray-50 rounded font-medium"><ArrowLeft size={13} /> Back</button>
-          {mode === "view" && <button onClick={() => setMode("edit")} className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded font-medium"><Edit2 size={13} /> Edit</button>}
-          {(mode === "new" || mode === "edit") && (
-            <>
-              <button onClick={handleSave} className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded font-medium"><Save size={13} /> Save</button>
-              <button onClick={handleDiscard} className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-gray-500 hover:bg-gray-600 text-white rounded font-medium"><X size={13} /> Discard</button>
-            </>
-          )}
-          {mode === "view" && !isNew && (
-            <>
-              <button onClick={handleDelete} className="flex items-center gap-1.5 text-xs px-3 py-1.5 border border-red-300 text-red-500 hover:bg-red-50 rounded font-medium"><Trash2 size={13} /> Delete</button>
-              <button onClick={handleResetPassword} className="flex items-center gap-1.5 text-xs px-3 py-1.5 border border-purple-300 text-purple-600 hover:bg-purple-50 rounded font-medium"><KeyRound size={13} /> Reset Password</button>
-            </>
-          )}
-          <div className="w-px h-5 bg-gray-200 mx-1" />
-          <button onClick={() => setShowChangelog(!showChangelog)} className={`flex items-center gap-1.5 text-xs px-3 py-1.5 border rounded font-medium transition-colors ${showChangelog ? "border-blue-300 bg-blue-50 text-brand-600" : "border-gray-300 text-gray-600 hover:bg-gray-50"}`}>
-            <FileText size={13} /> Changelog
-          </button>
-          {form.updatedAt && <div className="ml-auto text-xs text-gray-400 text-right"><span>Updated: {new Date(form.updatedAt).toLocaleString()}</span><span className="ml-2">by {form.updatedBy}</span></div>}
-        </div>
-
-        {showChangelog && (
-          <div className="bg-white border border-gray-200 rounded p-4">
-            <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2"><FileText size={14} /> Audit Log — {form.employeeId || "New"}</h3>
-            {!form.changelog?.length ? <p className="text-xs text-gray-400 py-4 text-center">No changes recorded yet.</p> : (
-              <table className="w-full text-xs">
-                <thead><tr className="border-b border-gray-200"><th className="text-left pb-2 text-gray-500 font-medium">Date & Time</th><th className="text-left pb-2 text-gray-500 font-medium">User</th><th className="text-left pb-2 text-gray-500 font-medium">Action</th><th className="text-left pb-2 text-gray-500 font-medium">Details</th></tr></thead>
-                <tbody>{form.changelog.map((c, i) => (<tr key={i} className="border-b border-gray-50"><td className="py-1.5 text-gray-600">{new Date(c.timestamp).toLocaleString()}</td><td className="py-1.5 text-gray-600">{c.user}</td><td className="py-1.5"><span className={`px-1.5 py-0.5 rounded text-xs ${c.action === "Created" ? "bg-green-50 text-green-600" : "bg-blue-50 text-brand-600"}`}>{c.action}</span></td><td className="py-1.5 text-gray-600">{c.changes}</td></tr>))}</tbody>
-              </table>
-            )}
+        <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+          {/* Gradient header */}
+          <div className="bg-gradient-to-r from-brand-800 to-brand-600 px-6 py-5 flex items-center gap-4 flex-wrap">
+            <div className="w-12 h-12 rounded-xl bg-white/15 ring-1 ring-white/20 flex items-center justify-center text-white font-bold shrink-0">
+              {form.employeeId ? form.employeeId.replace(/[^A-Za-z0-9]/g, "").slice(0, 2).toUpperCase() : <User size={22} />}
+            </div>
+            <div className="min-w-0">
+              <h1 className="text-xl font-bold text-white tracking-tight leading-tight">{isNew ? "New Employee" : (fullName || "Employee")}</h1>
+              <p className="text-sm text-white/70 mt-0.5">
+                {form.employeeId ? <span className="font-mono">{form.employeeId}</span> : "Add a new employee to the master"}
+                {form.designationName && <span className="ml-2">· {form.designationName}</span>}
+              </p>
+            </div>
+            <div className="flex items-center gap-2 ml-auto">
+              {form.status && (
+                <span className={`text-xs px-2 py-0.5 rounded font-medium ${form.status === "Active" ? "bg-green-400/30 text-green-100 border border-green-300/30" : "bg-white/10 text-white/80 border border-white/20"}`}>
+                  {form.status}
+                </span>
+              )}
+              {!isNew && <button onClick={() => setShowChangelog(!showChangelog)} className={headerBtn}><FileText size={13} /> Changelog</button>}
+              {mode === "view" && <button onClick={() => setMode("edit")} className={headerBtn}><Edit2 size={13} /> Edit</button>}
+              {mode === "view" && !isNew && <button onClick={handleResetPassword} className={headerBtn}><KeyRound size={13} /> Reset Password</button>}
+              {mode === "view" && !isNew && <button onClick={handleDelete} className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg font-medium border border-white/25 text-white hover:bg-red-500/80 transition-colors"><Trash2 size={13} /> Delete</button>}
+            </div>
           </div>
-        )}
 
-        <div className="bg-white border border-gray-200 rounded shadow-sm">
-          <div className="bg-gradient-to-r from-brand-900 to-brand-600 px-5 py-2.5 rounded-t flex items-center gap-4 text-white">
-            <span className="font-bold text-base tracking-wide">{form.employeeId || "NEW EMPLOYEE"}</span>
-            <span className="text-blue-200 text-sm">{fullName || "—"}</span>
-            {form.designationName && <span className="text-blue-300 text-xs">{form.designationName}</span>}
-            {form.status && (
-              <span className={`ml-auto text-xs px-2 py-0.5 rounded font-medium ${form.status === "Active" ? "bg-green-400/30 text-green-100 border border-green-300/30" : "bg-white/10 text-white/80 border border-white/20"}`}>
-                {form.status}
-              </span>
-            )}
-          </div>
+          {showChangelog && (
+            <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/60">
+              <h3 className="text-xs font-bold text-gray-600 uppercase tracking-wide mb-2 flex items-center gap-2"><FileText size={13} /> Audit Log — {form.employeeId || "New"}</h3>
+              {!form.changelog?.length ? <p className="text-xs text-gray-400">No changes recorded yet.</p> : (
+                <table className="w-full text-xs">
+                  <thead><tr className="text-gray-400 text-left"><th className="pb-1.5 font-medium">Date &amp; Time</th><th className="pb-1.5 font-medium">User</th><th className="pb-1.5 font-medium">Action</th><th className="pb-1.5 font-medium">Details</th></tr></thead>
+                  <tbody>{form.changelog.map((c, i) => (<tr key={i} className="border-t border-gray-100"><td className="py-1.5 text-gray-600">{new Date(c.timestamp).toLocaleString()}</td><td className="py-1.5 text-gray-600">{c.user}</td><td className="py-1.5"><span className={`px-1.5 py-0.5 rounded text-[11px] ${c.action === "Created" ? "bg-green-50 text-green-600" : "bg-brand-50 text-brand-600"}`}>{c.action}</span></td><td className="py-1.5 text-gray-600">{c.changes}</td></tr>))}</tbody>
+                </table>
+              )}
+            </div>
+          )}
 
           <div className="p-5 space-y-4">
 
             {/* Identity */}
-            <div className="bg-gray-50 border border-gray-200 rounded p-4 space-y-4">
+            <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 space-y-4">
               <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Identity</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <Field label="Employee ID">
@@ -348,7 +342,7 @@ export default function EmployeeForm() {
             </div>
 
             {/* Address */}
-            <div className="bg-gray-50 border border-gray-200 rounded p-4 space-y-4">
+            <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 space-y-4">
               <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Residential Address</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <Field label="Country">
@@ -370,7 +364,7 @@ export default function EmployeeForm() {
             </div>
 
             {/* Organisation */}
-            <div className="bg-gray-50 border border-gray-200 rounded p-4 space-y-4">
+            <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 space-y-4">
               <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Organisation</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <Field label="Department" required error={errors.departmentId}>
@@ -400,13 +394,13 @@ export default function EmployeeForm() {
             </div>
 
             {/* Documents */}
-            <div className="bg-gray-50 border border-gray-200 rounded p-4 space-y-4">
+            <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 space-y-4">
               <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Documents & Photo</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Photo upload */}
                 <Field label="Upload Photo">
                   <div className="flex items-center gap-3">
-                    <div className="w-14 h-14 rounded-lg border border-gray-200 bg-gray-100 flex items-center justify-center shrink-0 overflow-hidden">
+                    <div className="w-14 h-14 rounded-xl border border-gray-200 bg-gray-100 flex items-center justify-center shrink-0 overflow-hidden">
                       {form.photoFileName
                         ? <span className="text-xs text-gray-500 text-center px-1 leading-tight">{form.photoFileName}</span>
                         : <User size={22} className="text-gray-400" />}
@@ -421,7 +415,7 @@ export default function EmployeeForm() {
                         className="hidden"
                       />
                       {!isReadOnly ? (
-                        <button type="button" onClick={() => photoRef.current?.click()} className="text-xs px-3 py-1.5 border border-gray-300 rounded hover:bg-gray-100 text-gray-600 font-medium">
+                        <button type="button" onClick={() => photoRef.current?.click()} className="text-xs px-3 py-1.5 border border-gray-300 rounded-xl hover:bg-gray-100 text-gray-600 font-medium">
                           Choose Photo
                         </button>
                       ) : (
@@ -448,7 +442,7 @@ export default function EmployeeForm() {
                       className="hidden"
                     />
                     {!isReadOnly && (
-                      <button type="button" onClick={() => attachRef.current?.click()} className="flex items-center gap-1.5 text-xs px-3 py-1.5 border border-gray-300 rounded hover:bg-gray-100 text-gray-600 font-medium">
+                      <button type="button" onClick={() => attachRef.current?.click()} className="flex items-center gap-1.5 text-xs px-3 py-1.5 border border-gray-300 rounded-xl hover:bg-gray-100 text-gray-600 font-medium">
                         <Paperclip size={12} /> Add Files
                       </button>
                     )}
@@ -471,14 +465,22 @@ export default function EmployeeForm() {
             </div>
 
           </div>
+
+          {/* Footer actions */}
+          {(mode === "new" || mode === "edit") && (
+            <div className="px-6 py-4 border-t border-gray-100 bg-gray-50/60 flex items-center gap-2.5">
+              <button onClick={handleSave} className="flex items-center gap-2 text-sm px-6 py-2.5 bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white rounded-xl font-semibold shadow-md shadow-brand-200 transition-all"><Save size={15} /> Save Employee</button>
+              <button onClick={handleDiscard} className="flex items-center gap-2 text-sm px-5 py-2.5 border border-gray-300 text-gray-700 hover:bg-white rounded-xl font-semibold transition-colors"><X size={15} /> Discard</button>
+            </div>
+          )}
         </div>
 
         {Object.keys(errors).length > 0 && (
-          <div className="bg-red-50 border border-red-200 rounded p-3 flex items-start gap-2">
+          <div className="bg-red-50 border border-red-200 rounded-xl p-3 flex items-start gap-2">
             <AlertCircle size={15} className="text-red-500 mt-0.5 shrink-0" />
             <div>
               <p className="text-sm font-medium text-red-700 mb-1">Please correct the highlighted fields.</p>
-              <ul className="text-xs text-red-600 space-y-0.5 list-disc list-inside">{Object.values(errors).map((e, i) => <li key={i}>{e}</li>)}</ul>
+              <div className="text-xs text-red-600 space-y-0.5">{Object.values(errors).map((e, i) => <p key={i}>• {e}</p>)}</div>
             </div>
           </div>
         )}
