@@ -27,6 +27,18 @@
   font-family: "Plus Jakarta Sans", system-ui, sans-serif;
 }
 
+/* Crisp, fully-legible text rendering (Plus Jakarta Sans renders light at 400) */
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+body {
+  color: #1f2937;        /* solid base text colour, not faded */
+  font-weight: 450;      /* slightly stronger default so text reads crisply */
+  letter-spacing: -0.005em;
+}
+
 /* ── Smooth animations ── */
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 @keyframes flyoutIn { from { opacity: 0; transform: translateX(-6px) scale(.98); } to { opacity: 1; transform: none; } }
