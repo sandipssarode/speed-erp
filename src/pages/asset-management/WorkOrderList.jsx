@@ -91,7 +91,7 @@ export default function WorkOrderList() {
                 {paginated.length === 0 ? (
                   <tr><td colSpan={8} className="text-center py-16 text-gray-400 text-sm">{records.length === 0 ? 'No work orders yet. Click "New Work Order" to get started.' : "No records match your search."}</td></tr>
                 ) : paginated.map((r, i) => (
-                  <tr key={r.id} className={`border-b border-gray-200 hover:bg-brand-100 cursor-pointer transition-colors ${i % 2 !== 0 ? "bg-gray-50/50" : ""}`} onClick={() => navigate(`/asset-management/work-order/${r.id}`)}>
+                  <tr key={r.id} className={`border-b border-gray-200 hover:bg-brand-100 hover:-translate-y-0.5 cursor-pointer transition-all ${i % 2 !== 0 ? "bg-gray-50/50" : ""}`} onClick={() => navigate(`/asset-management/work-order/${r.id}`)}>
                     <td className="px-4 py-2.5 font-mono text-xs font-semibold text-brand-600">{r.workOrderId}</td>
                     <td className="px-4 py-2.5 text-gray-600 text-xs">{r.workOrderDate || "â€”"}</td>
                     <td className="px-4 py-2.5 font-medium text-gray-800">{r.productName || "â€”"}</td>
@@ -127,4 +127,5 @@ export default function WorkOrderList() {
     </Layout>
   );
 }
+
 

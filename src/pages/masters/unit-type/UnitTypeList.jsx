@@ -115,7 +115,7 @@ export default function UnitTypeList() {
                 ) : paginated.map(r => (
                   <tr
                     key={r.id}
-                    className="group border-b border-gray-100 last:border-0 hover:bg-brand-100 cursor-pointer transition-colors"
+                    className="group border-b border-gray-100 last:border-0 hover:bg-brand-100 hover:-translate-y-0.5 cursor-pointer transition-all"
                     onClick={() => navigate(`/masters/unit-type/${r.id}`)}
                   >
                     <td className="px-5 py-3.5">
@@ -187,4 +187,5 @@ export default function UnitTypeList() {
     </Layout>
   );
 }
+
 
