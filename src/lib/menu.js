@@ -25,14 +25,12 @@ export const menu = [
       { label: "Asset Type",               path: "/masters/asset-type" },
       { label: "Asset Master",             path: "/masters/asset-master" },
       { label: "Maintenance Type",         path: "/masters/maintenance-type" },
+      { label: "Work Order Type",          path: "/masters/work-order-type" },
     ],
   },
   {
     label: "Asset Management", icon: Wrench, landing: "/asset-management",
     children: {
-      Masters: [
-        { label: "Work Order Type", path: "/asset-management/work-order-type" },
-      ],
       Transaction: [
         { label: "Work Order", path: "/asset-management/work-order" },
       ],

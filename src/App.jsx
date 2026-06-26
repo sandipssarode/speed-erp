@@ -69,10 +69,10 @@ function App() {
         {/* Dashboard */}
         <Route path="/dashboard" element={<Dashboard />} />
 
-        {/* Asset Management */}
-        <Route path="/asset-management/work-order-type"      element={<WorkOrderTypeList />} />
-        <Route path="/asset-management/work-order-type/new"  element={<WorkOrderTypeForm />} />
-        <Route path="/asset-management/work-order-type/:id"  element={<WorkOrderTypeForm />} />
+        {/* Masters — Work Order Type */}
+        <Route path="/masters/work-order-type"      element={<WorkOrderTypeList />} />
+        <Route path="/masters/work-order-type/new"  element={<WorkOrderTypeForm />} />
+        <Route path="/masters/work-order-type/:id"  element={<WorkOrderTypeForm />} />
         <Route path="/asset-management/work-order"     element={<WorkOrderList />} />
         <Route path="/asset-management/work-order/new" element={<WorkOrderForm />} />
         <Route path="/asset-management/work-order/:id" element={<WorkOrderForm />} />

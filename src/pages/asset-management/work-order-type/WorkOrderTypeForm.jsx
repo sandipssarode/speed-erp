@@ -72,7 +72,7 @@ export default function WorkOrderTypeForm() {
       if (!isNew && id) {
         const found = list.find(r => r.id === id);
         if (found) setForm(found);
-        else navigate("/asset-management/work-order-type");
+        else navigate("/masters/work-order-type");
       }
     }).catch(console.error);
   }, [id, isNew]);
@@ -119,14 +119,14 @@ export default function WorkOrderTypeForm() {
       setMode("view");
       setErrors({});
       showToast("Work Order Type saved successfully.");
-      if (isNew) navigate(`/asset-management/work-order-type/${saved.id}`, { replace: true });
+      if (isNew) navigate(`/masters/work-order-type/${saved.id}`, { replace: true });
     } catch (err) {
       showToast(err.message || "Failed to save.", "error");
     }
   };
 
   const handleDiscard = async () => {
-    if (isNew) { navigate("/asset-management/work-order-type"); return; }
+    if (isNew) { navigate("/masters/work-order-type"); return; }
     try { const found = await api.get(`/api/work-order-types/${id}`); setForm(found); } catch { /* keep */ }
     setMode("view");
     setErrors({});
@@ -136,7 +136,7 @@ export default function WorkOrderTypeForm() {
     if (!window.confirm(`Delete work order type "${form.typeName}"? This cannot be undone.`)) return;
     try {
       await api.del(`/api/work-order-types/${id}`);
-      navigate("/asset-management/work-order-type");
+      navigate("/masters/work-order-type");
     } catch (err) {
       showToast(err.message || "Failed to delete.", "error");
     }
@@ -148,7 +148,7 @@ export default function WorkOrderTypeForm() {
     <Layout>
       <div className="max-w-5xl mx-auto space-y-4">
 
-        <button onClick={() => navigate("/asset-management/work-order-type")} className="flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600 transition-colors font-medium">
+        <button onClick={() => navigate("/masters/work-order-type")} className="flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600 transition-colors font-medium">
           <ChevronLeft size={15} /> Work Order Type
         </button>
 

@@ -103,7 +103,7 @@ export default function WorkOrderTypeList() {
           </div>
 
           <button
-            onClick={() => navigate("/asset-management/work-order-type/new")}
+            onClick={() => navigate("/masters/work-order-type/new")}
             className="ml-auto flex items-center gap-2 bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl shadow-md shadow-brand-200 transition-all"
           >
             <Plus size={16} /> New Work Order Type
@@ -140,7 +140,7 @@ export default function WorkOrderTypeList() {
                   <tr
                     key={r.id}
                     className="group border-b border-gray-100 last:border-0 hover:bg-brand-50/40 cursor-pointer transition-colors"
-                    onClick={() => navigate(`/asset-management/work-order-type/${r.id}`)}
+                    onClick={() => navigate(`/masters/work-order-type/${r.id}`)}
                   >
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-3">
@@ -170,7 +170,7 @@ export default function WorkOrderTypeList() {
                     <td className="px-5 py-3.5">
                       <div className="flex items-center justify-end gap-1.5" onClick={e => e.stopPropagation()}>
                         <button
-                          onClick={() => navigate(`/asset-management/work-order-type/${r.id}`)}
+                          onClick={() => navigate(`/masters/work-order-type/${r.id}`)}
                           className={`${actionBtn} hover:bg-brand-50 hover:text-brand-600 hover:border-brand-200`}
                           title="Edit"
                         >
