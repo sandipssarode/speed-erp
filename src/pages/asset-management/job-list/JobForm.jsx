@@ -58,6 +58,7 @@ const emptyForm = () => ({
   assetId:             "",
   assetName:           "",
   assetLocation:       "",
+  bom:                 "",
   maintenanceTypeId:   "",
   maintenanceTypeName: "",
   priority:            "",
@@ -84,7 +85,7 @@ function validate(form) {
   if (!form.priority)             e.priority = "Priority is required.";
   if (!form.problemDescription.trim()) e.problemDescription = "Problem Description is required.";
   if (!form.assignedToId)         e.assignedToId = "Assigned To is required.";
-  if (!form.startTime)            e.startTime = "Planned Start Time is required.";
+  if (!form.startTime)            e.startTime = "Start Time is required.";
   if (form.endTime && form.startTime && form.endTime < form.startTime)
     e.endTime = "End Time must be after Start Time.";
   if (form.status === "Completed" && !form.workDoneRemarks?.trim())
@@ -339,6 +340,9 @@ export default function JobForm() {
               <input value={form.assetLocation} disabled className={inputCls(true, false)} />
             </Row>
           )}
+          <Row label="BOM">
+            <input value={form.bom} onChange={e => setField("bom", e.target.value)} disabled={isReadOnly} placeholder="e.g. BOM-001" className={inputCls(isReadOnly, false)} />
+          </Row>
           <Row label="Maintenance Type" required error={errors.maintenanceTypeId}>
             <select value={form.maintenanceTypeId} onChange={e => handleMaintenanceTypeChange(e.target.value)} disabled={isReadOnly} className={inputCls(isReadOnly, errors.maintenanceTypeId)}>
               <option value="">Select Maintenance Type</option>
@@ -364,10 +368,10 @@ export default function JobForm() {
               {employees.map(e => <option key={e.id} value={e.id}>{e.firstName} {e.lastName} ({e.employeeId})</option>)}
             </select>
           </Row>
-          <Row label="Planned Start" required error={errors.startTime}>
+          <Row label="Start Time" required error={errors.startTime}>
             <input type="datetime-local" value={form.startTime} onChange={e => setField("startTime", e.target.value)} disabled={isReadOnly} className={inputCls(isReadOnly, errors.startTime)} />
           </Row>
-          <Row label="Planned End" error={errors.endTime}>
+          <Row label="End Time" error={errors.endTime}>
             <input type="datetime-local" value={form.endTime} onChange={e => setField("endTime", e.target.value)} disabled={isReadOnly} className={inputCls(isReadOnly, errors.endTime)} />
           </Row>
           <Row label="Estimated Duration (hrs)" help="Auto-suggested from Maintenance Type — editable.">
