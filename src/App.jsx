@@ -54,6 +54,8 @@ import EmployeeForm from "./pages/masters/employee/EmployeeForm";
 import ModuleLanding from "./pages/ModuleLanding";
 import WorkOrderList from "./pages/asset-management/WorkOrderList";
 import WorkOrderForm from "./pages/asset-management/WorkOrderForm";
+import WorkOrderTypeList from "./pages/asset-management/work-order-type/WorkOrderTypeList";
+import WorkOrderTypeForm from "./pages/asset-management/work-order-type/WorkOrderTypeForm";
 
 function App() {
   return (
@@ -68,6 +70,9 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
 
         {/* Asset Management */}
+        <Route path="/asset-management/work-order-type"      element={<WorkOrderTypeList />} />
+        <Route path="/asset-management/work-order-type/new"  element={<WorkOrderTypeForm />} />
+        <Route path="/asset-management/work-order-type/:id"  element={<WorkOrderTypeForm />} />
         <Route path="/asset-management/work-order"     element={<WorkOrderList />} />
         <Route path="/asset-management/work-order/new" element={<WorkOrderForm />} />
         <Route path="/asset-management/work-order/:id" element={<WorkOrderForm />} />

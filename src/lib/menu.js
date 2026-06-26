@@ -30,6 +30,9 @@ export const menu = [
   {
     label: "Asset Management", icon: Wrench, landing: "/asset-management",
     children: {
+      Masters: [
+        { label: "Work Order Type", path: "/asset-management/work-order-type" },
+      ],
       Transaction: [
         { label: "Work Order", path: "/asset-management/work-order" },
       ],

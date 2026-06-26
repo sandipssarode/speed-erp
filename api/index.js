@@ -603,6 +603,39 @@ export default async function handler(req, res) {
         break;
       }
 
+      // ── WORK ORDER TYPES ──────────────────────────────────────
+      case 'work-order-types': {
+        if (id) {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM work_order_types WHERE id=${id}`;
+            if (!rows.length) return res.status(404).json({ error: 'Not found' });
+            return res.json(rows[0].data);
+          }
+          if (req.method === 'PUT') {
+            const v = req.body;
+            await sql`UPDATE work_order_types SET code=${v.typeId}, name=${v.typeName}, is_active=${!v.isDeactivated}, data=${JSON.stringify(v)}, updated_at=${v.updatedAt} WHERE id=${id}`;
+            return res.json(v);
+          }
+          if (req.method === 'DELETE') {
+            await sql`DELETE FROM work_order_types WHERE id=${id}`;
+            return res.json({ success: true });
+          }
+        } else {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM work_order_types ORDER BY name ASC`;
+            return res.json(rows.map(r => r.data));
+          }
+          if (req.method === 'POST') {
+            const v = req.body;
+            const existing = await sql`SELECT id FROM work_order_types WHERE code=${v.typeId}`;
+            if (existing.length) return res.status(409).json({ error: 'Type ID already exists.' });
+            await sql`INSERT INTO work_order_types (id, code, name, is_active, data, created_at, updated_at) VALUES (${v.id}, ${v.typeId}, ${v.typeName}, ${!v.isDeactivated}, ${JSON.stringify(v)}, ${v.createdAt}, ${v.updatedAt})`;
+            return res.status(201).json(v);
+          }
+        }
+        break;
+      }
+
       default:
         return res.status(404).json({ error: `Unknown resource: ${resource}` });
     }

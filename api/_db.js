@@ -41,6 +41,7 @@ export async function ensureSchema(sql) {
     sql`CREATE TABLE IF NOT EXISTS designations (id TEXT PRIMARY KEY, code TEXT UNIQUE NOT NULL, name TEXT NOT NULL, level TEXT, is_active BOOLEAN DEFAULT true, data JSONB NOT NULL, created_at TIMESTAMPTZ DEFAULT NOW(), updated_at TIMESTAMPTZ DEFAULT NOW())`,
     sql`CREATE TABLE IF NOT EXISTS employees (id TEXT PRIMARY KEY, code TEXT UNIQUE NOT NULL, name TEXT NOT NULL, department_id TEXT, designation_id TEXT, status TEXT DEFAULT 'Active', is_active BOOLEAN DEFAULT true, data JSONB NOT NULL, created_at TIMESTAMPTZ DEFAULT NOW(), updated_at TIMESTAMPTZ DEFAULT NOW())`,
     sql`CREATE TABLE IF NOT EXISTS work_orders (id TEXT PRIMARY KEY, code TEXT UNIQUE NOT NULL, product_id TEXT, status TEXT DEFAULT 'Draft', data JSONB NOT NULL, created_at TIMESTAMPTZ DEFAULT NOW(), updated_at TIMESTAMPTZ DEFAULT NOW())`,
+    sql`CREATE TABLE IF NOT EXISTS work_order_types (id TEXT PRIMARY KEY, code TEXT UNIQUE NOT NULL, name TEXT NOT NULL, is_active BOOLEAN DEFAULT true, data JSONB NOT NULL, created_at TIMESTAMPTZ DEFAULT NOW(), updated_at TIMESTAMPTZ DEFAULT NOW())`,
   ]);
 
   // Check all seed counts in parallel
