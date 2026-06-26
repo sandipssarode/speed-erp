@@ -28,11 +28,8 @@ function Row({ label, required, error, children, help }) {
 }
 
 const emptyForm = () => ({
-  typeId:           `WOT-${Date.now().toString().slice(-5)}`,
-  typeName:         "",
-  description:      "",
-  requiresApproval: false,
-  isDeactivated:    false,
+  typeId:    `WOT-${Date.now().toString().slice(-5)}`,
+  typeName:  "",
   createdAt: "", updatedAt: "", createdBy: "", updatedBy: "",
   changelog: [],
 });
@@ -237,42 +234,6 @@ export default function WorkOrderTypeForm() {
               />
             </Row>
 
-            <Row label="Description" help="Optional — brief description of this work order category.">
-              <textarea
-                value={form.description}
-                onChange={e => setField("description", e.target.value)}
-                disabled={isReadOnly}
-                placeholder="e.g. Used for in-house production of finished goods from raw materials."
-                rows={3}
-                className={inputCls(isReadOnly, false) + " resize-none"}
-              />
-            </Row>
-
-            <Row label="Requires Approval">
-              <label className="flex items-center gap-2.5 sm:pt-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={!!form.requiresApproval}
-                  onChange={e => setField("requiresApproval", e.target.checked)}
-                  disabled={isReadOnly}
-                  className="w-4 h-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500"
-                />
-                <span className="text-sm text-gray-600">This work order type requires an approval workflow</span>
-              </label>
-            </Row>
-
-            <Row label="Status">
-              <label className="flex items-center gap-2.5 sm:pt-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={!!form.isDeactivated}
-                  onChange={e => setField("isDeactivated", e.target.checked)}
-                  disabled={isReadOnly}
-                  className="w-4 h-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500"
-                />
-                <span className="text-sm text-gray-600">Mark this type as inactive</span>
-              </label>
-            </Row>
           </div>
 
           {editing && (
