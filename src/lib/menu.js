@@ -7,7 +7,7 @@ import {
 // ─────────────────────────────────────────────────────────────
 export const menu = [
   {
-    label: "Masters", icon: Database, flat: true, landing: "/masters",
+    label: "Masters", icon: Database, flat: true,
     links: [
       { label: "Country Master",           path: "/system/countries" },
       { label: "State Master",             path: "/system/states" },
@@ -31,7 +31,7 @@ export const menu = [
     ],
   },
   {
-    label: "Asset Management", icon: Wrench, landing: "/asset-management",
+    label: "Asset Management", icon: Wrench,
     children: {
       Transaction: [
         { label: "Work Order", path: "/asset-management/work-order" },
@@ -40,7 +40,7 @@ export const menu = [
     },
   },
   {
-    label: "Purchase", icon: ShoppingCart, landing: "/purchase",
+    label: "Purchase", icon: ShoppingCart,
     children: {
       Transaction: [
         { label: "Purchase Requisition",  path: "/purchase/requisition" },
@@ -60,7 +60,7 @@ export const menu = [
     },
   },
   {
-    label: "Sales", icon: BarChart2, landing: "/sales",
+    label: "Sales", icon: BarChart2,
     children: {
       Transaction: [
         { label: "Sales Quotation",    path: "/sales/quotation" },
@@ -78,7 +78,7 @@ export const menu = [
     },
   },
   {
-    label: "Inventory", icon: Package, landing: "/inventory",
+    label: "Inventory", icon: Package,
     children: {
       Transaction: [
         { label: "Material Receipt (GRN)", path: "/inventory/grn" },
@@ -95,7 +95,7 @@ export const menu = [
     },
   },
   {
-    label: "Finance", icon: DollarSign, landing: "/finance",
+    label: "Finance", icon: DollarSign,
     children: {
       Transaction: [
         { label: "Journal Entry",    path: "/finance/journal" },
@@ -113,7 +113,7 @@ export const menu = [
     },
   },
   {
-    label: "System Setup", icon: Settings, flat: true, landing: "/system",
+    label: "System Setup", icon: Settings, flat: true,
     links: [
       { label: "User Master",                    path: "/system/users" },
       { label: "Organisation Master",            path: "/system/organisations" },
@@ -131,7 +131,6 @@ export const menu = [
 // Helpers
 // ─────────────────────────────────────────────────────────────
 export function isModuleActive(mod, pathname) {
-  if (pathname === mod.landing) return true;
   if (mod.flat) return mod.links.some(l => pathname.startsWith(l.path));
   return Object.values(mod.children).flat().some(l => pathname.startsWith(l.path));
 }

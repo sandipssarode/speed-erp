@@ -138,8 +138,8 @@ export default function Layout({ children }) {
             onMouseEnter={() => setOpenModule(mod.label)}
             onMouseLeave={() => setOpenModule(null)}
           >
-            <Link
-              to={mod.landing}
+            <button
+              onClick={() => setOpenModule(p => p === mod.label ? null : mod.label)}
               className={`relative flex items-center justify-between w-full gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                 highlight
                   ? "bg-brand-600 text-white shadow-md shadow-brand-200"
@@ -151,7 +151,7 @@ export default function Layout({ children }) {
                 <span>{mod.label}</span>
               </span>
               <ChevronRight size={14} className={highlight ? "text-white/80" : "text-gray-400"} />
-            </Link>
+            </button>
 
             {isOpen && <FlyoutPanel mod={mod} nearBottom={nearBottom} />}
           </div>

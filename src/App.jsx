@@ -51,7 +51,6 @@ import DesignationList from "./pages/masters/designation/DesignationList";
 import DesignationForm from "./pages/masters/designation/DesignationForm";
 import EmployeeList from "./pages/masters/employee/EmployeeList";
 import EmployeeForm from "./pages/masters/employee/EmployeeForm";
-import ModuleLanding from "./pages/ModuleLanding";
 import WorkOrderList from "./pages/asset-management/WorkOrderList";
 import WorkOrderForm from "./pages/asset-management/WorkOrderForm";
 import WorkOrderTypeList from "./pages/asset-management/work-order-type/WorkOrderTypeList";
@@ -93,14 +92,14 @@ function App() {
         <Route path="/asset-management/job-list/new" element={<JobForm />} />
         <Route path="/asset-management/job-list/:id" element={<JobForm />} />
 
-        {/* Module landing pages */}
-        <Route path="/masters"          element={<ModuleLanding />} />
-        <Route path="/asset-management"  element={<ModuleLanding />} />
-        <Route path="/purchase"  element={<ModuleLanding />} />
-        <Route path="/sales"     element={<ModuleLanding />} />
-        <Route path="/inventory" element={<ModuleLanding />} />
-        <Route path="/finance"   element={<ModuleLanding />} />
-        <Route path="/system"    element={<ModuleLanding />} />
+        {/* Module roots — redirect to dashboard (no landing pages) */}
+        <Route path="/masters"          element={<Navigate to="/dashboard" replace />} />
+        <Route path="/asset-management" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/purchase"         element={<Navigate to="/dashboard" replace />} />
+        <Route path="/sales"            element={<Navigate to="/dashboard" replace />} />
+        <Route path="/inventory"        element={<Navigate to="/dashboard" replace />} />
+        <Route path="/finance"          element={<Navigate to="/dashboard" replace />} />
+        <Route path="/system"           element={<Navigate to="/dashboard" replace />} />
 
         {/* System Setup */}
         <Route path="/system/organisations" element={<OrganisationList />} />
