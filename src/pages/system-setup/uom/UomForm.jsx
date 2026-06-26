@@ -118,7 +118,7 @@ export default function UomForm() {
       setForm(saved);
       setAllRecords(prev => isNew ? [...prev, saved] : prev.map(r => r.id === saved.id ? saved : r));
       setMode("view"); setErrors({});
-      showToast("Unit of Measure saved successfully.");
+      showToast("Unit saved successfully.");
       if (isNew) navigate(`/masters/uom/${saved.id}`, { replace: true });
     } catch (err) { showToast(err.message || "Failed to save.", "error"); }
   };
@@ -141,7 +141,7 @@ export default function UomForm() {
     <Layout>
       <div className="max-w-5xl mx-auto space-y-4">
         <button onClick={() => navigate("/masters/uom")} className="flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600 transition-colors font-medium">
-          <ChevronLeft size={15} /> Unit of Measure
+          <ChevronLeft size={15} /> Unit Master
         </button>
 
         {toast && (
@@ -159,10 +159,10 @@ export default function UomForm() {
             </div>
             <div className="min-w-0">
               <h1 className="text-xl font-bold text-white tracking-tight leading-tight">
-                {isNew ? "New Unit of Measure" : (form.unitName || "Unit")}
+                {isNew ? "New Unit Master" : (form.unitName || "Unit")}
               </h1>
               <p className="text-sm text-white/70 mt-0.5">
-                {isNew ? "Add a new unit to the master" : <span className="font-mono">{form.unitId}</span>}
+                {isNew ? "Add a new unit" : <span className="font-mono">{form.unitId}</span>}
               </p>
             </div>
             <div className="flex items-center gap-2 ml-auto">

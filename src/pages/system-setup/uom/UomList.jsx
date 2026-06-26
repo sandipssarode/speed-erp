@@ -69,7 +69,7 @@ export default function UomList() {
     <Layout>
       <div className="max-w-6xl mx-auto space-y-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Unit of Measure (UoM)</h1>
+          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Unit Master</h1>
           <p className="text-sm text-gray-500 mt-0.5">
             Define units like KGS, MTR, LTR, NOS used across all transactions
           </p>
@@ -93,11 +93,10 @@ export default function UomList() {
           </div>
 
           <div className="relative">
-            <SlidersHorizontal size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
             <select
               value={typeFilter}
               onChange={e => setTypeFilter(e.target.value)}
-              className="appearance-none pl-10 pr-9 py-2.5 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100 cursor-pointer"
+              className="appearance-none pl-4 pr-9 py-2.5 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100 cursor-pointer"
             >
               <option value="all">All Types</option>
               {unitTypes.map(t => <option key={t.id} value={t.id}>{t.unitTypeName}</option>)}
@@ -109,7 +108,7 @@ export default function UomList() {
             onClick={() => navigate("/masters/uom/new")}
             className="ml-auto flex items-center gap-2 bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl shadow-md shadow-brand-200 transition-all"
           >
-            <Plus size={16} /> New Unit
+            <Plus size={16} /> New Unit Master
           </button>
         </div>
 
@@ -135,7 +134,7 @@ export default function UomList() {
                 ) : paginated.length === 0 ? (
                   <tr><td colSpan={5} className="text-center py-16 text-gray-400 text-sm">
                     {records.length === 0
-                      ? 'No units yet. Click "New Unit" to add one.'
+                      ? 'No units yet. Click "New Unit Master" to add one.'
                       : "No records match your search."}
                   </td></tr>
                 ) : paginated.map(r => (

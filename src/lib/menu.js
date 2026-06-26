@@ -26,7 +26,7 @@ export const menu = [
       { label: "Asset Master",             path: "/masters/asset-master" },
       { label: "Maintenance Type",         path: "/masters/maintenance-type" },
       { label: "Unit Type Master",          path: "/masters/unit-type" },
-      { label: "Unit Master (UoM)",          path: "/masters/uom" },
+      { label: "Unit Master",                path: "/masters/uom" },
       { label: "Work Order Type",          path: "/masters/work-order-type" },
     ],
   },
