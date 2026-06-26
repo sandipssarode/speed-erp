@@ -33,7 +33,6 @@ const emptyForm = () => ({
   unitTypeName:  "",
   unitName:      "",
   unitShortCode: "",
-  isDeactivated: false,
   createdAt: "", updatedAt: "", createdBy: "", updatedBy: "",
   changelog: [],
 });
@@ -215,12 +214,6 @@ export default function UomForm() {
               <input value={form.unitShortCode} onChange={e => setField("unitShortCode", e.target.value.toUpperCase())} disabled={isReadOnly} placeholder="e.g. KGS" maxLength={10} className={inputCls(isReadOnly, errors.unitShortCode)} />
             </Row>
 
-            <Row label="Status">
-              <label className="flex items-center gap-2.5 sm:pt-2 cursor-pointer">
-                <input type="checkbox" checked={!!form.isDeactivated} onChange={e => setField("isDeactivated", e.target.checked)} disabled={isReadOnly} className="w-4 h-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500" />
-                <span className="text-sm text-gray-600">Mark this unit as inactive</span>
-              </label>
-            </Row>
           </div>
 
           {editing && (

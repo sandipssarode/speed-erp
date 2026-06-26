@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Layout from "../../../components/Layout";
 import {
   Plus, Search, Edit2, Trash2, ChevronLeft, ChevronRight, X,
-  SlidersHorizontal, ChevronsUpDown,
+  ChevronsUpDown,
 } from "lucide-react";
 import { api } from "../../../lib/api.js";
 
@@ -15,7 +15,6 @@ export default function UomList() {
   const [unitTypes, setUnitTypes]       = useState([]);
   const [loading, setLoading]           = useState(true);
   const [search, setSearch]             = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
   const [typeFilter, setTypeFilter]     = useState("all");
   const [sortDir, setSortDir]           = useState("asc");
   const [page, setPage]                 = useState(1);
@@ -30,7 +29,7 @@ export default function UomList() {
     }).catch(console.error).finally(() => setLoading(false));
   }, []);
 
-  useEffect(() => { setPage(1); }, [search, statusFilter, typeFilter]);
+  useEffect(() => { setPage(1); }, [search, typeFilter]);
 
   const filtered = records
     .filter(r => {
@@ -41,12 +40,9 @@ export default function UomList() {
         r.unitName?.toLowerCase().includes(q) ||
         r.unitShortCode?.toLowerCase().includes(q) ||
         r.unitTypeName?.toLowerCase().includes(q);
-      const matchStatus =
-        statusFilter === "all" ||
-        (statusFilter === "active" ? !r.isDeactivated : r.isDeactivated);
       const matchType =
         typeFilter === "all" || r.unitTypeId === typeFilter;
-      return matchSearch && matchStatus && matchType;
+      return matchSearch && matchType;
     })
     .sort((a, b) => {
       const r = (a.unitName || "").localeCompare(b.unitName || "");
@@ -109,19 +105,6 @@ export default function UomList() {
             <ChevronRight size={15} className="absolute right-3 top-1/2 -translate-y-1/2 rotate-90 text-gray-400 pointer-events-none" />
           </div>
 
-          <div className="relative">
-            <select
-              value={statusFilter}
-              onChange={e => setStatusFilter(e.target.value)}
-              className="appearance-none pl-4 pr-9 py-2.5 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100 cursor-pointer"
-            >
-              <option value="all">All Status</option>
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
-            </select>
-            <ChevronRight size={15} className="absolute right-3 top-1/2 -translate-y-1/2 rotate-90 text-gray-400 pointer-events-none" />
-          </div>
-
           <button
             onClick={() => navigate("/masters/uom/new")}
             className="ml-auto flex items-center gap-2 bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl shadow-md shadow-brand-200 transition-all"
@@ -143,15 +126,14 @@ export default function UomList() {
                   <th className={th}>Unit ID</th>
                   <th className={th}>Short Code</th>
                   <th className={th}>Unit Type</th>
-                  <th className={th}>Status</th>
                   <th className={`${th} text-right`}>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
-                  <tr><td colSpan={6} className="text-center py-16 text-gray-400 text-sm">Loading…</td></tr>
+                  <tr><td colSpan={5} className="text-center py-16 text-gray-400 text-sm">Loading…</td></tr>
                 ) : paginated.length === 0 ? (
-                  <tr><td colSpan={6} className="text-center py-16 text-gray-400 text-sm">
+                  <tr><td colSpan={5} className="text-center py-16 text-gray-400 text-sm">
                     {records.length === 0
                       ? 'No units yet. Click "New Unit" to add one.'
                       : "No records match your search."}
@@ -181,12 +163,6 @@ export default function UomList() {
                       ) : <span className="text-gray-400">—</span>}
                     </td>
                     <td className="px-5 py-3.5 text-gray-600 text-sm">{r.unitTypeName || "—"}</td>
-                    <td className="px-5 py-3.5">
-                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${r.isDeactivated ? "bg-red-50 text-red-600" : "bg-green-50 text-green-700"}`}>
-                        <span className={`w-1.5 h-1.5 rounded-full ${r.isDeactivated ? "bg-red-500" : "bg-green-500"}`} />
-                        {r.isDeactivated ? "Inactive" : "Active"}
-                      </span>
-                    </td>
                     <td className="px-5 py-3.5">
                       <div className="flex items-center justify-end gap-1.5" onClick={e => e.stopPropagation()}>
                         <button
