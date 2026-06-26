@@ -107,7 +107,7 @@ export default function VillageTalukaList() {
             )}
           </div>
 
-          <div className="relative">
+          <div className="relative min-w-[130px]">
             <select
               value={filterDistrict}
               onChange={(e) => setFilterDistrict(e.target.value)}

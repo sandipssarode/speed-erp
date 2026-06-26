@@ -144,7 +144,7 @@ export default function Dashboard() {
         </div>
 
         {/* ── Row 2: Quick Actions | Business Overview | Upcoming Tasks ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
           {/* Quick Actions */}
           <div className={`${card} p-5 flex flex-col gap-4`}>
@@ -235,7 +235,7 @@ export default function Dashboard() {
         </div>
 
         {/* ── Row 3: Recent Transactions | Purchase Stats | Sales Trend ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
           {/* Recent Transactions */}
           <div className={`${card} p-5 flex flex-col gap-3`}>

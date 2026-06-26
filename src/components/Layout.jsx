@@ -329,7 +329,7 @@ export default function Layout({ children }) {
               <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-coral ring-2 ring-white" />
             </button>
             {notifOpen && (
-              <div className="absolute right-0 mt-2 w-72 z-40 animate-flyout bg-white rounded-2xl border border-brand-200 ring-1 ring-black/5 shadow-[0_16px_48px_-12px_rgba(45,43,58,0.45)] overflow-hidden">
+              <div className="absolute right-0 mt-2 w-72 max-w-[calc(100vw-1.5rem)] z-40 animate-flyout bg-white rounded-2xl border border-brand-200 ring-1 ring-black/5 shadow-[0_16px_48px_-12px_rgba(45,43,58,0.45)] overflow-hidden">
                 <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
                   <p className="text-sm font-semibold text-gray-700">Notifications</p>
                   <span className="text-[10px] font-bold text-white bg-coral rounded-full px-2 py-0.5">3 new</span>

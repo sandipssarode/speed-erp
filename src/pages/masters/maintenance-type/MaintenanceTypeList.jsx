@@ -111,7 +111,7 @@ export default function MaintenanceTypeList() {
             )}
           </div>
 
-          <div className="relative">
+          <div className="relative min-w-[130px]">
             <select
               value={filterPriority}
               onChange={(e) => setFilterPriority(e.target.value)}

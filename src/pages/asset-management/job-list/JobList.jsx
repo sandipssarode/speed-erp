@@ -116,7 +116,7 @@ export default function JobList() {
             )}
           </div>
 
-          <div className="relative">
+          <div className="relative min-w-[130px]">
             <SlidersHorizontal size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
             <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}
               className="appearance-none pl-10 pr-9 py-2.5 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100 cursor-pointer">
@@ -126,7 +126,7 @@ export default function JobList() {
             <ChevronRight size={15} className="absolute right-3 top-1/2 -translate-y-1/2 rotate-90 text-gray-400 pointer-events-none" />
           </div>
 
-          <div className="relative">
+          <div className="relative min-w-[130px]">
             <select value={priorityFilter} onChange={e => setPriorityFilter(e.target.value)}
               className="appearance-none pl-4 pr-9 py-2.5 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100 cursor-pointer">
               <option value="all">All Priorities</option>

@@ -121,7 +121,7 @@ export default function EmployeeList() {
             )}
           </div>
 
-          <div className="relative">
+          <div className="relative min-w-[130px]">
             <SlidersHorizontal
               size={15}
               className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
@@ -142,7 +142,7 @@ export default function EmployeeList() {
             />
           </div>
 
-          <div className="relative">
+          <div className="relative min-w-[130px]">
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}

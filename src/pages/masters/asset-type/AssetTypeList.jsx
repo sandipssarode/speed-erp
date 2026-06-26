@@ -106,7 +106,7 @@ export default function AssetTypeList() {
             )}
           </div>
 
-          <div className="relative">
+          <div className="relative min-w-[130px]">
             <select
               value={filterCategory}
               onChange={(e) => setFilterCategory(e.target.value)}

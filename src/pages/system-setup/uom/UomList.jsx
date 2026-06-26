@@ -92,7 +92,7 @@ export default function UomList() {
             )}
           </div>
 
-          <div className="relative">
+          <div className="relative min-w-[130px]">
             <select
               value={typeFilter}
               onChange={e => setTypeFilter(e.target.value)}

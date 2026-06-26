@@ -107,7 +107,7 @@ export default function DistrictList() {
             )}
           </div>
 
-          <div className="relative">
+          <div className="relative min-w-[130px]">
             <select
               value={filterState}
               onChange={(e) => setFilterState(e.target.value)}

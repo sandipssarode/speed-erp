@@ -110,7 +110,7 @@ export default function DesignationList() {
             )}
           </div>
 
-          <div className="relative">
+          <div className="relative min-w-[130px]">
             <select
               value={filterLevel}
               onChange={(e) => setFilterLevel(e.target.value)}
