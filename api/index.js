@@ -603,6 +603,76 @@ export default async function handler(req, res) {
         break;
       }
 
+      // ── UNIT TYPES ────────────────────────────────────────────
+      case 'unit-types': {
+        if (id) {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM unit_types WHERE id=${id}`;
+            if (!rows.length) return res.status(404).json({ error: 'Not found' });
+            return res.json(rows[0].data);
+          }
+          if (req.method === 'PUT') {
+            const v = req.body;
+            await sql`UPDATE unit_types SET code=${v.unitTypeId}, name=${v.unitTypeName}, is_active=${!v.isDeactivated}, data=${JSON.stringify(v)}, updated_at=${v.updatedAt} WHERE id=${id}`;
+            return res.json(v);
+          }
+          if (req.method === 'DELETE') {
+            await sql`DELETE FROM unit_types WHERE id=${id}`;
+            return res.json({ success: true });
+          }
+        } else {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM unit_types ORDER BY name ASC`;
+            return res.json(rows.map(r => r.data));
+          }
+          if (req.method === 'POST') {
+            const v = req.body;
+            const existing = await sql`SELECT id FROM unit_types WHERE code=${v.unitTypeId}`;
+            if (existing.length) return res.status(409).json({ error: 'Unit Type ID already exists.' });
+            await sql`INSERT INTO unit_types (id, code, name, is_active, data, created_at, updated_at) VALUES (${v.id}, ${v.unitTypeId}, ${v.unitTypeName}, ${!v.isDeactivated}, ${JSON.stringify(v)}, ${v.createdAt}, ${v.updatedAt})`;
+            return res.status(201).json(v);
+          }
+        }
+        break;
+      }
+
+      // ── UOM ───────────────────────────────────────────────────
+      case 'uom': {
+        if (id) {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM uom WHERE id=${id}`;
+            if (!rows.length) return res.status(404).json({ error: 'Not found' });
+            return res.json(rows[0].data);
+          }
+          if (req.method === 'PUT') {
+            const v = req.body;
+            await sql`UPDATE uom SET code=${v.unitId}, name=${v.unitName}, short_code=${v.unitShortCode}, unit_type_id=${v.unitTypeId||null}, is_active=${!v.isDeactivated}, data=${JSON.stringify(v)}, updated_at=${v.updatedAt} WHERE id=${id}`;
+            return res.json(v);
+          }
+          if (req.method === 'DELETE') {
+            await sql`DELETE FROM uom WHERE id=${id}`;
+            return res.json({ success: true });
+          }
+        } else {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM uom ORDER BY name ASC`;
+            return res.json(rows.map(r => r.data));
+          }
+          if (req.method === 'POST') {
+            const v = req.body;
+            const [existId, existCode] = await Promise.all([
+              sql`SELECT id FROM uom WHERE code=${v.unitId}`,
+              sql`SELECT id FROM uom WHERE short_code=${v.unitShortCode}`,
+            ]);
+            if (existId.length) return res.status(409).json({ error: 'Unit ID already exists.' });
+            if (existCode.length) return res.status(409).json({ error: 'Short Code already exists.' });
+            await sql`INSERT INTO uom (id, code, name, short_code, unit_type_id, is_active, data, created_at, updated_at) VALUES (${v.id}, ${v.unitId}, ${v.unitName}, ${v.unitShortCode}, ${v.unitTypeId||null}, ${!v.isDeactivated}, ${JSON.stringify(v)}, ${v.createdAt}, ${v.updatedAt})`;
+            return res.status(201).json(v);
+          }
+        }
+        break;
+      }
+
       // ── WORK ORDER TYPES ──────────────────────────────────────
       case 'work-order-types': {
         if (id) {

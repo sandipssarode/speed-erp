@@ -56,6 +56,10 @@ import WorkOrderList from "./pages/asset-management/WorkOrderList";
 import WorkOrderForm from "./pages/asset-management/WorkOrderForm";
 import WorkOrderTypeList from "./pages/asset-management/work-order-type/WorkOrderTypeList";
 import WorkOrderTypeForm from "./pages/asset-management/work-order-type/WorkOrderTypeForm";
+import UnitTypeList from "./pages/masters/unit-type/UnitTypeList";
+import UnitTypeForm from "./pages/masters/unit-type/UnitTypeForm";
+import UomList from "./pages/system-setup/uom/UomList";
+import UomForm from "./pages/system-setup/uom/UomForm";
 
 function App() {
   return (
@@ -68,6 +72,11 @@ function App() {
 
         {/* Dashboard */}
         <Route path="/dashboard" element={<Dashboard />} />
+
+        {/* Masters — Unit Type */}
+        <Route path="/masters/unit-type"      element={<UnitTypeList />} />
+        <Route path="/masters/unit-type/new"  element={<UnitTypeForm />} />
+        <Route path="/masters/unit-type/:id"  element={<UnitTypeForm />} />
 
         {/* Masters — Work Order Type */}
         <Route path="/masters/work-order-type"      element={<WorkOrderTypeList />} />
@@ -105,7 +114,9 @@ function App() {
         <Route path="/system/countries"      element={<CountryList />} />
         <Route path="/system/countries/new"  element={<CountryForm />} />
         <Route path="/system/countries/:id"  element={<CountryForm />} />
-        <Route path="/system/uom" element={<WorkInProgress />} />
+        <Route path="/system/uom"      element={<UomList />} />
+        <Route path="/system/uom/new"  element={<UomForm />} />
+        <Route path="/system/uom/:id"  element={<UomForm />} />
         <Route path="/system/document-series" element={<WorkInProgress />} />
         <Route path="/system/financial-year" element={<WorkInProgress />} />
         <Route path="/system/email-config" element={<WorkInProgress />} />
