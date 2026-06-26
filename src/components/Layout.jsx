@@ -19,7 +19,6 @@ export default function Layout({ children }) {
 
   const active = getActiveState(location.pathname);
   const [openModule,  setOpenModule]  = useState(null);        // open flyout / accordion
-  const [openSection, setOpenSection] = useState(active.section);
   const [mobileOpen,  setMobileOpen]  = useState(false);
   const [notifOpen,   setNotifOpen]   = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
@@ -28,12 +27,7 @@ export default function Layout({ children }) {
 
   const handleLogoff = () => { localStorage.removeItem("loggedInUser"); navigate("/"); };
 
-  const toggleModule = (label) => {
-    setOpenModule(p => p === label ? null : label);
-    setOpenSection(null);
-  };
-
-  const toggleSection = (sec) => setOpenSection(p => p === sec ? null : sec);
+  const toggleModule = (label) => setOpenModule(p => p === label ? null : label);
 
   // Close the desktop flyout on outside-click / Escape
   useEffect(() => {
@@ -168,8 +162,8 @@ export default function Layout({ children }) {
     </div>
   );
 
-  // ── Mobile drawer nav: inline accordion (full width, no flyout) ─────────────
-  const SidebarContent = ({ onLinkClick }) => (
+  // ── Mobile drawer nav: inline accordion — one tap to expand, links shown directly ──
+  const renderMobileNav = (onLinkClick) => (
     <div className="flex flex-col h-full overflow-y-auto">
 
       {/* Dashboard link */}
@@ -190,8 +184,8 @@ export default function Layout({ children }) {
 
       {/* Module items */}
       {menu.map((mod, i) => {
-        const ModIcon = mod.icon;
-        const isOpen   = openModule === mod.label;
+        const ModIcon   = mod.icon;
+        const isOpen    = openModule === mod.label;
         const hasActive = isModuleActive(mod, location.pathname);
 
         return (
@@ -219,13 +213,14 @@ export default function Layout({ children }) {
             {isOpen && (
               <div className="ml-2 mr-2 mb-1 bg-gray-50 rounded-xl overflow-hidden border border-gray-100">
                 {mod.flat ? (
+                  /* Flat module: links shown directly */
                   <div className="py-1">
                     {mod.links.map(link => (
                       <Link
                         key={link.path}
                         to={link.path}
                         onClick={onLinkClick}
-                        className={`block pl-6 pr-3 py-1.5 text-xs transition-colors ${
+                        className={`block pl-6 pr-3 py-2 text-sm transition-colors ${
                           link.deprecated
                             ? location.pathname === link.path
                               ? "bg-red-50 text-red-600 font-semibold border-r-2 border-red-400"
@@ -243,35 +238,30 @@ export default function Layout({ children }) {
                     ))}
                   </div>
                 ) : (
-                  Object.entries(mod.children).map(([section, links]) => (
-                    <div key={section}>
-                      <button
-                        onClick={() => toggleSection(section)}
-                        className="w-full flex items-center justify-between px-4 py-2 text-[10px] font-bold text-gray-400 uppercase tracking-wider hover:text-brand-600 transition-colors"
-                      >
-                        {section}
-                        {openSection === section ? <ChevronUp size={10} /> : <ChevronDown size={10} />}
-                      </button>
-                      {openSection === section && (
-                        <div className="pb-1">
-                          {links.map(link => (
-                            <Link
-                              key={link.path}
-                              to={link.path}
-                              onClick={onLinkClick}
-                              className={`block pl-6 pr-3 py-1.5 text-xs transition-colors ${
-                                location.pathname === link.path
-                                  ? "bg-brand-100 text-brand-600 font-semibold border-r-2 border-brand-600"
-                                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-700"
-                              }`}
-                            >
-                              {link.label}
-                            </Link>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  ))
+                  /* Sectioned module: section names are static labels, all links visible immediately */
+                  <div className="py-1">
+                    {Object.entries(mod.children).map(([section, links]) => (
+                      <div key={section}>
+                        <p className="px-4 pt-2.5 pb-1 text-[10px] font-bold text-brand-500 uppercase tracking-wider">
+                          {section}
+                        </p>
+                        {links.map(link => (
+                          <Link
+                            key={link.path}
+                            to={link.path}
+                            onClick={onLinkClick}
+                            className={`block pl-6 pr-3 py-2 text-sm transition-colors ${
+                              location.pathname === link.path
+                                ? "bg-brand-100 text-brand-600 font-semibold border-r-2 border-brand-600"
+                                : "text-gray-600 hover:bg-gray-100 hover:text-gray-700"
+                            }`}
+                          >
+                            {link.label}
+                          </Link>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
                 )}
               </div>
             )}
@@ -405,7 +395,7 @@ export default function Layout({ children }) {
             </button>
           </div>
           <div className="flex-1 overflow-hidden">
-            <SidebarContent onLinkClick={() => setMobileOpen(false)} />
+            {renderMobileNav(() => setMobileOpen(false))}
           </div>
         </aside>
 
