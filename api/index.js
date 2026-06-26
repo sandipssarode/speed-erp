@@ -706,6 +706,138 @@ export default async function handler(req, res) {
         break;
       }
 
+      // ── ASSET STRUCTURES ─────────────────────────────────────
+      case 'asset-structures': {
+        if (id) {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM asset_structures WHERE id=${id}`;
+            if (!rows.length) return res.status(404).json({ error: 'Not found' });
+            return res.json(rows[0].data);
+          }
+          if (req.method === 'PUT') {
+            const v = req.body;
+            await sql`UPDATE asset_structures SET code=${v.locationId}, name=${v.locationName}, site=${v.site||null}, warehouse_id=${v.warehouseId||null}, data=${JSON.stringify(v)}, updated_at=${v.updatedAt} WHERE id=${id}`;
+            return res.json(v);
+          }
+          if (req.method === 'DELETE') {
+            await sql`DELETE FROM asset_structures WHERE id=${id}`;
+            return res.json({ success: true });
+          }
+        } else {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM asset_structures ORDER BY name ASC`;
+            return res.json(rows.map(r => r.data));
+          }
+          if (req.method === 'POST') {
+            const v = req.body;
+            const existing = await sql`SELECT id FROM asset_structures WHERE code=${v.locationId}`;
+            if (existing.length) return res.status(409).json({ error: 'Location ID already exists.' });
+            await sql`INSERT INTO asset_structures (id, code, name, site, warehouse_id, data, created_at, updated_at) VALUES (${v.id}, ${v.locationId}, ${v.locationName}, ${v.site||null}, ${v.warehouseId||null}, ${JSON.stringify(v)}, ${v.createdAt}, ${v.updatedAt})`;
+            return res.status(201).json(v);
+          }
+        }
+        break;
+      }
+
+      // ── ASSETS ────────────────────────────────────────────────
+      case 'assets': {
+        if (id) {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM assets WHERE id=${id}`;
+            if (!rows.length) return res.status(404).json({ error: 'Not found' });
+            return res.json(rows[0].data);
+          }
+          if (req.method === 'PUT') {
+            const v = req.body;
+            await sql`UPDATE assets SET code=${v.assetId}, name=${v.name}, location_id=${v.locationId||null}, asset_type_id=${v.assetTypeId||null}, status=${v.status||'Active'}, data=${JSON.stringify(v)}, updated_at=${v.updatedAt} WHERE id=${id}`;
+            return res.json(v);
+          }
+          if (req.method === 'DELETE') {
+            await sql`DELETE FROM assets WHERE id=${id}`;
+            return res.json({ success: true });
+          }
+        } else {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM assets ORDER BY name ASC`;
+            return res.json(rows.map(r => r.data));
+          }
+          if (req.method === 'POST') {
+            const v = req.body;
+            const existing = await sql`SELECT id FROM assets WHERE code=${v.assetId}`;
+            if (existing.length) return res.status(409).json({ error: 'Asset ID already exists.' });
+            await sql`INSERT INTO assets (id, code, name, location_id, asset_type_id, status, data, created_at, updated_at) VALUES (${v.id}, ${v.assetId}, ${v.name}, ${v.locationId||null}, ${v.assetTypeId||null}, ${v.status||'Active'}, ${JSON.stringify(v)}, ${v.createdAt}, ${v.updatedAt})`;
+            return res.status(201).json(v);
+          }
+        }
+        break;
+      }
+
+      // ── MAINTENANCE TYPES ─────────────────────────────────────
+      case 'maintenance-types': {
+        if (id) {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM maintenance_types WHERE id=${id}`;
+            if (!rows.length) return res.status(404).json({ error: 'Not found' });
+            return res.json(rows[0].data);
+          }
+          if (req.method === 'PUT') {
+            const v = req.body;
+            await sql`UPDATE maintenance_types SET code=${v.typeId}, name=${v.maintenanceName}, priority=${v.priority||null}, is_active=${!v.isDeactivated}, data=${JSON.stringify(v)}, updated_at=${v.updatedAt} WHERE id=${id}`;
+            return res.json(v);
+          }
+          if (req.method === 'DELETE') {
+            await sql`DELETE FROM maintenance_types WHERE id=${id}`;
+            return res.json({ success: true });
+          }
+        } else {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM maintenance_types ORDER BY name ASC`;
+            return res.json(rows.map(r => r.data));
+          }
+          if (req.method === 'POST') {
+            const v = req.body;
+            const existing = await sql`SELECT id FROM maintenance_types WHERE code=${v.typeId}`;
+            if (existing.length) return res.status(409).json({ error: 'Type ID already exists.' });
+            await sql`INSERT INTO maintenance_types (id, code, name, priority, is_active, data, created_at, updated_at) VALUES (${v.id}, ${v.typeId}, ${v.maintenanceName}, ${v.priority||null}, ${!v.isDeactivated}, ${JSON.stringify(v)}, ${v.createdAt}, ${v.updatedAt})`;
+            return res.status(201).json(v);
+          }
+        }
+        break;
+      }
+
+      // ── JOB LIST ──────────────────────────────────────────────
+      case 'job-list': {
+        if (id) {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM job_list WHERE id=${id}`;
+            if (!rows.length) return res.status(404).json({ error: 'Not found' });
+            return res.json(rows[0].data);
+          }
+          if (req.method === 'PUT') {
+            const v = req.body;
+            await sql`UPDATE job_list SET code=${v.jobId}, asset_id=${v.assetId||null}, maintenance_type_id=${v.maintenanceTypeId||null}, priority=${v.priority||null}, status=${v.status||'Open'}, assigned_to_id=${v.assignedToId||null}, job_date=${v.jobDate||null}, data=${JSON.stringify(v)}, updated_at=${v.updatedAt} WHERE id=${id}`;
+            return res.json(v);
+          }
+          if (req.method === 'DELETE') {
+            await sql`DELETE FROM job_list WHERE id=${id}`;
+            return res.json({ success: true });
+          }
+        } else {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM job_list ORDER BY job_date DESC, created_at DESC`;
+            return res.json(rows.map(r => r.data));
+          }
+          if (req.method === 'POST') {
+            const v = req.body;
+            const existing = await sql`SELECT id FROM job_list WHERE code=${v.jobId}`;
+            if (existing.length) return res.status(409).json({ error: 'Job ID already exists.' });
+            await sql`INSERT INTO job_list (id, code, asset_id, maintenance_type_id, priority, status, assigned_to_id, job_date, data, created_at, updated_at) VALUES (${v.id}, ${v.jobId}, ${v.assetId||null}, ${v.maintenanceTypeId||null}, ${v.priority||null}, ${v.status||'Open'}, ${v.assignedToId||null}, ${v.jobDate||null}, ${JSON.stringify(v)}, ${v.createdAt}, ${v.updatedAt})`;
+            return res.status(201).json(v);
+          }
+        }
+        break;
+      }
+
       default:
         return res.status(404).json({ error: `Unknown resource: ${resource}` });
     }

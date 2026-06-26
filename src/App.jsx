@@ -60,6 +60,8 @@ import UnitTypeList from "./pages/masters/unit-type/UnitTypeList";
 import UnitTypeForm from "./pages/masters/unit-type/UnitTypeForm";
 import UomList from "./pages/system-setup/uom/UomList";
 import UomForm from "./pages/system-setup/uom/UomForm";
+import JobList from "./pages/asset-management/job-list/JobList";
+import JobForm from "./pages/asset-management/job-list/JobForm";
 
 function App() {
   return (
@@ -85,6 +87,11 @@ function App() {
         <Route path="/asset-management/work-order"     element={<WorkOrderList />} />
         <Route path="/asset-management/work-order/new" element={<WorkOrderForm />} />
         <Route path="/asset-management/work-order/:id" element={<WorkOrderForm />} />
+
+        {/* Asset Management — Job List */}
+        <Route path="/asset-management/job-list"     element={<JobList />} />
+        <Route path="/asset-management/job-list/new" element={<JobForm />} />
+        <Route path="/asset-management/job-list/:id" element={<JobForm />} />
 
         {/* Module landing pages */}
         <Route path="/masters"          element={<ModuleLanding />} />

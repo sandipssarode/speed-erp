@@ -35,6 +35,7 @@ export const menu = [
     children: {
       Transaction: [
         { label: "Work Order", path: "/asset-management/work-order" },
+        { label: "Job List",   path: "/asset-management/job-list" },
       ],
     },
   },
