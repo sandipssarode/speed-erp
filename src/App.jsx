@@ -114,9 +114,10 @@ function App() {
         <Route path="/system/countries"      element={<CountryList />} />
         <Route path="/system/countries/new"  element={<CountryForm />} />
         <Route path="/system/countries/:id"  element={<CountryForm />} />
-        <Route path="/system/uom"      element={<UomList />} />
-        <Route path="/system/uom/new"  element={<UomForm />} />
-        <Route path="/system/uom/:id"  element={<UomForm />} />
+        <Route path="/masters/uom"      element={<UomList />} />
+        <Route path="/masters/uom/new"  element={<UomForm />} />
+        <Route path="/masters/uom/:id"  element={<UomForm />} />
+        <Route path="/system/uom"       element={<Navigate to="/masters/uom" replace />} />
         <Route path="/system/document-series" element={<WorkInProgress />} />
         <Route path="/system/financial-year" element={<WorkInProgress />} />
         <Route path="/system/email-config" element={<WorkInProgress />} />

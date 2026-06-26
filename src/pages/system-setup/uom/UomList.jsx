@@ -123,7 +123,7 @@ export default function UomList() {
           </div>
 
           <button
-            onClick={() => navigate("/system/uom/new")}
+            onClick={() => navigate("/masters/uom/new")}
             className="ml-auto flex items-center gap-2 bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl shadow-md shadow-brand-200 transition-all"
           >
             <Plus size={16} /> New Unit
@@ -160,7 +160,7 @@ export default function UomList() {
                   <tr
                     key={r.id}
                     className="group border-b border-gray-100 last:border-0 hover:bg-brand-50/40 cursor-pointer transition-colors"
-                    onClick={() => navigate(`/system/uom/${r.id}`)}
+                    onClick={() => navigate(`/masters/uom/${r.id}`)}
                   >
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-3">
@@ -190,7 +190,7 @@ export default function UomList() {
                     <td className="px-5 py-3.5">
                       <div className="flex items-center justify-end gap-1.5" onClick={e => e.stopPropagation()}>
                         <button
-                          onClick={() => navigate(`/system/uom/${r.id}`)}
+                          onClick={() => navigate(`/masters/uom/${r.id}`)}
                           className={`${actionBtn} hover:bg-brand-50 hover:text-brand-600 hover:border-brand-200`}
                           title="Edit"
                         >

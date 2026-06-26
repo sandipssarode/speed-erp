@@ -82,7 +82,7 @@ export default function UomForm() {
       if (!isNew && id) {
         const found = uoms.find(r => r.id === id);
         if (found) setForm(found);
-        else navigate("/system/uom");
+        else navigate("/masters/uom");
       }
     }).catch(console.error);
   }, [id, isNew]);
@@ -120,19 +120,19 @@ export default function UomForm() {
       setAllRecords(prev => isNew ? [...prev, saved] : prev.map(r => r.id === saved.id ? saved : r));
       setMode("view"); setErrors({});
       showToast("Unit of Measure saved successfully.");
-      if (isNew) navigate(`/system/uom/${saved.id}`, { replace: true });
+      if (isNew) navigate(`/masters/uom/${saved.id}`, { replace: true });
     } catch (err) { showToast(err.message || "Failed to save.", "error"); }
   };
 
   const handleDiscard = async () => {
-    if (isNew) { navigate("/system/uom"); return; }
+    if (isNew) { navigate("/masters/uom"); return; }
     try { const found = await api.get(`/api/uom/${id}`); setForm(found); } catch { /* keep */ }
     setMode("view"); setErrors({});
   };
 
   const handleDelete = async () => {
     if (!window.confirm(`Delete unit "${form.unitName}"? This cannot be undone.`)) return;
-    try { await api.del(`/api/uom/${id}`); navigate("/system/uom"); }
+    try { await api.del(`/api/uom/${id}`); navigate("/masters/uom"); }
     catch (err) { showToast(err.message || "Failed to delete.", "error"); }
   };
 
@@ -141,7 +141,7 @@ export default function UomForm() {
   return (
     <Layout>
       <div className="max-w-5xl mx-auto space-y-4">
-        <button onClick={() => navigate("/system/uom")} className="flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600 transition-colors font-medium">
+        <button onClick={() => navigate("/masters/uom")} className="flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600 transition-colors font-medium">
           <ChevronLeft size={15} /> Unit of Measure
         </button>
 
