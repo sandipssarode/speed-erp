@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import Layout from "../../../components/Layout";
 import { api } from "../../../lib/api.js";
@@ -130,7 +130,7 @@ export default function JobForm() {
         const found = jobs.find(r => r.id === id);
         if (found) {
           setForm(found);
-          // If ?complete=1 query param — jump straight to edit in completing mode
+          // If ?complete=1 query param â€” jump straight to edit in completing mode
           if (searchParams.get("complete") === "1") {
             setMode("edit");
           }
@@ -274,7 +274,7 @@ export default function JobForm() {
             </div>
             <div className="min-w-0">
               <h1 className="text-xl font-bold text-white tracking-tight leading-tight">
-                {isNew ? "New Job" : (form.assetName ? `${form.jobId} — ${form.assetName}` : form.jobId || "Job")}
+                {isNew ? "New Job" : (form.assetName ? `${form.jobId} â€” ${form.assetName}` : form.jobId || "Job")}
               </h1>
               <p className="text-sm text-white/70 mt-0.5 flex items-center gap-2">
                 {!isNew && form.maintenanceTypeName && <span>{form.maintenanceTypeName}</span>}
@@ -327,7 +327,7 @@ export default function JobForm() {
           <Row label="Asset" required error={errors.assetId}>
             <select value={form.assetId} onChange={e => handleAssetChange(e.target.value)} disabled={isReadOnly} className={inputCls(isReadOnly, errors.assetId)}>
               <option value="">Select Asset</option>
-              {assets.map(a => <option key={a.id} value={a.id}>{a.assetId} — {a.name}</option>)}
+              {assets.map(a => <option key={a.id} value={a.id}>{a.assetId} â€” {a.name}</option>)}
             </select>
           </Row>
           {form.assetName && (
@@ -350,13 +350,13 @@ export default function JobForm() {
             </select>
           </Row>
           <Row label="Problem Description" required error={errors.problemDescription}>
-            <textarea value={form.problemDescription} onChange={e => setField("problemDescription", e.target.value)} disabled={isReadOnly} rows={3} placeholder="Describe the fault, breakdown or maintenance task…" className={inputCls(isReadOnly, errors.problemDescription) + " resize-none"} />
+            <textarea value={form.problemDescription} onChange={e => setField("problemDescription", e.target.value)} disabled={isReadOnly} rows={3} placeholder="Describe the fault, breakdown or maintenance taskâ€¦" className={inputCls(isReadOnly, errors.problemDescription) + " resize-none"} />
           </Row>
         </SectionCard>
 
         {/* Section: Schedule & Assignment */}
         <SectionCard title="Schedule &amp; Assignment">
-          <Row label="Priority" required error={errors.priority} help="Auto-filled from Maintenance Type — editable.">
+          <Row label="Priority" required error={errors.priority} help="Auto-filled from Maintenance Type â€” editable.">
             <select value={form.priority} onChange={e => setField("priority", e.target.value)} disabled={isReadOnly} className={inputCls(isReadOnly, errors.priority)}>
               <option value="">Select Priority</option>
               {PRIORITY_OPTIONS.map(p => <option key={p} value={p}>{p}</option>)}
@@ -374,7 +374,7 @@ export default function JobForm() {
           <Row label="End Time" error={errors.endTime}>
             <input type="datetime-local" value={form.endTime} onChange={e => setField("endTime", e.target.value)} disabled={isReadOnly} className={inputCls(isReadOnly, errors.endTime)} />
           </Row>
-          <Row label="Estimated Duration (hrs)" help="Auto-suggested from Maintenance Type — editable.">
+          <Row label="Estimated Duration (hrs)" help="Auto-suggested from Maintenance Type â€” editable.">
             <input type="number" value={form.estimatedDuration} onChange={e => setField("estimatedDuration", e.target.value)} disabled={isReadOnly} placeholder="e.g. 4" min={0} className={inputCls(isReadOnly, false)} />
           </Row>
           <Row label="Status" required>
@@ -390,9 +390,9 @@ export default function JobForm() {
             <input type="number" value={form.actualDuration} onChange={e => setField("actualDuration", e.target.value)} disabled={isReadOnly || !isCompleting} placeholder="e.g. 5.5" min={0} className={inputCls(isReadOnly || !isCompleting, false)} />
           </Row>
           <Row label="Work Done Remarks" required={isCompleting} error={errors.workDoneRemarks} help="Mandatory when status = Completed.">
-            <textarea value={form.workDoneRemarks} onChange={e => setField("workDoneRemarks", e.target.value)} disabled={isReadOnly || !isCompleting} rows={3} placeholder="Describe the work performed, parts replaced, resolution…" className={inputCls(isReadOnly || !isCompleting, errors.workDoneRemarks) + " resize-none"} />
+            <textarea value={form.workDoneRemarks} onChange={e => setField("workDoneRemarks", e.target.value)} disabled={isReadOnly || !isCompleting} rows={3} placeholder="Describe the work performed, parts replaced, resolutionâ€¦" className={inputCls(isReadOnly || !isCompleting, errors.workDoneRemarks) + " resize-none"} />
           </Row>
-          <Row label="Consumed Hours Update" help="Current asset running hours — updates Asset Master on completion.">
+          <Row label="Consumed Hours Update" help="Current asset running hours â€” updates Asset Master on completion.">
             <input type="number" value={form.consumedHoursUpdate} onChange={e => setField("consumedHoursUpdate", e.target.value)} disabled={isReadOnly || !isCompleting} placeholder="e.g. 4520" min={0} className={inputCls(isReadOnly || !isCompleting, false)} />
           </Row>
         </SectionCard>
@@ -447,10 +447,11 @@ export default function JobForm() {
 
         {!isNew && form.createdAt && (
           <p className="text-xs text-gray-400 px-1">
-            Created {new Date(form.createdAt).toLocaleString()} by {form.createdBy} · Updated {new Date(form.updatedAt).toLocaleString()} by {form.updatedBy}
+            Created {new Date(form.createdAt).toLocaleString()} by {form.createdBy} Â· Updated {new Date(form.updatedAt).toLocaleString()} by {form.updatedBy}
           </p>
         )}
       </div>
     </Layout>
   );
 }
+

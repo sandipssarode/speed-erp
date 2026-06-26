@@ -447,7 +447,7 @@ export default function QuotationComparison() {
                 <tbody>
                   {allQCs.map((qc, i) => (
                     <tr key={qc.id} onClick={() => { goTo(i); setShowList(false); }}
-                      className={`border-b border-gray-100 cursor-pointer hover:bg-brand-50/40 ${i === currentIdx ? "bg-blue-50 border-l-2 border-l-blue-500" : ""}`}>
+                      className={`border-b border-gray-100 cursor-pointer hover:bg-brand-100 ${i === currentIdx ? "bg-blue-50 border-l-2 border-l-blue-500" : ""}`}>
                       <td className="px-3 py-2 font-mono font-semibold text-brand-600">{qc.number}</td>
                       <td className="px-3 py-2 text-gray-600">{qc.comparisonDate ? new Date(qc.comparisonDate).toLocaleDateString("en-IN") : "—"}</td>
                       <td className="px-3 py-2 font-mono text-gray-600">{qc.piNumber || "—"}</td>
@@ -802,3 +802,4 @@ export default function QuotationComparison() {
     </Layout>
   );
 }
+

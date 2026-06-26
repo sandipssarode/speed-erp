@@ -1190,3 +1190,4 @@ export default function VendorForm() {
     </Layout>
   );
 }
+

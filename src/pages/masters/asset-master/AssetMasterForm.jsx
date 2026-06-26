@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Layout from "../../../components/Layout";
 import { api } from "../../../lib/api.js";
@@ -34,7 +34,7 @@ function Row({ label, required, error, children, help }) {
   );
 }
 
-// ─── HELPERS ─────────────────────────────────────────────────────
+// â”€â”€â”€ HELPERS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const emptyForm = () => ({
   assetId:          `AST-${Date.now().toString().slice(-6)}`,
   name:             "",
@@ -72,7 +72,7 @@ function validate(form, allRecords, editingId) {
   return e;
 }
 
-// ─── MAIN COMPONENT ──────────────────────────────────────────────
+// â”€â”€â”€ MAIN COMPONENT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export default function AssetMasterForm() {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -170,12 +170,12 @@ export default function AssetMasterForm() {
 
   const locationOptions = assetStructures.map(s => ({
     value: s.id,
-    label: `${s.locationId}${s.locationName ? " — " + s.locationName : ""}`,
+    label: `${s.locationId}${s.locationName ? " â€” " + s.locationName : ""}`,
   }));
 
   const assetTypeOptions = assetTypes.map(t => ({
     value: t.id,
-    label: `${t.assetTypeId} — ${t.assetTypeName}`,
+    label: `${t.assetTypeId} â€” ${t.assetTypeName}`,
   }));
 
   const headerBtn = "flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg font-medium border border-white/25 text-white hover:bg-white/15 transition-colors";
@@ -230,7 +230,7 @@ export default function AssetMasterForm() {
 
           {/* Body */}
           <div className="px-6 py-7 space-y-6">
-            <Row label="Asset ID" required error={errors.assetId} help={isNew ? "Auto-generated — cannot be changed later." : undefined}>
+            <Row label="Asset ID" required error={errors.assetId} help={isNew ? "Auto-generated â€” cannot be changed later." : undefined}>
               <input
                 value={form.assetId ?? ""}
                 onChange={e => setField("assetId", e.target.value.toUpperCase())}
@@ -389,7 +389,7 @@ export default function AssetMasterForm() {
             <div>
               <p className="text-sm font-medium text-red-700 mb-1">Please correct the highlighted fields and try again.</p>
               <div className="text-xs text-red-600 space-y-0.5">
-                {Object.values(errors).map((e, i) => <p key={i}>• {e}</p>)}
+                {Object.values(errors).map((e, i) => <p key={i}>â€¢ {e}</p>)}
               </div>
             </div>
           </div>
@@ -397,10 +397,11 @@ export default function AssetMasterForm() {
 
         {!isNew && form.createdAt && (
           <p className="text-xs text-gray-400 px-1">
-            Created {new Date(form.createdAt).toLocaleString()} by {form.createdBy} · Updated {new Date(form.updatedAt).toLocaleString()} by {form.updatedBy}
+            Created {new Date(form.createdAt).toLocaleString()} by {form.createdBy} Â· Updated {new Date(form.updatedAt).toLocaleString()} by {form.updatedBy}
           </p>
         )}
       </div>
     </Layout>
   );
 }
+

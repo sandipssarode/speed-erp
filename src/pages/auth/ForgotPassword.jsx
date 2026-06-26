@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function ForgotPassword() {
@@ -65,10 +65,11 @@ export default function ForgotPassword() {
 
         <div className="mt-4 text-center text-sm text-gray-600">
           <Link to="/" className="text-brand-600 font-medium hover:underline">
-            ← Back to Login
+            â† Back to Login
           </Link>
         </div>
       </div>
     </div>
   );
 }
+

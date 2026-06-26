@@ -682,7 +682,7 @@ export default function PurchaseRequisition() {
                     <tr
                       key={pr.id}
                       onClick={() => goTo(i)}
-                      className={`border-b border-gray-100 cursor-pointer transition-colors hover:bg-brand-50/40
+                      className={`border-b border-gray-100 cursor-pointer transition-colors hover:bg-brand-100
                         ${i === currentIdx ? "bg-blue-50 border-l-2 border-l-blue-500" : ""}`}
                     >
                       <td className="px-3 py-2 font-mono font-semibold text-brand-600">{pr.number}</td>
@@ -1164,3 +1164,4 @@ export default function PurchaseRequisition() {
     </Layout>
   );
 }
+

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Layout from "../../../components/Layout";
 import { api } from "../../../lib/api.js";
@@ -36,7 +36,7 @@ function Row({ label, required, error, children, help }) {
   );
 }
 
-// ─── HELPERS ─────────────────────────────────────────────────────
+// â”€â”€â”€ HELPERS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const emptyForm = () => ({
   assetTypeId:   `AT-${Date.now().toString().slice(-5)}`,
   assetTypeName: "",
@@ -59,7 +59,7 @@ function validate(form, allRecords, editingId) {
   return e;
 }
 
-// ─── MAIN COMPONENT ──────────────────────────────────────────────
+// â”€â”€â”€ MAIN COMPONENT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export default function AssetTypeForm() {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -194,7 +194,7 @@ export default function AssetTypeForm() {
 
           {/* Body */}
           <div className="px-6 py-7 space-y-6">
-            <Row label="Asset Type ID" required error={errors.assetTypeId} help={isNew ? "Auto-generated — cannot be changed later." : undefined}>
+            <Row label="Asset Type ID" required error={errors.assetTypeId} help={isNew ? "Auto-generated â€” cannot be changed later." : undefined}>
               <input
                 value={form.assetTypeId ?? ""}
                 onChange={e => setField("assetTypeId", e.target.value.toUpperCase())}
@@ -242,7 +242,7 @@ export default function AssetTypeForm() {
             <div>
               <p className="text-sm font-medium text-red-700 mb-1">Please correct the highlighted fields and try again.</p>
               <div className="text-xs text-red-600 space-y-0.5">
-                {Object.values(errors).map((e, i) => <p key={i}>• {e}</p>)}
+                {Object.values(errors).map((e, i) => <p key={i}>â€¢ {e}</p>)}
               </div>
             </div>
           </div>
@@ -250,10 +250,11 @@ export default function AssetTypeForm() {
 
         {!isNew && form.createdAt && (
           <p className="text-xs text-gray-400 px-1">
-            Created {new Date(form.createdAt).toLocaleString()} by {form.createdBy} · Updated {new Date(form.updatedAt).toLocaleString()} by {form.updatedBy}
+            Created {new Date(form.createdAt).toLocaleString()} by {form.createdBy} Â· Updated {new Date(form.updatedAt).toLocaleString()} by {form.updatedBy}
           </p>
         )}
       </div>
     </Layout>
   );
 }
+

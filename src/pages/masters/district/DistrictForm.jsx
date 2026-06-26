@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Layout from "../../../components/Layout";
 import { api } from "../../../lib/api.js";
@@ -230,7 +230,7 @@ export default function DistrictForm() {
             <Row label="State" required error={errors.state}>
               <select value={form.state} onChange={e => setField("state", e.target.value)} disabled={isReadOnly} className={inputCls(isReadOnly, errors.state)}>
                 <option value="">Select State</option>
-                {INDIAN_STATES.map(s => <option key={s.code} value={s.name}>{s.code} — {s.name}</option>)}
+                {INDIAN_STATES.map(s => <option key={s.code} value={s.name}>{s.code} â€” {s.name}</option>)}
               </select>
             </Row>
             <Row label="District Headquarters">
@@ -255,10 +255,11 @@ export default function DistrictForm() {
 
         {!isNew && form.createdAt && (
           <p className="text-xs text-gray-400 px-1">
-            Created {new Date(form.createdAt).toLocaleString()} by {form.createdBy} · Updated {new Date(form.updatedAt).toLocaleString()} by {form.updatedBy}
+            Created {new Date(form.createdAt).toLocaleString()} by {form.createdBy} Â· Updated {new Date(form.updatedAt).toLocaleString()} by {form.updatedBy}
           </p>
         )}
       </div>
     </Layout>
   );
 }
+

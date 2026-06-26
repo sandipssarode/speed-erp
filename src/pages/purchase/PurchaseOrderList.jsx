@@ -927,7 +927,7 @@ export default function PurchaseOrderList() {
                     const idx = allPOs.findIndex((p) => p.id === po.id);
                     return (
                       <tr key={po.id} onClick={() => { goTo(idx); setShowSearch(false); setSearchQ(""); }}
-                        className={`border-b border-gray-100 cursor-pointer hover:bg-brand-50/40 ${idx === currentIdx ? "bg-blue-50 border-l-2 border-l-blue-500" : ""}`}>
+                        className={`border-b border-gray-100 cursor-pointer hover:bg-brand-100 ${idx === currentIdx ? "bg-blue-50 border-l-2 border-l-blue-500" : ""}`}>
                         <td className="px-3 py-2 font-mono font-semibold text-brand-600">{po.number}</td>
                         <td className="px-3 py-2 text-gray-600">{po.date ? new Date(po.date).toLocaleDateString("en-IN") : "—"}</td>
                         <td className="px-3 py-2 text-gray-600">{po.vendorName || "—"}</td>
@@ -974,7 +974,7 @@ export default function PurchaseOrderList() {
                 <tbody>
                   {allPOs.map((po, i) => (
                     <tr key={po.id} onClick={() => goTo(i)}
-                      className={`border-b border-gray-100 cursor-pointer hover:bg-brand-50/40 ${i === currentIdx ? "bg-blue-50 border-l-2 border-l-blue-500" : ""}`}>
+                      className={`border-b border-gray-100 cursor-pointer hover:bg-brand-100 ${i === currentIdx ? "bg-blue-50 border-l-2 border-l-blue-500" : ""}`}>
                       <td className="px-3 py-2 font-mono font-semibold text-brand-600">{po.number}</td>
                       <td className="px-3 py-2 text-gray-600">{po.date ? new Date(po.date).toLocaleDateString("en-IN") : "—"}</td>
                       <td className="px-3 py-2 text-gray-600">{po.vendorName || "—"}</td>
@@ -2054,3 +2054,4 @@ export default function PurchaseOrderList() {
     </Layout>
   );
 }
+

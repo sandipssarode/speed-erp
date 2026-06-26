@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Layout from "../../../components/Layout";
 import { api } from "../../../lib/api.js";
@@ -150,7 +150,7 @@ export default function CountryForm() {
 
           {/* Body */}
           <div className="px-6 py-7 space-y-6">
-            <Row label="Country Code" required error={errors.countryCode} help={isNew ? "Max 3 characters — cannot be changed later." : undefined}>
+            <Row label="Country Code" required error={errors.countryCode} help={isNew ? "Max 3 characters â€” cannot be changed later." : undefined}>
               <input value={form.countryCode} onChange={e => setField("countryCode", e.target.value.toUpperCase())} disabled={isReadOnly || !isNew} placeholder="e.g. IN" maxLength={3} className={inputCls(isReadOnly || !isNew, errors.countryCode)} />
             </Row>
             <Row label="Country Name" required error={errors.countryName}>
@@ -181,10 +181,11 @@ export default function CountryForm() {
 
         {!isNew && form.createdAt && (
           <p className="text-xs text-gray-400 px-1">
-            Created {new Date(form.createdAt).toLocaleString()} by {form.createdBy} · Updated {new Date(form.updatedAt).toLocaleString()} by {form.updatedBy}
+            Created {new Date(form.createdAt).toLocaleString()} by {form.createdBy} Â· Updated {new Date(form.updatedAt).toLocaleString()} by {form.updatedBy}
           </p>
         )}
       </div>
     </Layout>
   );
 }
+

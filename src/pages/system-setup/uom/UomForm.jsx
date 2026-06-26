@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Layout from "../../../components/Layout";
 import { api } from "../../../lib/api.js";
@@ -195,7 +195,7 @@ export default function UomForm() {
           )}
 
           <div className="px-6 py-7 space-y-6">
-            <Row label="Unit ID" required error={errors.unitId} help={isNew ? "Auto-suggested (UOM-XXXXX) — editable before first save." : undefined}>
+            <Row label="Unit ID" required error={errors.unitId} help={isNew ? "Auto-suggested (UOM-XXXXX) â€” editable before first save." : undefined}>
               <input value={form.unitId} onChange={e => setField("unitId", e.target.value.toUpperCase())} disabled={isReadOnly || !isNew} placeholder="e.g. UOM-001" maxLength={20} className={inputCls(isReadOnly || !isNew, errors.unitId)} />
             </Row>
 
@@ -210,7 +210,7 @@ export default function UomForm() {
               <input value={form.unitName} onChange={e => setField("unitName", e.target.value)} disabled={isReadOnly} placeholder="e.g. Kilogram" className={inputCls(isReadOnly, errors.unitName)} />
             </Row>
 
-            <Row label="Short Code" required error={errors.unitShortCode} help="Max 10 characters — printed on all PO, GRN, and Sales documents.">
+            <Row label="Short Code" required error={errors.unitShortCode} help="Max 10 characters â€” printed on all PO, GRN, and Sales documents.">
               <input value={form.unitShortCode} onChange={e => setField("unitShortCode", e.target.value.toUpperCase())} disabled={isReadOnly} placeholder="e.g. KGS" maxLength={10} className={inputCls(isReadOnly, errors.unitShortCode)} />
             </Row>
 
@@ -226,10 +226,11 @@ export default function UomForm() {
 
         {!isNew && form.createdAt && (
           <p className="text-xs text-gray-400 px-1">
-            Created {new Date(form.createdAt).toLocaleString()} by {form.createdBy} · Updated {new Date(form.updatedAt).toLocaleString()} by {form.updatedBy}
+            Created {new Date(form.createdAt).toLocaleString()} by {form.createdBy} Â· Updated {new Date(form.updatedAt).toLocaleString()} by {form.updatedBy}
           </p>
         )}
       </div>
     </Layout>
   );
 }
+

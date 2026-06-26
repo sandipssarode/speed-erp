@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../../components/Layout";
 import { Plus, Search, Edit2, Trash2 } from "lucide-react";
@@ -91,13 +91,13 @@ export default function WorkOrderList() {
                 {paginated.length === 0 ? (
                   <tr><td colSpan={8} className="text-center py-16 text-gray-400 text-sm">{records.length === 0 ? 'No work orders yet. Click "New Work Order" to get started.' : "No records match your search."}</td></tr>
                 ) : paginated.map((r, i) => (
-                  <tr key={r.id} className={`border-b border-gray-200 hover:bg-brand-50/40 cursor-pointer transition-colors ${i % 2 !== 0 ? "bg-gray-50/50" : ""}`} onClick={() => navigate(`/asset-management/work-order/${r.id}`)}>
+                  <tr key={r.id} className={`border-b border-gray-200 hover:bg-brand-100 cursor-pointer transition-colors ${i % 2 !== 0 ? "bg-gray-50/50" : ""}`} onClick={() => navigate(`/asset-management/work-order/${r.id}`)}>
                     <td className="px-4 py-2.5 font-mono text-xs font-semibold text-brand-600">{r.workOrderId}</td>
-                    <td className="px-4 py-2.5 text-gray-600 text-xs">{r.workOrderDate || "—"}</td>
-                    <td className="px-4 py-2.5 font-medium text-gray-800">{r.productName || "—"}</td>
-                    <td className="px-4 py-2.5 text-gray-600 text-xs">{r.workOrderType || "—"}</td>
-                    <td className="px-4 py-2.5 text-gray-600 text-xs">{r.quantityToProduce || "—"}</td>
-                    <td className="px-4 py-2.5"><span className={`text-xs px-2 py-0.5 rounded-full font-medium ${priorityBadge(r.priority)}`}>{r.priority || "—"}</span></td>
+                    <td className="px-4 py-2.5 text-gray-600 text-xs">{r.workOrderDate || "â€”"}</td>
+                    <td className="px-4 py-2.5 font-medium text-gray-800">{r.productName || "â€”"}</td>
+                    <td className="px-4 py-2.5 text-gray-600 text-xs">{r.workOrderType || "â€”"}</td>
+                    <td className="px-4 py-2.5 text-gray-600 text-xs">{r.quantityToProduce || "â€”"}</td>
+                    <td className="px-4 py-2.5"><span className={`text-xs px-2 py-0.5 rounded-full font-medium ${priorityBadge(r.priority)}`}>{r.priority || "â€”"}</span></td>
                     <td className="px-4 py-2.5"><span className={`text-xs px-2 py-0.5 rounded-full font-medium ${statusBadge(r.status)}`}>{r.status || "Draft"}</span></td>
                     <td className="px-4 py-2.5">
                       <div className="flex items-center gap-1" onClick={e => e.stopPropagation()}>
@@ -112,13 +112,13 @@ export default function WorkOrderList() {
           </div>
           {pageCount > 1 && (
             <div className="flex items-center justify-between px-4 py-2.5 border-t border-gray-200 bg-gray-50 text-xs">
-              <span className="text-gray-500">Showing {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filtered.length)} of {filtered.length} records</span>
+              <span className="text-gray-500">Showing {(page - 1) * PAGE_SIZE + 1}â€“{Math.min(page * PAGE_SIZE, filtered.length)} of {filtered.length} records</span>
               <div className="flex items-center gap-1">
-                <button onClick={() => setPage(p => p - 1)} disabled={page === 1} className="px-2.5 py-1 border border-gray-300 rounded text-gray-600 hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed">‹ Prev</button>
+                <button onClick={() => setPage(p => p - 1)} disabled={page === 1} className="px-2.5 py-1 border border-gray-300 rounded text-gray-600 hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed">â€¹ Prev</button>
                 {Array.from({ length: pageCount }, (_, i) => i + 1).map(p => (
                   <button key={p} onClick={() => setPage(p)} className={`px-2.5 py-1 border rounded ${p === page ? "bg-brand-600 text-white border-brand-600" : "border-gray-300 text-gray-600 hover:bg-white"}`}>{p}</button>
                 ))}
-                <button onClick={() => setPage(p => p + 1)} disabled={page === pageCount} className="px-2.5 py-1 border border-gray-300 rounded text-gray-600 hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed">Next ›</button>
+                <button onClick={() => setPage(p => p + 1)} disabled={page === pageCount} className="px-2.5 py-1 border border-gray-300 rounded text-gray-600 hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed">Next â€º</button>
               </div>
             </div>
           )}
@@ -127,3 +127,4 @@ export default function WorkOrderList() {
     </Layout>
   );
 }
+

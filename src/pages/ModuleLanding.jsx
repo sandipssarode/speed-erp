@@ -1,9 +1,9 @@
-import { Link, useLocation } from "react-router-dom";
+﻿import { Link, useLocation } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import Layout from "../components/Layout.jsx";
 import { menu } from "../lib/menu.js";
 
-// Generic module landing page — lists every link of a module as cards.
+// Generic module landing page â€” lists every link of a module as cards.
 export default function ModuleLanding() {
   const { pathname } = useLocation();
   const mod = menu.find(m => m.landing === pathname);
@@ -59,3 +59,4 @@ export default function ModuleLanding() {
     </Layout>
   );
 }
+

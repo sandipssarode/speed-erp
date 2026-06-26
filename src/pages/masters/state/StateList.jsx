@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../../../components/Layout";
 import {
@@ -97,7 +97,7 @@ export default function StateList() {
             />
             <input
               type="text"
-              placeholder="Search states…"
+              placeholder="Search statesâ€¦"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-10 pr-9 py-2.5 text-sm bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100 transition-all"
@@ -187,7 +187,7 @@ export default function StateList() {
                       colSpan={6}
                       className="text-center py-16 text-gray-400 text-sm"
                     >
-                      Loading…
+                      Loadingâ€¦
                     </td>
                   </tr>
                 ) : paginated.length === 0 ? (
@@ -205,7 +205,7 @@ export default function StateList() {
                   paginated.map((r) => (
                     <tr
                       key={r.id}
-                      className="group border-b border-gray-100 last:border-0 hover:bg-brand-50/40 cursor-pointer transition-colors"
+                      className="group border-b border-gray-100 last:border-0 hover:bg-brand-100 cursor-pointer transition-colors"
                       onClick={() => navigate(`/system/states/${r.id}`)}
                     >
                       <td className="px-5 py-3.5">
@@ -222,10 +222,10 @@ export default function StateList() {
                         {r.stateCode}
                       </td>
                       <td className="px-5 py-3.5 text-gray-600">
-                        {r.countryName || "—"}
+                        {r.countryName || "â€”"}
                       </td>
                       <td className="px-5 py-3.5 text-gray-600">
-                        {r.gstStateCode || "—"}
+                        {r.gstStateCode || "â€”"}
                       </td>
                       <td className="px-5 py-3.5">
                         <span
@@ -271,7 +271,7 @@ export default function StateList() {
               <span className="text-gray-500">
                 Showing{" "}
                 <span className="font-semibold text-gray-700">
-                  {(page - 1) * PAGE_SIZE + 1}–
+                  {(page - 1) * PAGE_SIZE + 1}â€“
                   {Math.min(page * PAGE_SIZE, filtered.length)}
                 </span>{" "}
                 of{" "}
@@ -312,3 +312,4 @@ export default function StateList() {
     </Layout>
   );
 }
+

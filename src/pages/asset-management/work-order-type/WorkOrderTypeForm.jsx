@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Layout from "../../../components/Layout";
 import { api } from "../../../lib/api.js";
@@ -213,7 +213,7 @@ export default function WorkOrderTypeForm() {
           )}
 
           <div className="px-6 py-7 space-y-6">
-            <Row label="Type ID" required error={errors.typeId} help={isNew ? "Auto-suggested — you may edit before saving; cannot be changed later." : undefined}>
+            <Row label="Type ID" required error={errors.typeId} help={isNew ? "Auto-suggested â€” you may edit before saving; cannot be changed later." : undefined}>
               <input
                 value={form.typeId}
                 onChange={e => setField("typeId", e.target.value.toUpperCase())}
@@ -256,10 +256,11 @@ export default function WorkOrderTypeForm() {
 
         {!isNew && form.createdAt && (
           <p className="text-xs text-gray-400 px-1">
-            Created {new Date(form.createdAt).toLocaleString()} by {form.createdBy} · Updated {new Date(form.updatedAt).toLocaleString()} by {form.updatedBy}
+            Created {new Date(form.createdAt).toLocaleString()} by {form.createdBy} Â· Updated {new Date(form.updatedAt).toLocaleString()} by {form.updatedBy}
           </p>
         )}
       </div>
     </Layout>
   );
 }
+

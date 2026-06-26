@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Layout from "../../../components/Layout";
 import { api } from "../../../lib/api.js";
@@ -174,7 +174,7 @@ export default function UnitTypeForm() {
           )}
 
           <div className="px-6 py-7 space-y-6">
-            <Row label="Unit Type ID" required error={errors.unitTypeId} help={isNew ? "Auto-suggested (UT-XXXXX) — editable before first save." : undefined}>
+            <Row label="Unit Type ID" required error={errors.unitTypeId} help={isNew ? "Auto-suggested (UT-XXXXX) â€” editable before first save." : undefined}>
               <input value={form.unitTypeId} onChange={e => setField("unitTypeId", e.target.value.toUpperCase())} disabled={isReadOnly || !isNew} placeholder="e.g. UT-001" maxLength={20} className={inputCls(isReadOnly || !isNew, errors.unitTypeId)} />
             </Row>
             <Row label="Unit Type Name" required error={errors.unitTypeName}>
@@ -192,10 +192,11 @@ export default function UnitTypeForm() {
 
         {!isNew && form.createdAt && (
           <p className="text-xs text-gray-400 px-1">
-            Created {new Date(form.createdAt).toLocaleString()} by {form.createdBy} · Updated {new Date(form.updatedAt).toLocaleString()} by {form.updatedBy}
+            Created {new Date(form.createdAt).toLocaleString()} by {form.createdBy} Â· Updated {new Date(form.updatedAt).toLocaleString()} by {form.updatedBy}
           </p>
         )}
       </div>
     </Layout>
   );
 }
+

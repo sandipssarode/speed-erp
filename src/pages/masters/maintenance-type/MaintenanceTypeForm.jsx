@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Layout from "../../../components/Layout";
 import { api } from "../../../lib/api.js";
@@ -28,7 +28,7 @@ function Row({ label, required, error, children, help }) {
   );
 }
 
-// ─── HELPERS ─────────────────────────────────────────────────────
+// â”€â”€â”€ HELPERS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const emptyForm = () => ({
   typeId:          `MT-${Date.now().toString().slice(-5)}`,
   maintenanceName: "",
@@ -54,7 +54,7 @@ function validate(form, allRecords, editingId) {
   return e;
 }
 
-// ─── MAIN COMPONENT ──────────────────────────────────────────────
+// â”€â”€â”€ MAIN COMPONENT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export default function MaintenanceTypeForm() {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -189,7 +189,7 @@ export default function MaintenanceTypeForm() {
 
           {/* Body */}
           <div className="px-6 py-7 space-y-6">
-            <Row label="Type ID" required error={errors.typeId} help={isNew ? "Auto-suggested — you may edit before saving; cannot be changed later." : undefined}>
+            <Row label="Type ID" required error={errors.typeId} help={isNew ? "Auto-suggested â€” you may edit before saving; cannot be changed later." : undefined}>
               <input value={form.typeId} onChange={e => setField("typeId", e.target.value.toUpperCase())} disabled={isReadOnly || !isNew} placeholder="e.g. MT-001" maxLength={20} className={inputCls(isReadOnly || !isNew, errors.typeId)} />
             </Row>
             <Row label="Maintenance Name" required error={errors.maintenanceName}>
@@ -217,10 +217,11 @@ export default function MaintenanceTypeForm() {
 
         {!isNew && form.createdAt && (
           <p className="text-xs text-gray-400 px-1">
-            Created {new Date(form.createdAt).toLocaleString()} by {form.createdBy} · Updated {new Date(form.updatedAt).toLocaleString()} by {form.updatedBy}
+            Created {new Date(form.createdAt).toLocaleString()} by {form.createdBy} Â· Updated {new Date(form.updatedAt).toLocaleString()} by {form.updatedBy}
           </p>
         )}
       </div>
     </Layout>
   );
 }
+

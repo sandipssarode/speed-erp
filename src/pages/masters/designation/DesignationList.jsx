@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../../../components/Layout";
 import {
@@ -16,11 +16,11 @@ import { api } from "../../../lib/api.js";
 const PAGE_SIZE = 12;
 
 const LEVEL_LABELS = {
-  L1: "L1 — Top Management",
-  L2: "L2 — Senior Management",
-  L3: "L3 — Middle Management",
-  L4: "L4 — Executive",
-  L5: "L5 — Staff / Operator",
+  L1: "L1 â€” Top Management",
+  L2: "L2 â€” Senior Management",
+  L3: "L3 â€” Middle Management",
+  L4: "L4 â€” Executive",
+  L5: "L5 â€” Staff / Operator",
   L6: "L6", L7: "L7", L8: "L8", L9: "L9", L10: "L10",
   L11: "L11", L12: "L12", L13: "L13", L14: "L14", L15: "L15",
 };
@@ -95,7 +95,7 @@ export default function DesignationList() {
             />
             <input
               type="text"
-              placeholder="Search designations…"
+              placeholder="Search designationsâ€¦"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-10 pr-9 py-2.5 text-sm bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100 transition-all"
@@ -164,7 +164,7 @@ export default function DesignationList() {
                       colSpan={5}
                       className="text-center py-16 text-gray-400 text-sm"
                     >
-                      Loading…
+                      Loadingâ€¦
                     </td>
                   </tr>
                 ) : paginated.length === 0 ? (
@@ -182,7 +182,7 @@ export default function DesignationList() {
                   paginated.map((r) => (
                     <tr
                       key={r.id}
-                      className="group border-b border-gray-100 last:border-0 hover:bg-brand-50/40 cursor-pointer transition-colors"
+                      className="group border-b border-gray-100 last:border-0 hover:bg-brand-100 cursor-pointer transition-colors"
                       onClick={() => navigate(`/masters/designation/${r.id}`)}
                     >
                       <td className="px-5 py-3.5">
@@ -199,10 +199,10 @@ export default function DesignationList() {
                         {r.designationCode}
                       </td>
                       <td className="px-5 py-3.5 text-gray-600">
-                        {r.departmentName || "—"}
+                        {r.departmentName || "â€”"}
                       </td>
                       <td className="px-5 py-3.5 text-gray-600">
-                        {LEVEL_LABELS[r.level] || r.level || "—"}
+                        {LEVEL_LABELS[r.level] || r.level || "â€”"}
                       </td>
                       <td className="px-5 py-3.5">
                         <div
@@ -238,7 +238,7 @@ export default function DesignationList() {
               <span className="text-gray-500">
                 Showing{" "}
                 <span className="font-semibold text-gray-700">
-                  {(page - 1) * PAGE_SIZE + 1}–
+                  {(page - 1) * PAGE_SIZE + 1}â€“
                   {Math.min(page * PAGE_SIZE, filtered.length)}
                 </span>{" "}
                 of{" "}
@@ -279,3 +279,4 @@ export default function DesignationList() {
     </Layout>
   );
 }
+

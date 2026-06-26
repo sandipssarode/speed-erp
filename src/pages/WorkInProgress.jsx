@@ -1,4 +1,4 @@
-import { useNavigate, useLocation } from "react-router-dom";
+﻿import { useNavigate, useLocation } from "react-router-dom";
 import Layout from "../components/Layout";
 
 const PAGE_NAMES = {
@@ -152,3 +152,4 @@ export default function WorkInProgress() {
     </Layout>
   );
 }
+

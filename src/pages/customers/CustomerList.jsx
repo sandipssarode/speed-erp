@@ -414,7 +414,7 @@ export default function CustomerList() {
                   paginated.map((c) => (
                     <tr
                       key={c.id}
-                      className="group border-b border-gray-100 last:border-0 hover:bg-brand-50/40 cursor-pointer transition-colors"
+                      className="group border-b border-gray-100 last:border-0 hover:bg-brand-100 cursor-pointer transition-colors"
                       onClick={() => navigate(`/sales/customers/${c.id}`)}
                     >
                       <td className="px-5 py-3.5">
@@ -527,3 +527,4 @@ export default function CustomerList() {
     </Layout>
   );
 }
+

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../../../components/Layout";
 import {
@@ -98,7 +98,7 @@ export default function CountryList() {
             />
             <input
               type="text"
-              placeholder="Search countries…"
+              placeholder="Search countriesâ€¦"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-10 pr-9 py-2.5 text-sm bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100 transition-all"
@@ -171,7 +171,7 @@ export default function CountryList() {
                       colSpan={6}
                       className="text-center py-16 text-gray-400 text-sm"
                     >
-                      Loading…
+                      Loadingâ€¦
                     </td>
                   </tr>
                 ) : paginated.length === 0 ? (
@@ -189,7 +189,7 @@ export default function CountryList() {
                   paginated.map((r) => (
                     <tr
                       key={r.id}
-                      className="group border-b border-gray-100 last:border-0 hover:bg-brand-50/40 cursor-pointer transition-colors"
+                      className="group border-b border-gray-100 last:border-0 hover:bg-brand-100 cursor-pointer transition-colors"
                       onClick={() => navigate(`/system/countries/${r.id}`)}
                     >
                       <td className="px-5 py-3.5">
@@ -206,7 +206,7 @@ export default function CountryList() {
                         {r.countryCode}
                       </td>
                       <td className="px-5 py-3.5 text-gray-600">
-                        {r.dialCode || "—"}
+                        {r.dialCode || "â€”"}
                       </td>
                       <td className="px-5 py-3.5">
                         {r.currency ? (
@@ -214,7 +214,7 @@ export default function CountryList() {
                             {r.currency}
                           </span>
                         ) : (
-                          <span className="text-gray-400">—</span>
+                          <span className="text-gray-400">â€”</span>
                         )}
                       </td>
                       <td className="px-5 py-3.5">
@@ -263,7 +263,7 @@ export default function CountryList() {
               <span className="text-gray-500">
                 Showing{" "}
                 <span className="font-semibold text-gray-700">
-                  {(page - 1) * PAGE_SIZE + 1}–
+                  {(page - 1) * PAGE_SIZE + 1}â€“
                   {Math.min(page * PAGE_SIZE, filtered.length)}
                 </span>{" "}
                 of{" "}
@@ -304,3 +304,4 @@ export default function CountryList() {
     </Layout>
   );
 }
+

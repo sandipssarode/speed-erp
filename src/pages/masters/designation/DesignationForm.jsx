@@ -1,15 +1,15 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Layout from "../../../components/Layout";
 import { api } from "../../../lib/api.js";
 import { Save, Trash2, Edit2, FileText, CheckCircle, AlertCircle, ChevronLeft, IdCard } from "lucide-react";
 
 const LEVEL_OPTIONS = [
-  { value: "L1",  label: "L1 — Top Management (Director / CEO / MD / CXO)" },
-  { value: "L2",  label: "L2 — Senior Management (VP / General Manager / AGM)" },
-  { value: "L3",  label: "L3 — Middle Management (Manager / Deputy Manager / AM)" },
-  { value: "L4",  label: "L4 — Executive (Sr. Executive / Engineer / Officer)" },
-  { value: "L5",  label: "L5 — Staff / Operator (Technician / Associate / Helper)" },
+  { value: "L1",  label: "L1 â€” Top Management (Director / CEO / MD / CXO)" },
+  { value: "L2",  label: "L2 â€” Senior Management (VP / General Manager / AGM)" },
+  { value: "L3",  label: "L3 â€” Middle Management (Manager / Deputy Manager / AM)" },
+  { value: "L4",  label: "L4 â€” Executive (Sr. Executive / Engineer / Officer)" },
+  { value: "L5",  label: "L5 â€” Staff / Operator (Technician / Associate / Helper)" },
   { value: "L6",  label: "L6" },
   { value: "L7",  label: "L7" },
   { value: "L8",  label: "L8" },
@@ -159,7 +159,7 @@ export default function DesignationForm() {
             </div>
             <div className="min-w-0">
               <h1 className="text-xl font-bold text-white tracking-tight leading-tight">{isNew ? "New Designation" : (form.designationName || "Designation")}</h1>
-              <p className="text-sm text-white/70 mt-0.5">{isNew ? "Add a new designation to the master" : <span className="font-mono">{form.designationCode}</span>}{!isNew && form.departmentName ? ` · ${form.departmentName}` : ""}</p>
+              <p className="text-sm text-white/70 mt-0.5">{isNew ? "Add a new designation to the master" : <span className="font-mono">{form.designationCode}</span>}{!isNew && form.departmentName ? ` Â· ${form.departmentName}` : ""}</p>
             </div>
             <div className="flex items-center gap-2 ml-auto">
               {!isNew && <button onClick={() => setShowChangelog(s => !s)} className={headerBtn}><FileText size={13} /> History</button>}
@@ -213,10 +213,11 @@ export default function DesignationForm() {
 
         {!isNew && form.createdAt && (
           <p className="text-xs text-gray-400 px-1">
-            Created {new Date(form.createdAt).toLocaleString()} by {form.createdBy} · Updated {new Date(form.updatedAt).toLocaleString()} by {form.updatedBy}
+            Created {new Date(form.createdAt).toLocaleString()} by {form.createdBy} Â· Updated {new Date(form.updatedAt).toLocaleString()} by {form.updatedBy}
           </p>
         )}
       </div>
     </Layout>
   );
 }
+

@@ -394,7 +394,7 @@ export default function Dashboard() {
                 </thead>
                 <tbody>
                   {tickets.map((t, i) => (
-                    <tr key={t.id} className={`border-b border-gray-100 hover:bg-brand-50/40 transition-colors ${i % 2 !== 0 ? "bg-gray-50/40" : ""}`}>
+                    <tr key={t.id} className={`border-b border-gray-100 hover:bg-brand-100 transition-colors ${i % 2 !== 0 ? "bg-gray-50/40" : ""}`}>
                       <td className="px-4 py-2.5 font-mono text-xs font-semibold text-brand-600">{t.id}</td>
                       <td className="px-4 py-2.5 text-gray-700">{t.subject}</td>
                       <td className="px-4 py-2.5 text-gray-600">{t.module}</td>
@@ -417,3 +417,4 @@ export default function Dashboard() {
     </Layout>
   );
 }
+
