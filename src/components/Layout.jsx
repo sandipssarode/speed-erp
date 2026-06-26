@@ -135,8 +135,6 @@ export default function Layout({ children }) {
           <div
             key={mod.label}
             className="relative"
-            onMouseEnter={() => setOpenModule(mod.label)}
-            onMouseLeave={() => setOpenModule(null)}
           >
             <button
               onClick={() => setOpenModule(p => p === mod.label ? null : mod.label)}
