@@ -1,5 +1,6 @@
 import { neon } from '@neondatabase/serverless';
 import { SEED_USERS, SEED_VENDORS, SEED_CUSTOMERS, SEED_CATEGORIES, SEED_PRODUCTS, SEED_WAREHOUSES, SEED_BUSINESS_UNITS, SEED_ORGANISATIONS, SEED_COUNTRIES, SEED_STATES, SEED_DISTRICTS, SEED_VILLAGE_TALUKAS, SEED_PRODUCT_TYPES, SEED_PRODUCT_SUBTYPES, SEED_PRODUCT_MASTERS, SEED_DEPARTMENTS, SEED_DESIGNATIONS, SEED_EMPLOYEES } from './_seed.js';
+import { SEED_WORK_ORDER_TYPES, SEED_UNIT_TYPES, SEED_UOM, SEED_ASSET_STRUCTURES, SEED_ASSETS, SEED_MAINTENANCE_TYPES, SEED_JOB_LIST } from './_seed_asset.js';
 
 // Reused across requests within the same serverless instance lifetime
 let _sql = null;
@@ -51,7 +52,7 @@ export async function ensureSchema(sql) {
   ]);
 
   // Check all seed counts in parallel
-  const [[uCount], [vCount], [cCount], [catCount], [pCount], [whCount], [buCount], [orgCount], [ctryCount], [stCount], [distCount], [vlgCount], [ptCount], [pstCount], [pmCount], [deptCount], [desgCount], [empCount]] = await Promise.all([
+  const [[uCount], [vCount], [cCount], [catCount], [pCount], [whCount], [buCount], [orgCount], [ctryCount], [stCount], [distCount], [vlgCount], [ptCount], [pstCount], [pmCount], [deptCount], [desgCount], [empCount], [wotCount], [utCount], [uomCount], [locCount], [astCount], [mtCount], [jobCount]] = await Promise.all([
     sql`SELECT COUNT(*) AS c FROM users`,
     sql`SELECT COUNT(*) AS c FROM vendors`,
     sql`SELECT COUNT(*) AS c FROM customers`,
@@ -70,6 +71,13 @@ export async function ensureSchema(sql) {
     sql`SELECT COUNT(*) AS c FROM departments`,
     sql`SELECT COUNT(*) AS c FROM designations`,
     sql`SELECT COUNT(*) AS c FROM employees`,
+    sql`SELECT COUNT(*) AS c FROM work_order_types`,
+    sql`SELECT COUNT(*) AS c FROM unit_types`,
+    sql`SELECT COUNT(*) AS c FROM uom`,
+    sql`SELECT COUNT(*) AS c FROM asset_structures`,
+    sql`SELECT COUNT(*) AS c FROM assets`,
+    sql`SELECT COUNT(*) AS c FROM maintenance_types`,
+    sql`SELECT COUNT(*) AS c FROM job_list`,
   ]);
 
   // Seed empty tables in parallel; each table's rows are also inserted in parallel
@@ -162,6 +170,41 @@ export async function ensureSchema(sql) {
     Number(empCount.c) === 0 && Promise.all(SEED_EMPLOYEES.map(v =>
       sql`INSERT INTO employees (id,code,name,department_id,designation_id,status,is_active,data,created_at,updated_at)
         VALUES (${v.id},${v.employeeId},${(v.firstName||'')+' '+(v.lastName||'')},${v.departmentId||null},${v.designationId||null},${v.status||'Active'},${!v.isDeactivated},${JSON.stringify(v)},${v.createdAt},${v.updatedAt})
+        ON CONFLICT DO NOTHING`
+    )),
+    Number(wotCount.c) === 0 && Promise.all(SEED_WORK_ORDER_TYPES.map(v =>
+      sql`INSERT INTO work_order_types (id,code,name,is_active,data,created_at,updated_at)
+        VALUES (${v.id},${v.typeId},${v.typeName},${!v.isDeactivated},${JSON.stringify(v)},${v.createdAt},${v.updatedAt})
+        ON CONFLICT DO NOTHING`
+    )),
+    Number(utCount.c) === 0 && Promise.all(SEED_UNIT_TYPES.map(v =>
+      sql`INSERT INTO unit_types (id,code,name,is_active,data,created_at,updated_at)
+        VALUES (${v.id},${v.unitTypeId},${v.unitTypeName},${!v.isDeactivated},${JSON.stringify(v)},${v.createdAt},${v.updatedAt})
+        ON CONFLICT DO NOTHING`
+    )),
+    Number(uomCount.c) === 0 && Promise.all(SEED_UOM.map(v =>
+      sql`INSERT INTO uom (id,code,name,short_code,unit_type_id,is_active,data,created_at,updated_at)
+        VALUES (${v.id},${v.unitId},${v.unitName},${v.unitShortCode},${v.unitTypeId||null},${!v.isDeactivated},${JSON.stringify(v)},${v.createdAt},${v.updatedAt})
+        ON CONFLICT DO NOTHING`
+    )),
+    Number(locCount.c) === 0 && Promise.all(SEED_ASSET_STRUCTURES.map(v =>
+      sql`INSERT INTO asset_structures (id,code,name,site,warehouse_id,data,created_at,updated_at)
+        VALUES (${v.id},${v.locationId},${v.locationName},${v.site||null},${v.warehouseId||null},${JSON.stringify(v)},${v.createdAt},${v.updatedAt})
+        ON CONFLICT DO NOTHING`
+    )),
+    Number(astCount.c) === 0 && Promise.all(SEED_ASSETS.map(v =>
+      sql`INSERT INTO assets (id,code,name,location_id,asset_type_id,status,data,created_at,updated_at)
+        VALUES (${v.id},${v.assetId},${v.name},${v.locationId||null},${v.assetTypeId||null},${v.status||'Active'},${JSON.stringify(v)},${v.createdAt},${v.updatedAt})
+        ON CONFLICT DO NOTHING`
+    )),
+    Number(mtCount.c) === 0 && Promise.all(SEED_MAINTENANCE_TYPES.map(v =>
+      sql`INSERT INTO maintenance_types (id,code,name,priority,is_active,data,created_at,updated_at)
+        VALUES (${v.id},${v.typeId},${v.maintenanceName},${v.priority||null},${!v.isDeactivated},${JSON.stringify(v)},${v.createdAt},${v.updatedAt})
+        ON CONFLICT DO NOTHING`
+    )),
+    Number(jobCount.c) === 0 && Promise.all(SEED_JOB_LIST.map(v =>
+      sql`INSERT INTO job_list (id,code,asset_id,maintenance_type_id,priority,status,assigned_to_id,job_date,data,created_at,updated_at)
+        VALUES (${v.id},${v.jobId},${v.assetId||null},${v.maintenanceTypeId||null},${v.priority||null},${v.status||'Open'},${v.assignedToId||null},${v.jobDate||null},${JSON.stringify(v)},${v.createdAt},${v.updatedAt})
         ON CONFLICT DO NOTHING`
     )),
   ].filter(Boolean));
