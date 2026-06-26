@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Layout from "../../../components/Layout";
 import {
   Plus, Search, Edit2, Trash2, ChevronLeft, ChevronRight, X,
-  SlidersHorizontal, ChevronsUpDown,
+  ChevronsUpDown,
 } from "lucide-react";
 import { api } from "../../../lib/api.js";
 
@@ -13,10 +13,9 @@ export default function UnitTypeList() {
   const navigate = useNavigate();
   const [records, setRecords]           = useState([]);
   const [loading, setLoading]           = useState(true);
-  const [search, setSearch]             = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [sortDir, setSortDir]           = useState("asc");
-  const [page, setPage]                 = useState(1);
+  const [search, setSearch] = useState("");
+  const [sortDir, setSortDir] = useState("asc");
+  const [page, setPage]       = useState(1);
 
   useEffect(() => {
     api.get("/api/unit-types")
@@ -25,19 +24,14 @@ export default function UnitTypeList() {
       .finally(() => setLoading(false));
   }, []);
 
-  useEffect(() => { setPage(1); }, [search, statusFilter]);
+  useEffect(() => { setPage(1); }, [search]);
 
   const filtered = records
     .filter(r => {
       const q = search.toLowerCase();
-      const matchSearch =
-        !q ||
+      return !q ||
         r.unitTypeId?.toLowerCase().includes(q) ||
         r.unitTypeName?.toLowerCase().includes(q);
-      const matchStatus =
-        statusFilter === "all" ||
-        (statusFilter === "active" ? !r.isDeactivated : r.isDeactivated);
-      return matchSearch && matchStatus;
     })
     .sort((a, b) => {
       const r = (a.unitTypeName || "").localeCompare(b.unitTypeName || "");
@@ -87,20 +81,6 @@ export default function UnitTypeList() {
             )}
           </div>
 
-          <div className="relative">
-            <SlidersHorizontal size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-            <select
-              value={statusFilter}
-              onChange={e => setStatusFilter(e.target.value)}
-              className="appearance-none pl-10 pr-9 py-2.5 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100 cursor-pointer"
-            >
-              <option value="all">All Status</option>
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
-            </select>
-            <ChevronRight size={15} className="absolute right-3 top-1/2 -translate-y-1/2 rotate-90 text-gray-400 pointer-events-none" />
-          </div>
-
           <button
             onClick={() => navigate("/masters/unit-type/new")}
             className="ml-auto flex items-center gap-2 bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl shadow-md shadow-brand-200 transition-all"
@@ -120,15 +100,14 @@ export default function UnitTypeList() {
                     </button>
                   </th>
                   <th className={th}>Type ID</th>
-                  <th className={th}>Status</th>
                   <th className={`${th} text-right`}>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
-                  <tr><td colSpan={4} className="text-center py-16 text-gray-400 text-sm">Loading…</td></tr>
+                  <tr><td colSpan={3} className="text-center py-16 text-gray-400 text-sm">Loading…</td></tr>
                 ) : paginated.length === 0 ? (
-                  <tr><td colSpan={4} className="text-center py-16 text-gray-400 text-sm">
+                  <tr><td colSpan={3} className="text-center py-16 text-gray-400 text-sm">
                     {records.length === 0
                       ? 'No unit types yet. Click "New Unit Type" to add one.'
                       : "No records match your search."}
@@ -150,12 +129,6 @@ export default function UnitTypeList() {
                       </div>
                     </td>
                     <td className="px-5 py-3.5 font-mono text-xs text-gray-400">{r.unitTypeId}</td>
-                    <td className="px-5 py-3.5">
-                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${r.isDeactivated ? "bg-red-50 text-red-600" : "bg-green-50 text-green-700"}`}>
-                        <span className={`w-1.5 h-1.5 rounded-full ${r.isDeactivated ? "bg-red-500" : "bg-green-500"}`} />
-                        {r.isDeactivated ? "Inactive" : "Active"}
-                      </span>
-                    </td>
                     <td className="px-5 py-3.5">
                       <div className="flex items-center justify-end gap-1.5" onClick={e => e.stopPropagation()}>
                         <button

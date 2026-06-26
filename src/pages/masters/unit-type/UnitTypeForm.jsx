@@ -30,7 +30,6 @@ function Row({ label, required, error, children, help }) {
 const emptyForm = () => ({
   unitTypeId:   `UT-${Date.now().toString().slice(-5)}`,
   unitTypeName: "",
-  isDeactivated: false,
   createdAt: "", updatedAt: "", createdBy: "", updatedBy: "",
   changelog: [],
 });
@@ -180,12 +179,6 @@ export default function UnitTypeForm() {
             </Row>
             <Row label="Unit Type Name" required error={errors.unitTypeName}>
               <input value={form.unitTypeName} onChange={e => setField("unitTypeName", e.target.value)} disabled={isReadOnly} placeholder="e.g. Weight" className={inputCls(isReadOnly, errors.unitTypeName)} />
-            </Row>
-            <Row label="Status">
-              <label className="flex items-center gap-2.5 sm:pt-2 cursor-pointer">
-                <input type="checkbox" checked={!!form.isDeactivated} onChange={e => setField("isDeactivated", e.target.checked)} disabled={isReadOnly} className="w-4 h-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500" />
-                <span className="text-sm text-gray-600">Mark this unit type as inactive</span>
-              </label>
             </Row>
           </div>
 
