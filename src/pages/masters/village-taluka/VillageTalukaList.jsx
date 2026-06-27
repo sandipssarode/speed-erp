@@ -76,7 +76,7 @@ export default function VillageTalukaList() {
         {/* Heading */}
         <div>
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
-            Village / Taluka Master
+            Village Master
           </h1>
           <p className="text-sm text-gray-500 mt-0.5">
             Manage villages, talukas &amp; PIN codes
@@ -92,7 +92,7 @@ export default function VillageTalukaList() {
             />
             <input
               type="text"
-              placeholder="Search villages / talukas…"
+              placeholder="Search villages…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-10 pr-9 py-2.5 text-sm bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100 transition-all"
@@ -171,7 +171,7 @@ export default function VillageTalukaList() {
                       className="text-center py-16 text-gray-400 text-sm"
                     >
                       {records.length === 0
-                        ? 'No villages / talukas yet. Click "New Village" to add one.'
+                        ? 'No villages yet. Click "New Village" to add one.'
                         : "No records match your search."}
                     </td>
                   </tr>

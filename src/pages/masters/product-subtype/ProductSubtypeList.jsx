@@ -76,7 +76,7 @@ export default function ProductSubtypeList() {
         {/* Heading */}
         <div>
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
-            Product Sub-type Master
+            Product Sub-Type Master
           </h1>
           <p className="text-sm text-gray-500 mt-0.5">
             Manage product sub-types &amp; their parent types
@@ -148,7 +148,7 @@ export default function ProductSubtypeList() {
             onClick={() => navigate("/masters/product-subtype/new")}
             className="ml-auto flex items-center gap-2 bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl shadow-md shadow-brand-200 transition-all"
           >
-            <Plus size={16} /> New Sub-type
+            <Plus size={16} /> New Sub-Type
           </button>
         </div>
 
@@ -168,7 +168,7 @@ export default function ProductSubtypeList() {
                       Name <ChevronsUpDown size={13} className="opacity-70" />
                     </button>
                   </th>
-                  <th className={th}>Sub-type ID</th>
+                  <th className={th}>Sub-Type ID</th>
                   <th className={th}>Product Type</th>
                   <th className={th}>Status</th>
                   <th className={`${th} text-right`}>Actions</th>
@@ -191,7 +191,7 @@ export default function ProductSubtypeList() {
                       className="text-center py-16 text-gray-400 text-sm"
                     >
                       {records.length === 0
-                        ? 'No product sub-types yet. Click "New Sub-type" to add one.'
+                        ? 'No product sub-types yet. Click "New Sub-Type" to add one.'
                         : "No records match your search."}
                     </td>
                   </tr>

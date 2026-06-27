@@ -39,7 +39,7 @@ const emptyForm = () => ({
 
 function validate(form) {
   const e = {};
-  if (!form.villageName.trim()) e.villageName = "Village / Taluka Name is required.";
+  if (!form.villageName.trim()) e.villageName = "Village Name is required.";
   if (!form.districtId) e.districtId = "District is required.";
   if (form.pinCode.trim() && !/^\d{6}$/.test(form.pinCode.trim()))
     e.pinCode = "PIN Code must be exactly 6 digits.";
@@ -122,7 +122,7 @@ export default function VillageTalukaForm() {
       setAllRecords(prev => isNew ? [...prev, saved] : prev.map(r => r.id === saved.id ? saved : r));
       setMode("view");
       setErrors({});
-      showToast("Village / Taluka saved successfully.");
+      showToast("Village saved successfully.");
       if (isNew) navigate(`/masters/village-taluka/${saved.id}`, { replace: true });
     } catch (err) {
       showToast(err.message || "Failed to save.", "error");
@@ -156,7 +156,7 @@ export default function VillageTalukaForm() {
       <div className="max-w-5xl mx-auto space-y-4">
 
         <button onClick={() => navigate("/masters/village-taluka")} className="flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600 transition-colors font-medium">
-          <ChevronLeft size={15} /> Village / Taluka Master
+          <ChevronLeft size={15} /> Village Master
         </button>
 
         {toast && (
@@ -172,8 +172,8 @@ export default function VillageTalukaForm() {
               {form.villageCode ? form.villageName.slice(0, 2).toUpperCase() : <MapPin size={22} />}
             </div>
             <div className="min-w-0">
-              <h1 className="text-xl font-bold text-white tracking-tight leading-tight">{isNew ? "New Village / Taluka" : (form.villageName || "Village / Taluka")}</h1>
-              <p className="text-sm text-white/70 mt-0.5">{isNew ? "Add a new village / taluka to the master" : <span className="font-mono">{form.villageCode}</span>}</p>
+              <h1 className="text-xl font-bold text-white tracking-tight leading-tight">{isNew ? "New Village" : (form.villageName || "Village")}</h1>
+              <p className="text-sm text-white/70 mt-0.5">{isNew ? "Add a new village to the master" : <span className="font-mono">{form.villageCode}</span>}</p>
             </div>
             <div className="flex items-center gap-2 ml-auto">
               {!isNew && <button onClick={() => setShowChangelog(s => !s)} className={headerBtn}><FileText size={13} /> History</button>}
@@ -196,10 +196,10 @@ export default function VillageTalukaForm() {
 
           {/* Body */}
           <div className="px-6 py-7 space-y-6">
-            <Row label="Village / Taluka Code">
+            <Row label="Village Code">
               <input value={form.villageCode} disabled placeholder="Auto-generated on save" className={inputCls(true)} />
             </Row>
-            <Row label="Village / Taluka Name" required error={errors.villageName}>
+            <Row label="Village Name" required error={errors.villageName}>
               <input value={form.villageName} onChange={e => setField("villageName", e.target.value)} disabled={isReadOnly} placeholder="e.g. Haveli" className={inputCls(isReadOnly, errors.villageName)} />
             </Row>
             <Row label="District" required error={errors.districtId}>
@@ -214,7 +214,7 @@ export default function VillageTalukaForm() {
             <Row label="Status">
               <label className="flex items-center gap-2.5 sm:pt-2 cursor-pointer">
                 <input type="checkbox" checked={!!form.isDeactivated} onChange={e => setField("isDeactivated", e.target.checked)} disabled={isReadOnly} className="w-4 h-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500" />
-                <span className="text-sm text-gray-600">Mark this village / taluka as inactive</span>
+                <span className="text-sm text-gray-600">Mark this village as inactive</span>
               </label>
             </Row>
           </div>
@@ -222,7 +222,7 @@ export default function VillageTalukaForm() {
           {/* Footer actions */}
           {editing && (
             <div className="px-6 py-4 border-t border-gray-100 bg-gray-50/60 flex items-center gap-2.5">
-              <button onClick={handleSave} className="flex items-center gap-2 text-sm px-6 py-2.5 bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white rounded-xl font-semibold shadow-md shadow-brand-200 transition-all"><Save size={15} /> Save Village / Taluka</button>
+              <button onClick={handleSave} className="flex items-center gap-2 text-sm px-6 py-2.5 bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white rounded-xl font-semibold shadow-md shadow-brand-200 transition-all"><Save size={15} /> Save Village</button>
               <button onClick={handleDiscard} className="text-sm px-5 py-2.5 border border-gray-300 text-gray-700 hover:bg-white rounded-xl font-semibold transition-colors">Cancel</button>
             </div>
           )}

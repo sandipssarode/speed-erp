@@ -44,7 +44,7 @@ const emptyForm = () => ({
 function validate(form) {
   const e = {};
   if (!form.productTypeId) e.productTypeId = "Product Type is required.";
-  if (!form.subtypeName?.trim()) e.subtypeName = "Sub-type Name is required.";
+  if (!form.subtypeName?.trim()) e.subtypeName = "Sub-Type Name is required.";
   return e;
 }
 
@@ -109,7 +109,7 @@ export default function ProductSubtypeForm() {
       setForm(saved);
       setAllRecords(prev => isNew ? [...prev, saved] : prev.map(r => r.id === saved.id ? saved : r));
       setMode("view"); setErrors({});
-      showToast("Product Sub-type saved successfully.");
+      showToast("Product Sub-Type saved successfully.");
       if (isNew) navigate(`/masters/product-subtype/${saved.id}`, { replace: true });
     } catch (err) { showToast(err.message || "Failed to save.", "error"); }
   };
@@ -135,7 +135,7 @@ export default function ProductSubtypeForm() {
       <div className="max-w-5xl mx-auto space-y-4">
 
         <button onClick={() => navigate("/masters/product-subtype")} className="flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600 transition-colors font-medium">
-          <ChevronLeft size={15} /> Product Sub-type
+          <ChevronLeft size={15} /> Product Sub-Type
         </button>
 
         {toast && (
@@ -151,7 +151,7 @@ export default function ProductSubtypeForm() {
               {!isNew && form.subtypeName ? form.subtypeName.slice(0, 2).toUpperCase() : <Tags size={22} />}
             </div>
             <div className="min-w-0">
-              <h1 className="text-xl font-bold text-white tracking-tight leading-tight">{isNew ? "New Product Sub-type" : (form.subtypeName || "Product Sub-type")}</h1>
+              <h1 className="text-xl font-bold text-white tracking-tight leading-tight">{isNew ? "New Product Sub-Type" : (form.subtypeName || "Product Sub-Type")}</h1>
               <p className="text-sm text-white/70 mt-0.5">{isNew ? "Add a new product sub-type to the master" : <span className="font-mono">{form.subtypeId}</span>}</p>
             </div>
             <div className="flex items-center gap-2 ml-auto">
@@ -175,7 +175,7 @@ export default function ProductSubtypeForm() {
 
           {/* Body */}
           <div className="px-6 py-7 space-y-6">
-            <Row label="Sub-type ID">
+            <Row label="Sub-Type ID">
               <input value={form.subtypeId} disabled placeholder="Auto-generated" className={inputCls(true)} />
             </Row>
             <Row label="Product Type" required error={errors.productTypeId}>
@@ -184,7 +184,7 @@ export default function ProductSubtypeForm() {
                 {typeOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
               </select>
             </Row>
-            <Row label="Sub-type Name" required error={errors.subtypeName}>
+            <Row label="Sub-Type Name" required error={errors.subtypeName}>
               <input value={form.subtypeName} onChange={e => setField("subtypeName", e.target.value)} disabled={isReadOnly} placeholder="e.g. Ferrous Metals" className={inputCls(isReadOnly, errors.subtypeName)} />
             </Row>
             <Row label="Status">
@@ -198,7 +198,7 @@ export default function ProductSubtypeForm() {
           {/* Footer actions */}
           {editing && (
             <div className="px-6 py-4 border-t border-gray-100 bg-gray-50/60 flex items-center gap-2.5">
-              <button onClick={handleSave} className="flex items-center gap-2 text-sm px-6 py-2.5 bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white rounded-xl font-semibold shadow-md shadow-brand-200 transition-all"><Save size={15} /> Save Sub-type</button>
+              <button onClick={handleSave} className="flex items-center gap-2 text-sm px-6 py-2.5 bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white rounded-xl font-semibold shadow-md shadow-brand-200 transition-all"><Save size={15} /> Save Sub-Type</button>
               <button onClick={handleDiscard} className="text-sm px-5 py-2.5 border border-gray-300 text-gray-700 hover:bg-white rounded-xl font-semibold transition-colors">Cancel</button>
             </div>
           )}

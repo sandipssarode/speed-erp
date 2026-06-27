@@ -213,7 +213,7 @@ export default function ProductMasterForm() {
                 <Field label="Product Type" required error={errors.productTypeId}>
                   <TSelect value={form.productTypeId} onChange={e => handleTypeChange(e.target.value)} disabled={isReadOnly} options={typeOptions} placeholder="Select Product Type" error={errors.productTypeId} />
                 </Field>
-                <Field label="Product Sub-type">
+                <Field label="Product Sub-Type">
                   <TSelect
                     value={form.subtypeId}
                     onChange={e => handleSubtypeChange(e.target.value)}
