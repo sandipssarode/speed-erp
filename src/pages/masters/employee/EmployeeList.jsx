@@ -106,7 +106,7 @@ export default function EmployeeList() {
             />
             <input
               type="text"
-              placeholder="Search employeesâ€¦"
+              placeholder="Search employees…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-10 pr-9 py-2.5 text-sm bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100 transition-all"
@@ -199,7 +199,7 @@ export default function EmployeeList() {
                       colSpan={7}
                       className="text-center py-16 text-gray-400 text-sm"
                     >
-                      Loadingâ€¦
+                      Loading…
                     </td>
                   </tr>
                 ) : paginated.length === 0 ? (
@@ -215,7 +215,7 @@ export default function EmployeeList() {
                   </tr>
                 ) : (
                   paginated.map((r) => {
-                    const fullName = [r.firstName, r.lastName].filter(Boolean).join(" ") || "â€”";
+                    const fullName = [r.firstName, r.lastName].filter(Boolean).join(" ") || "—";
                     return (
                     <tr
                       key={r.id}
@@ -225,7 +225,7 @@ export default function EmployeeList() {
                       <td className="px-5 py-3.5">
                         <div className="flex items-center gap-3">
                           <span className="w-9 h-9 rounded-lg bg-brand-50 ring-1 ring-brand-100 text-brand-700 flex items-center justify-center text-xs font-bold shrink-0">
-                            {(fullName !== "â€”" ? fullName : r.employeeId || "?").slice(0, 2).toUpperCase()}
+                            {(fullName !== "—" ? fullName : r.employeeId || "?").slice(0, 2).toUpperCase()}
                           </span>
                           <span className="font-semibold text-gray-800 group-hover:text-brand-600 transition-colors">
                             {fullName}
@@ -236,13 +236,13 @@ export default function EmployeeList() {
                         {r.employeeId}
                       </td>
                       <td className="px-5 py-3.5 text-gray-600">
-                        {r.departmentName || "â€”"}
+                        {r.departmentName || "—"}
                       </td>
                       <td className="px-5 py-3.5 text-gray-600">
-                        {r.designationName || "â€”"}
+                        {r.designationName || "—"}
                       </td>
                       <td className="px-5 py-3.5 text-gray-600">
-                        {r.level || "â€”"}
+                        {r.level || "—"}
                       </td>
                       <td className="px-5 py-3.5">
                         <span
@@ -251,7 +251,7 @@ export default function EmployeeList() {
                           <span
                             className={`w-1.5 h-1.5 rounded-full ${statusDot[r.status] || "bg-gray-400"}`}
                           />
-                          {r.status || "â€”"}
+                          {r.status || "—"}
                         </span>
                       </td>
                       <td className="px-5 py-3.5">
