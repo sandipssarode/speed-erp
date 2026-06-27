@@ -9,20 +9,25 @@ export const menu = [
   {
     label: "Masters", icon: Database, flat: true,
     links: [
-      { label: "Department",            path: "/masters/department" },
-      { label: "Designation",           path: "/masters/designation" },
-      { label: "Employee Registration", path: "/masters/employee" },
-      { label: "Vendor",                path: "/vendors" },
-      { label: "Customer",              path: "/sales/customers" },
-      { label: "Product Type",          path: "/masters/product-type" },
-      { label: "Product Sub-type",      path: "/masters/product-subtype" },
-      { label: "Product",               path: "/masters/product-master" },
-      { label: "Unit Type",             path: "/masters/unit-type" },
-      { label: "Unit of Measure",       path: "/masters/uom" },
+      // Geographic — base reference, feeds into address fields everywhere
       { label: "Country",               path: "/system/countries" },
       { label: "State",                 path: "/system/states" },
       { label: "District",              path: "/masters/district" },
       { label: "Village / Taluka",      path: "/masters/village-taluka" },
+      // HR — Department feeds Designation, Designation feeds Employee
+      { label: "Department",            path: "/masters/department" },
+      { label: "Designation",           path: "/masters/designation" },
+      { label: "Employee Registration", path: "/masters/employee" },
+      // Parties
+      { label: "Vendor",                path: "/vendors" },
+      { label: "Customer",              path: "/sales/customers" },
+      // Products — Type → Sub-type → Product; Unit Type → UOM feeds Product
+      { label: "Unit Type",             path: "/masters/unit-type" },
+      { label: "Unit of Measure",       path: "/masters/uom" },
+      { label: "Product Type",          path: "/masters/product-type" },
+      { label: "Product Sub-type",      path: "/masters/product-subtype" },
+      { label: "Product",               path: "/masters/product-master" },
+      // Assets — Structure → Type → Asset → Maintenance Type → Work Order Type
       { label: "Asset Structure",       path: "/masters/asset-structure" },
       { label: "Asset Type",            path: "/masters/asset-type" },
       { label: "Asset",                 path: "/masters/asset-master" },
