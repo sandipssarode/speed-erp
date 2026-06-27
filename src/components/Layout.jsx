@@ -70,7 +70,7 @@ export default function Layout({ children }) {
             : "text-red-400 hover:bg-red-50"
           : location.pathname === link.path
           ? "bg-brand-50 text-brand-600 font-semibold"
-          : "text-gray-600 hover:bg-gray-100 hover:text-brand-600"
+          : "text-gray-600 hover:bg-brand-600 hover:text-white"
       }`}
     >
       {link.label}
@@ -114,7 +114,7 @@ export default function Layout({ children }) {
         className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all ${
           location.pathname === "/dashboard"
             ? "bg-brand-600 text-white shadow-md shadow-brand-200"
-            : "text-gray-500 hover:bg-brand-50 hover:text-brand-600"
+            : "text-gray-500 hover:bg-brand-600 hover:text-white"
         }`}
       >
         <LayoutDashboard size={18} className="shrink-0" />
@@ -141,7 +141,7 @@ export default function Layout({ children }) {
               className={`relative flex items-center justify-between w-full gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                 highlight
                   ? "bg-brand-600 text-white shadow-md shadow-brand-200"
-                  : "text-gray-500 hover:bg-brand-50 hover:text-brand-600"
+                  : "text-gray-500 hover:bg-brand-600 hover:text-white"
               }`}
             >
               <span className="flex items-center gap-3">
@@ -171,7 +171,7 @@ export default function Layout({ children }) {
         className={`flex items-center gap-3 px-3 py-2.5 mx-2 my-1 rounded-xl text-sm font-semibold transition-all ${
           location.pathname === "/dashboard"
             ? "bg-brand-600 text-white shadow-md shadow-brand-200"
-            : "text-gray-600 hover:bg-brand-50 hover:text-brand-600"
+            : "text-gray-600 hover:bg-brand-600 hover:text-white"
         }`}
       >
         <LayoutDashboard size={18} className="shrink-0" />
@@ -195,7 +195,7 @@ export default function Layout({ children }) {
                   ? "bg-brand-600 text-white"
                   : hasActive
                   ? "bg-brand-50 text-brand-600"
-                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-800"
+                  : "text-gray-600 hover:bg-brand-600 hover:text-white"
               }`}
               style={{ width: "calc(100% - 16px)", marginLeft: 8 }}
             >
@@ -225,7 +225,7 @@ export default function Layout({ children }) {
                               : "text-red-400 hover:bg-red-50"
                             : location.pathname === link.path
                             ? "bg-brand-100 text-brand-600 font-semibold border-r-2 border-brand-600"
-                            : "text-gray-600 hover:bg-gray-100 hover:text-gray-700"
+                            : "text-gray-600 hover:bg-brand-600 hover:text-white"
                         }`}
                       >
                         {link.label}
@@ -251,7 +251,7 @@ export default function Layout({ children }) {
                             className={`block pl-6 pr-3 py-2 text-sm transition-colors ${
                               location.pathname === link.path
                                 ? "bg-brand-100 text-brand-600 font-semibold border-r-2 border-brand-600"
-                                : "text-gray-600 hover:bg-gray-100 hover:text-gray-700"
+                                : "text-gray-600 hover:bg-brand-600 hover:text-white"
                             }`}
                           >
                             {link.label}
