@@ -5,11 +5,11 @@ import { api } from "../../../lib/api.js";
 import { Save, X, Trash2, Edit2, FileText, CheckCircle, AlertCircle, ChevronLeft, KeyRound, Paperclip, User } from "lucide-react";
 
 const LEVEL_OPTIONS = [
-  { value: "L1",  label: "L1 — Top Management (Director / CEO / MD / CXO)" },
-  { value: "L2",  label: "L2 — Senior Management (VP / General Manager / AGM)" },
-  { value: "L3",  label: "L3 — Middle Management (Manager / Deputy Manager / AM)" },
-  { value: "L4",  label: "L4 — Executive (Sr. Executive / Engineer / Officer)" },
-  { value: "L5",  label: "L5 — Staff / Operator (Technician / Associate / Helper)" },
+  { value: "L1",  label: "L1" },
+  { value: "L2",  label: "L2" },
+  { value: "L3",  label: "L3" },
+  { value: "L4",  label: "L4" },
+  { value: "L5",  label: "L5" },
   { value: "L6",  label: "L6" },
   { value: "L7",  label: "L7" },
   { value: "L8",  label: "L8" },
@@ -82,14 +82,20 @@ const emptyForm = () => ({
   village: "",
   departmentId: "",
   departmentName: "",
+  level: "",
   designationId: "",
   designationName: "",
-  level: "",
+  locationId: "",
+  locationName: "",
   employeeType: "",
   dateOfJoining: "",
+  status: "Active",
   reportingManagerId: "",
   reportingManagerName: "",
-  status: "Active",
+  reportingManagerDept: "",
+  reportingManagerLevel: "",
+  reportingManagerDesig: "",
+  reportingManagerLocation: "",
   photoFileName: "",
   attachmentFileNames: [],
   createdAt: "", updatedAt: "", createdBy: "", updatedBy: "",
@@ -131,6 +137,7 @@ export default function EmployeeForm() {
   const [allRecords, setAllRecords] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [designations, setDesignations] = useState([]);
+  const [locations, setLocations] = useState([]);
   const [countries, setCountries] = useState([]);
   const [allStates, setAllStates] = useState([]);
   const [allDistricts, setAllDistricts] = useState([]);
@@ -144,14 +151,16 @@ export default function EmployeeForm() {
       api.get("/api/employees"),
       api.get("/api/departments").catch(() => []),
       api.get("/api/designations").catch(() => []),
+      api.get("/api/asset-structures").catch(() => []),
       api.get("/api/countries").catch(() => []),
       api.get("/api/states").catch(() => []),
       api.get("/api/districts").catch(() => []),
       api.get("/api/village-talukas").catch(() => []),
-    ]).then(([employees, depts, desigs, ctries, states, districts, villages]) => {
+    ]).then(([employees, depts, desigs, locs, ctries, states, districts, villages]) => {
       setAllRecords(employees);
       setDepartments(depts);
       setDesignations(desigs);
+      setLocations(locs.filter(l => !l.isDeactivated));
       setCountries(ctries.filter(c => !c.isDeactivated));
       setAllStates(states.filter(s => !s.isDeactivated));
       setAllDistricts(districts.filter(d => !d.isDeactivated));
@@ -160,8 +169,16 @@ export default function EmployeeForm() {
         setForm(prev => ({ ...prev, employeeId: nextEmpId(employees) }));
       } else if (id) {
         const found = employees.find(r => r.id === id);
-        if (found) setForm(found);
-        else navigate("/masters/employee");
+        if (found) {
+          const mgr = found.reportingManagerId ? employees.find(e => e.id === found.reportingManagerId) : null;
+          setForm({
+            ...found,
+            reportingManagerDept: found.reportingManagerDept || mgr?.departmentName || "",
+            reportingManagerLevel: found.reportingManagerLevel || mgr?.level || "",
+            reportingManagerDesig: found.reportingManagerDesig || mgr?.designationName || "",
+            reportingManagerLocation: found.reportingManagerLocation || mgr?.locationName || "",
+          });
+        } else navigate("/masters/employee");
       }
     }).catch(console.error);
   }, [id, isNew]);
@@ -196,6 +213,24 @@ export default function EmployeeForm() {
     const found = designations.find(d => d.id === desigId);
     setForm(prev => ({ ...prev, designationId: desigId, designationName: found?.designationName || "", level: found?.level || prev.level }));
     if (errors.designationId) setErrors(prev => { const e = { ...prev }; delete e.designationId; delete e.level; return e; });
+  };
+
+  const handleLocationChange = (locId) => {
+    const found = locations.find(l => l.id === locId);
+    setForm(prev => ({ ...prev, locationId: locId, locationName: found?.locationName || "" }));
+  };
+
+  const handleReportingManagerChange = (managerId) => {
+    const found = allRecords.find(r => r.id === managerId);
+    setForm(prev => ({
+      ...prev,
+      reportingManagerId: managerId,
+      reportingManagerName: found ? `${found.firstName} ${found.lastName}` : "",
+      reportingManagerDept: found?.departmentName || "",
+      reportingManagerLevel: found?.level || "",
+      reportingManagerDesig: found?.designationName || "",
+      reportingManagerLocation: found?.locationName || "",
+    }));
   };
 
   const handleSave = async () => {
@@ -244,6 +279,7 @@ export default function EmployeeForm() {
 
   const deptOptions = departments.map(d => ({ value: d.id, label: d.departmentName }));
   const desigOptions = designations.map(d => ({ value: d.id, label: d.designationName }));
+  const locationOptions = locations.map(l => ({ value: l.id, label: l.locationName || l.locationId || l.id }));
   const managerOptions = allRecords.filter(e => e.status === "Active" && e.id !== id).map(e => ({ value: e.id, label: `${e.firstName} ${e.lastName} (${e.employeeId})` }));
   const countryOptions = countries.map(c => ({ value: c.id, label: c.countryName }));
   const stateOptions = filteredStates.map(s => ({ value: s.id, label: s.stateName }));
@@ -366,17 +402,22 @@ export default function EmployeeForm() {
             {/* Organisation */}
             <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 space-y-4">
               <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Organisation</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <Field label="Department" required error={errors.departmentId}>
                   <TSelect value={form.departmentId} onChange={e => handleDeptChange(e.target.value)} disabled={isReadOnly} options={deptOptions} placeholder="Select Department" error={errors.departmentId} />
+                </Field>
+                <Field label="Level" required error={errors.level}>
+                  <TSelect value={form.level} onChange={e => setField("level", e.target.value)} disabled={isReadOnly} options={LEVEL_OPTIONS} placeholder="Select Level" error={errors.level} />
+                  {!isReadOnly && <p className="text-[11px] text-gray-400 mt-0.5">Auto-filled from Designation.</p>}
                 </Field>
                 <Field label="Designation" required error={errors.designationId}>
                   <TSelect value={form.designationId} onChange={e => handleDesigChange(e.target.value)} disabled={isReadOnly} options={desigOptions} placeholder="Select Designation" error={errors.designationId} />
                 </Field>
-                <Field label="Level" required error={errors.level}>
-                  <TSelect value={form.level} onChange={e => setField("level", e.target.value)} disabled={isReadOnly} options={LEVEL_OPTIONS} placeholder="Select Level" error={errors.level} />
-                  {!isReadOnly && <p className="text-[11px] text-gray-400 mt-0.5">Auto-filled from Designation — editable for exceptions.</p>}
+                <Field label="Location">
+                  <TSelect value={form.locationId} onChange={e => handleLocationChange(e.target.value)} disabled={isReadOnly} options={locationOptions} placeholder="Select Location" />
                 </Field>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <Field label="Employee Type" required error={errors.employeeType}>
                   <TSelect value={form.employeeType} onChange={e => setField("employeeType", e.target.value)} disabled={isReadOnly} options={EMP_TYPE_OPTIONS} placeholder="Select Type" error={errors.employeeType} />
                 </Field>
@@ -386,10 +427,31 @@ export default function EmployeeForm() {
                 <Field label="Date of Joining" error={errors.dateOfJoining}>
                   <TInput type="date" value={form.dateOfJoining} onChange={e => setField("dateOfJoining", e.target.value)} disabled={isReadOnly} error={errors.dateOfJoining} />
                 </Field>
-                <Field label="Reporting Manager (Report To)" className="sm:col-span-2 lg:col-span-3">
-                  <TSelect value={form.reportingManagerId} onChange={e => { const found = allRecords.find(r => r.id === e.target.value); setField("reportingManagerId", e.target.value); setField("reportingManagerName", found ? `${found.firstName} ${found.lastName}` : ""); }} disabled={isReadOnly} options={managerOptions} placeholder="Select Reporting Manager (optional)" />
+              </div>
+
+              {/* Reporting To */}
+              <div className="border-t border-gray-200 pt-4 space-y-3">
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Reporting To</p>
+                <Field label="Report To">
+                  <TSelect value={form.reportingManagerId} onChange={e => handleReportingManagerChange(e.target.value)} disabled={isReadOnly} options={managerOptions} placeholder="Select Reporting Manager (optional)" />
                   <p className="text-[11px] text-gray-400 mt-0.5">Shows Active employees only.</p>
                 </Field>
+                {form.reportingManagerId && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <Field label="Report To — Department">
+                      <TInput value={form.reportingManagerDept} disabled={true} placeholder="—" />
+                    </Field>
+                    <Field label="Report To — Level">
+                      <TInput value={form.reportingManagerLevel} disabled={true} placeholder="—" />
+                    </Field>
+                    <Field label="Report To — Designation">
+                      <TInput value={form.reportingManagerDesig} disabled={true} placeholder="—" />
+                    </Field>
+                    <Field label="Report To — Location">
+                      <TInput value={form.reportingManagerLocation} disabled={true} placeholder="—" />
+                    </Field>
+                  </div>
+                )}
               </div>
             </div>
 
