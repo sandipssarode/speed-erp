@@ -18,6 +18,8 @@ export function setCors(res) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 }
 
+export function resetSchemaFlag() { _schemaReady = false; }
+
 export async function ensureSchema(sql) {
   if (_schemaReady) return;
 

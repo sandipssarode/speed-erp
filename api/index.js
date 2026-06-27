@@ -1,4 +1,4 @@
-import { getDb, setCors, ensureSchema } from './_db.js';
+import { getDb, setCors, ensureSchema, resetSchemaFlag } from './_db.js';
 
 // Single unified serverless function — routes all /api/* traffic.
 // vercel.json rewrites:
@@ -15,6 +15,42 @@ export default async function handler(req, res) {
     await ensureSchema(sql);
 
     switch (resource) {
+
+      // ── ADMIN RESEED ──────────────────────────────────────────
+      case 'admin-reseed': {
+        if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
+        await Promise.all([
+          sql`DELETE FROM job_list`,
+          sql`DELETE FROM assets`,
+          sql`DELETE FROM asset_structures`,
+          sql`DELETE FROM maintenance_types`,
+          sql`DELETE FROM work_order_types`,
+          sql`DELETE FROM uom`,
+          sql`DELETE FROM unit_types`,
+          sql`DELETE FROM product_masters`,
+          sql`DELETE FROM product_subtypes`,
+          sql`DELETE FROM product_types`,
+          sql`DELETE FROM products`,
+          sql`DELETE FROM product_categories`,
+          sql`DELETE FROM employees`,
+          sql`DELETE FROM designations`,
+          sql`DELETE FROM departments`,
+          sql`DELETE FROM customers`,
+          sql`DELETE FROM vendors`,
+          sql`DELETE FROM warehouses`,
+          sql`DELETE FROM business_units`,
+          sql`DELETE FROM organisations`,
+          sql`DELETE FROM village_talukas`,
+          sql`DELETE FROM districts`,
+          sql`DELETE FROM states`,
+          sql`DELETE FROM countries`,
+          sql`DELETE FROM users`,
+          sql`DELETE FROM work_orders`,
+        ]);
+        resetSchemaFlag();
+        await ensureSchema(sql);
+        return res.json({ ok: true, message: 'Database reseeded successfully.' });
+      }
 
       // ── VENDORS ──────────────────────────────────────────────
       case 'vendors': {
