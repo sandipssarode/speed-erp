@@ -289,7 +289,7 @@ export default function EmployeeList() {
               <span className="text-gray-500">
                 Showing{" "}
                 <span className="font-semibold text-gray-700">
-                  {(page - 1) * PAGE_SIZE + 1}â€“
+                  {(page - 1) * PAGE_SIZE + 1}–
                   {Math.min(page * PAGE_SIZE, filtered.length)}
                 </span>{" "}
                 of{" "}
