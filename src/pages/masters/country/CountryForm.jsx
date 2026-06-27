@@ -150,7 +150,7 @@ export default function CountryForm() {
 
           {/* Body */}
           <div className="px-6 py-7 space-y-6">
-            <Row label="Country Code" required error={errors.countryCode} help={isNew ? "Max 3 characters â€” cannot be changed later." : undefined}>
+            <Row label="Country Code" required error={errors.countryCode} help={isNew ? "Max 3 characters — cannot be changed later." : undefined}>
               <input value={form.countryCode} onChange={e => setField("countryCode", e.target.value.toUpperCase())} disabled={isReadOnly || !isNew} placeholder="e.g. IN" maxLength={3} className={inputCls(isReadOnly || !isNew, errors.countryCode)} />
             </Row>
             <Row label="Country Name" required error={errors.countryName}>

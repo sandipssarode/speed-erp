@@ -261,7 +261,7 @@ export default function JobList() {
               <span className="text-gray-500">
                 Showing{" "}
                 <span className="font-semibold text-gray-700">
-                  {(page - 1) * PAGE_SIZE + 1}â€“{Math.min(page * PAGE_SIZE, filtered.length)}
+                  {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filtered.length)}
                 </span>{" "}
                 of{" "}
                 <span className="font-semibold text-gray-700">{filtered.length}</span>{" "}

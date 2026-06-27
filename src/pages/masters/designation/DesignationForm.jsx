@@ -5,11 +5,11 @@ import { api } from "../../../lib/api.js";
 import { Save, Trash2, Edit2, FileText, CheckCircle, AlertCircle, ChevronLeft, IdCard } from "lucide-react";
 
 const LEVEL_OPTIONS = [
-  { value: "L1",  label: "L1 â€” Top Management (Director / CEO / MD / CXO)" },
-  { value: "L2",  label: "L2 â€” Senior Management (VP / General Manager / AGM)" },
-  { value: "L3",  label: "L3 â€” Middle Management (Manager / Deputy Manager / AM)" },
-  { value: "L4",  label: "L4 â€” Executive (Sr. Executive / Engineer / Officer)" },
-  { value: "L5",  label: "L5 â€” Staff / Operator (Technician / Associate / Helper)" },
+  { value: "L1",  label: "L1 — Top Management (Director / CEO / MD / CXO)" },
+  { value: "L2",  label: "L2 — Senior Management (VP / General Manager / AGM)" },
+  { value: "L3",  label: "L3 — Middle Management (Manager / Deputy Manager / AM)" },
+  { value: "L4",  label: "L4 — Executive (Sr. Executive / Engineer / Officer)" },
+  { value: "L5",  label: "L5 — Staff / Operator (Technician / Associate / Helper)" },
   { value: "L6",  label: "L6" },
   { value: "L7",  label: "L7" },
   { value: "L8",  label: "L8" },

@@ -170,12 +170,12 @@ export default function AssetMasterForm() {
 
   const locationOptions = assetStructures.map(s => ({
     value: s.id,
-    label: `${s.locationId}${s.locationName ? " â€” " + s.locationName : ""}`,
+    label: `${s.locationId}${s.locationName ? " — " + s.locationName : ""}`,
   }));
 
   const assetTypeOptions = assetTypes.map(t => ({
     value: t.id,
-    label: `${t.assetTypeId} â€” ${t.assetTypeName}`,
+    label: `${t.assetTypeId} — ${t.assetTypeName}`,
   }));
 
   const headerBtn = "flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg font-medium border border-white/25 text-white hover:bg-white/15 transition-colors";
@@ -230,7 +230,7 @@ export default function AssetMasterForm() {
 
           {/* Body */}
           <div className="px-6 py-7 space-y-6">
-            <Row label="Asset ID" required error={errors.assetId} help={isNew ? "Auto-generated â€” cannot be changed later." : undefined}>
+            <Row label="Asset ID" required error={errors.assetId} help={isNew ? "Auto-generated — cannot be changed later." : undefined}>
               <input
                 value={form.assetId ?? ""}
                 onChange={e => setField("assetId", e.target.value.toUpperCase())}
@@ -389,7 +389,7 @@ export default function AssetMasterForm() {
             <div>
               <p className="text-sm font-medium text-red-700 mb-1">Please correct the highlighted fields and try again.</p>
               <div className="text-xs text-red-600 space-y-0.5">
-                {Object.values(errors).map((e, i) => <p key={i}>â€¢ {e}</p>)}
+                {Object.values(errors).map((e, i) => <p key={i}>• {e}</p>)}
               </div>
             </div>
           </div>

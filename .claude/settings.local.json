@@ -59,7 +59,8 @@
       "Bash(node verify-fouc.mjs)",
       "Bash(node check-grid.mjs)",
       "Bash(node verify.mjs)",
-      "Bash(python3 *)"
+      "Bash(python3 *)",
+      "Bash(python *)"
     ]
   }
 }

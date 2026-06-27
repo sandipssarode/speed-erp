@@ -184,8 +184,8 @@ export default function WorkOrderForm() {
     setMode("view"); setErrors({});
   };
 
-  const productOptions = products.map(p => ({ value: p.id, label: `${p.productCode} â€” ${p.productName}` }));
-  const employeeOptions = employees.map(e => ({ value: e.id, label: `${e.employeeId} â€” ${`${e.firstName || ""} ${e.lastName || ""}`.trim()}` }));
+  const productOptions = products.map(p => ({ value: p.id, label: `${p.productCode} — ${p.productName}` }));
+  const employeeOptions = employees.map(e => ({ value: e.id, label: `${e.employeeId} — ${`${e.firstName || ""} ${e.lastName || ""}`.trim()}` }));
   const st = form.status;
   const editing = mode === "new" || mode === "edit";
 
@@ -227,7 +227,7 @@ export default function WorkOrderForm() {
         <div className="bg-white border border-gray-200 rounded shadow-sm">
           <div className="bg-gradient-to-r from-brand-900 to-brand-600 px-5 py-2.5 rounded-t flex items-center gap-4 text-white">
             <span className="font-bold text-base tracking-wide">{form.workOrderId || "NEW WORK ORDER"}</span>
-            <span className="text-blue-200 text-sm">{form.productName || "â€”"}</span>
+            <span className="text-blue-200 text-sm">{form.productName || "—"}</span>
             <span className={`ml-auto px-2 py-0.5 rounded text-xs font-semibold ${statusBadge(st)}`}>{st}</span>
           </div>
 
@@ -244,7 +244,7 @@ export default function WorkOrderForm() {
                 <Field label="Work Order Type" required error={errors.workOrderType}>
                   <TSelect value={form.workOrderType} onChange={e => setField("workOrderType", e.target.value)} disabled={isReadOnly} options={WO_TYPES} placeholder="Select type" error={errors.workOrderType} />
                 </Field>
-                <Field label="Job ID" hint="Job List master â€” coming soon">
+                <Field label="Job ID" hint="Job List master — coming soon">
                   <TInput value={form.jobId} onChange={e => setField("jobId", e.target.value)} disabled={isReadOnly} placeholder="e.g. JOB-001 (optional)" />
                 </Field>
                 <Field label="Asset Name" className="lg:col-span-2">
@@ -261,13 +261,13 @@ export default function WorkOrderForm() {
                   <TSelect value={form.productId} onChange={e => handleProductChange(e.target.value)} disabled={isReadOnly} options={productOptions} placeholder="Select Finished / Semi-Finished product" error={errors.productId} />
                 </Field>
                 <Field label="Unit"><TInput value={form.unit} disabled placeholder="From product" /></Field>
-                <Field label="BOM" hint="BOM master â€” coming soon">
+                <Field label="BOM" hint="BOM master — coming soon">
                   <TInput value={form.bom} onChange={e => setField("bom", e.target.value)} disabled={isReadOnly} placeholder="e.g. BOM-001 (optional)" />
                 </Field>
                 <Field label="Quantity to Produce" required error={errors.quantityToProduce}>
                   <TInput type="number" value={form.quantityToProduce} onChange={e => setField("quantityToProduce", e.target.value)} disabled={isReadOnly} placeholder="e.g. 100" error={errors.quantityToProduce} />
                 </Field>
-                <Field label="Floor Name" hint="Work Centre master â€” coming soon">
+                <Field label="Floor Name" hint="Work Centre master — coming soon">
                   <TInput value={form.floorName} onChange={e => setField("floorName", e.target.value)} disabled={isReadOnly} placeholder="e.g. Production Line 1" />
                 </Field>
                 <Field label="Assigned To">
@@ -316,7 +316,7 @@ export default function WorkOrderForm() {
                   </thead>
                   <tbody>
                     {(!form.materials || form.materials.length === 0) ? (
-                      <tr><td colSpan={isReadOnly ? 6 : 7} className="text-center py-6 text-gray-400">No material lines. {!isReadOnly && "Click â€œAdd Lineâ€ (BOM auto-populate coming soon)."}</td></tr>
+                      <tr><td colSpan={isReadOnly ? 6 : 7} className="text-center py-6 text-gray-400">No material lines. {!isReadOnly && "Click “Add Line” (BOM auto-populate coming soon)."}</td></tr>
                     ) : form.materials.map((m, i) => (
                       <tr key={i} className="border-b border-gray-100">
                         <td className="px-2 py-1 text-gray-500">{i + 1}</td>
@@ -355,7 +355,7 @@ export default function WorkOrderForm() {
                         ))}
                       </ul>
                     ) : <p className="text-xs text-gray-400 mt-1.5">No attachments uploaded.</p>}
-                    <p className="text-[11px] text-gray-400 mt-1">PDF, DOC, DOCX, XLS, XLSX, JPG, JPEG, PNG â€” max 10 MB each</p>
+                    <p className="text-[11px] text-gray-400 mt-1">PDF, DOC, DOCX, XLS, XLSX, JPG, JPEG, PNG — max 10 MB each</p>
                   </div>
                 </Field>
               </div>
@@ -368,7 +368,7 @@ export default function WorkOrderForm() {
             <AlertCircle size={15} className="text-red-500 mt-0.5 shrink-0" />
             <div>
               <p className="text-sm font-medium text-red-700 mb-1">Please correct the highlighted fields.</p>
-              <ul className="text-xs text-red-600 space-y-0.5">{Object.values(errors).map((e, i) => <li key={i}>â€¢ {e}</li>)}</ul>
+              <ul className="text-xs text-red-600 space-y-0.5">{Object.values(errors).map((e, i) => <li key={i}>• {e}</li>)}</ul>
             </div>
           </div>
         )}

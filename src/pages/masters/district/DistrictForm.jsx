@@ -230,7 +230,7 @@ export default function DistrictForm() {
             <Row label="State" required error={errors.state}>
               <select value={form.state} onChange={e => setField("state", e.target.value)} disabled={isReadOnly} className={inputCls(isReadOnly, errors.state)}>
                 <option value="">Select State</option>
-                {INDIAN_STATES.map(s => <option key={s.code} value={s.name}>{s.code} â€” {s.name}</option>)}
+                {INDIAN_STATES.map(s => <option key={s.code} value={s.name}>{s.code} — {s.name}</option>)}
               </select>
             </Row>
             <Row label="District Headquarters">

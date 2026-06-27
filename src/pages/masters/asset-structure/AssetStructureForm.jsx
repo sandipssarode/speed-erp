@@ -196,7 +196,7 @@ export default function AssetStructureForm() {
 
           {/* Body */}
           <div className="px-6 py-7 space-y-6">
-            <Row label="Location ID" required error={errors.locationId} help={isNew ? "Auto-generated â€” cannot be changed later." : undefined}>
+            <Row label="Location ID" required error={errors.locationId} help={isNew ? "Auto-generated — cannot be changed later." : undefined}>
               <input
                 value={form.locationId ?? ""}
                 onChange={e => setField("locationId", e.target.value.toUpperCase())}
@@ -261,7 +261,7 @@ export default function AssetStructureForm() {
             <div>
               <p className="text-sm font-medium text-red-700 mb-1">Please correct the highlighted fields and try again.</p>
               <div className="text-xs text-red-600 space-y-0.5">
-                {Object.values(errors).map((e, i) => <p key={i}>â€¢ {e}</p>)}
+                {Object.values(errors).map((e, i) => <p key={i}>• {e}</p>)}
               </div>
             </div>
           </div>

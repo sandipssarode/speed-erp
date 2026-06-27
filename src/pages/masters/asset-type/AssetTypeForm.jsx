@@ -194,7 +194,7 @@ export default function AssetTypeForm() {
 
           {/* Body */}
           <div className="px-6 py-7 space-y-6">
-            <Row label="Asset Type ID" required error={errors.assetTypeId} help={isNew ? "Auto-generated â€” cannot be changed later." : undefined}>
+            <Row label="Asset Type ID" required error={errors.assetTypeId} help={isNew ? "Auto-generated — cannot be changed later." : undefined}>
               <input
                 value={form.assetTypeId ?? ""}
                 onChange={e => setField("assetTypeId", e.target.value.toUpperCase())}
@@ -242,7 +242,7 @@ export default function AssetTypeForm() {
             <div>
               <p className="text-sm font-medium text-red-700 mb-1">Please correct the highlighted fields and try again.</p>
               <div className="text-xs text-red-600 space-y-0.5">
-                {Object.values(errors).map((e, i) => <p key={i}>â€¢ {e}</p>)}
+                {Object.values(errors).map((e, i) => <p key={i}>• {e}</p>)}
               </div>
             </div>
           </div>

@@ -189,7 +189,7 @@ export default function MaintenanceTypeForm() {
 
           {/* Body */}
           <div className="px-6 py-7 space-y-6">
-            <Row label="Type ID" required error={errors.typeId} help={isNew ? "Auto-suggested â€” you may edit before saving; cannot be changed later." : undefined}>
+            <Row label="Type ID" required error={errors.typeId} help={isNew ? "Auto-suggested — you may edit before saving; cannot be changed later." : undefined}>
               <input value={form.typeId} onChange={e => setField("typeId", e.target.value.toUpperCase())} disabled={isReadOnly || !isNew} placeholder="e.g. MT-001" maxLength={20} className={inputCls(isReadOnly || !isNew, errors.typeId)} />
             </Row>
             <Row label="Maintenance Name" required error={errors.maintenanceName}>

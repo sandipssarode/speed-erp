@@ -108,7 +108,7 @@ export default function AssetMasterList() {
             />
             <input
               type="text"
-              placeholder="Search assetsâ€¦"
+              placeholder="Search assets…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-10 pr-9 py-2.5 text-sm bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100 transition-all"
@@ -200,7 +200,7 @@ export default function AssetMasterList() {
                       colSpan={7}
                       className="text-center py-16 text-gray-400 text-sm"
                     >
-                      Loadingâ€¦
+                      Loading…
                     </td>
                   </tr>
                 ) : paginated.length === 0 ? (
@@ -235,13 +235,13 @@ export default function AssetMasterList() {
                         {r.assetId}
                       </td>
                       <td className="px-5 py-3.5 text-gray-600">
-                        {r.assetTypeName || "â€”"}
+                        {r.assetTypeName || "—"}
                       </td>
                       <td className="px-5 py-3.5 text-gray-600">
-                        {r.locationName || r.locationId || "â€”"}
+                        {r.locationName || r.locationId || "—"}
                       </td>
                       <td className="px-5 py-3.5 text-gray-600">
-                        {r.manufacturer || "â€”"}
+                        {r.manufacturer || "—"}
                       </td>
                       <td className="px-5 py-3.5">
                         {r.status ? (
@@ -254,7 +254,7 @@ export default function AssetMasterList() {
                             {r.status}
                           </span>
                         ) : (
-                          <span className="text-gray-400">â€”</span>
+                          <span className="text-gray-400">—</span>
                         )}
                       </td>
                       <td className="px-5 py-3.5">
@@ -291,7 +291,7 @@ export default function AssetMasterList() {
               <span className="text-gray-500">
                 Showing{" "}
                 <span className="font-semibold text-gray-700">
-                  {(page - 1) * PAGE_SIZE + 1}â€“
+                  {(page - 1) * PAGE_SIZE + 1}–
                   {Math.min(page * PAGE_SIZE, filtered.length)}
                 </span>{" "}
                 of{" "}

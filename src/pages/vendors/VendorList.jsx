@@ -99,7 +99,7 @@ export default function VendorList() {
             />
             <input
               type="text"
-              placeholder="Search vendorsâ€¦"
+              placeholder="Search vendors…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-10 pr-9 py-2.5 text-sm bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100 transition-all"
@@ -191,7 +191,7 @@ export default function VendorList() {
                       colSpan={8}
                       className="text-center py-16 text-gray-400 text-sm"
                     >
-                      Loadingâ€¦
+                      Loading…
                     </td>
                   </tr>
                 ) : paginated.length === 0 ? (
@@ -229,13 +229,13 @@ export default function VendorList() {
                         {v.code}
                       </td>
                       <td className="px-5 py-3.5 text-gray-600">
-                        {v.group || "â€”"}
+                        {v.group || "—"}
                       </td>
                       <td className="px-5 py-3.5 text-gray-600">
-                        {v.corporateCity || "â€”"}
+                        {v.corporateCity || "—"}
                       </td>
                       <td className="px-5 py-3.5 font-mono text-xs text-gray-600">
-                        {v.gstRegistrationNo || "â€”"}
+                        {v.gstRegistrationNo || "—"}
                       </td>
                       <td className="px-5 py-3.5 text-gray-600">
                         {v.currency || "INR"}
@@ -284,7 +284,7 @@ export default function VendorList() {
               <span className="text-gray-500">
                 Showing{" "}
                 <span className="font-semibold text-gray-700">
-                  {(page - 1) * PAGE_SIZE + 1}â€“
+                  {(page - 1) * PAGE_SIZE + 1}–
                   {Math.min(page * PAGE_SIZE, filtered.length)}
                 </span>{" "}
                 of{" "}

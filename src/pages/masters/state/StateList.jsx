@@ -97,7 +97,7 @@ export default function StateList() {
             />
             <input
               type="text"
-              placeholder="Search statesâ€¦"
+              placeholder="Search states…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-10 pr-9 py-2.5 text-sm bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100 transition-all"
@@ -187,7 +187,7 @@ export default function StateList() {
                       colSpan={6}
                       className="text-center py-16 text-gray-400 text-sm"
                     >
-                      Loadingâ€¦
+                      Loading…
                     </td>
                   </tr>
                 ) : paginated.length === 0 ? (
@@ -222,10 +222,10 @@ export default function StateList() {
                         {r.stateCode}
                       </td>
                       <td className="px-5 py-3.5 text-gray-600">
-                        {r.countryName || "â€”"}
+                        {r.countryName || "—"}
                       </td>
                       <td className="px-5 py-3.5 text-gray-600">
-                        {r.gstStateCode || "â€”"}
+                        {r.gstStateCode || "—"}
                       </td>
                       <td className="px-5 py-3.5">
                         <span
@@ -271,7 +271,7 @@ export default function StateList() {
               <span className="text-gray-500">
                 Showing{" "}
                 <span className="font-semibold text-gray-700">
-                  {(page - 1) * PAGE_SIZE + 1}â€“
+                  {(page - 1) * PAGE_SIZE + 1}–
                   {Math.min(page * PAGE_SIZE, filtered.length)}
                 </span>{" "}
                 of{" "}

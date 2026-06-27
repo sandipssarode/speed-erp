@@ -202,7 +202,7 @@ export default function StateForm() {
 
           {/* Body */}
           <div className="px-6 py-7 space-y-6">
-            <Row label="State Code" required error={errors.stateCode} help={isNew ? "Unique short code â€” cannot be changed later." : undefined}>
+            <Row label="State Code" required error={errors.stateCode} help={isNew ? "Unique short code — cannot be changed later." : undefined}>
               <input value={form.stateCode} onChange={e => setField("stateCode", e.target.value.toUpperCase())} disabled={isReadOnly || !isNew} placeholder="e.g. MH" maxLength={10} className={inputCls(isReadOnly || !isNew, errors.stateCode)} />
             </Row>
             <Row label="State Name" required error={errors.stateName}>
@@ -211,7 +211,7 @@ export default function StateForm() {
             <Row label="Country" required error={errors.countryId}>
               <select value={form.countryId} onChange={e => handleCountryChange(e.target.value)} disabled={isReadOnly} className={inputCls(isReadOnly, errors.countryId)}>
                 <option value="">Select Country</option>
-                {countries.map(c => <option key={c.id} value={c.id}>{c.countryCode} â€” {c.countryName}</option>)}
+                {countries.map(c => <option key={c.id} value={c.id}>{c.countryCode} — {c.countryName}</option>)}
               </select>
             </Row>
             <Row label="GST State Code" error={errors.gstStateCode}>

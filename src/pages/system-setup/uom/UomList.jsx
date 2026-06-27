@@ -80,7 +80,7 @@ export default function UomList() {
             <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
-              placeholder="Search unitsâ€¦"
+              placeholder="Search units…"
               value={search}
               onChange={e => setSearch(e.target.value)}
               className="w-full pl-10 pr-9 py-2.5 text-sm bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100 transition-all"
@@ -130,7 +130,7 @@ export default function UomList() {
               </thead>
               <tbody>
                 {loading ? (
-                  <tr><td colSpan={5} className="text-center py-16 text-gray-400 text-sm">Loadingâ€¦</td></tr>
+                  <tr><td colSpan={5} className="text-center py-16 text-gray-400 text-sm">Loading…</td></tr>
                 ) : paginated.length === 0 ? (
                   <tr><td colSpan={5} className="text-center py-16 text-gray-400 text-sm">
                     {records.length === 0
@@ -159,9 +159,9 @@ export default function UomList() {
                         <span className="inline-block px-2 py-0.5 text-xs font-semibold text-brand-700 bg-brand-50 border border-brand-100 rounded-md font-mono">
                           {r.unitShortCode}
                         </span>
-                      ) : <span className="text-gray-400">â€”</span>}
+                      ) : <span className="text-gray-400">—</span>}
                     </td>
-                    <td className="px-5 py-3.5 text-gray-600 text-sm">{r.unitTypeName || "â€”"}</td>
+                    <td className="px-5 py-3.5 text-gray-600 text-sm">{r.unitTypeName || "—"}</td>
                     <td className="px-5 py-3.5">
                       <div className="flex items-center justify-end gap-1.5" onClick={e => e.stopPropagation()}>
                         <button
@@ -191,7 +191,7 @@ export default function UomList() {
               <span className="text-gray-500">
                 Showing{" "}
                 <span className="font-semibold text-gray-700">
-                  {(page - 1) * PAGE_SIZE + 1}â€“{Math.min(page * PAGE_SIZE, filtered.length)}
+                  {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filtered.length)}
                 </span>{" "}
                 of{" "}
                 <span className="font-semibold text-gray-700">{filtered.length}</span>{" "}

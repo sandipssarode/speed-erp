@@ -174,7 +174,7 @@ export default function UnitTypeForm() {
           )}
 
           <div className="px-6 py-7 space-y-6">
-            <Row label="Unit Type ID" required error={errors.unitTypeId} help={isNew ? "Auto-suggested (UT-XXXXX) â€” editable before first save." : undefined}>
+            <Row label="Unit Type ID" required error={errors.unitTypeId} help={isNew ? "Auto-suggested (UT-XXXXX) — editable before first save." : undefined}>
               <input value={form.unitTypeId} onChange={e => setField("unitTypeId", e.target.value.toUpperCase())} disabled={isReadOnly || !isNew} placeholder="e.g. UT-001" maxLength={20} className={inputCls(isReadOnly || !isNew, errors.unitTypeId)} />
             </Row>
             <Row label="Unit Type Name" required error={errors.unitTypeName}>

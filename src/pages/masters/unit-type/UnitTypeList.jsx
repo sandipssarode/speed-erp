@@ -60,7 +60,7 @@ export default function UnitTypeList() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Unit Type Master</h1>
           <p className="text-sm text-gray-500 mt-0.5">
-            Manage unit categories â€” Weight, Length, Volume, Quantity and more
+            Manage unit categories — Weight, Length, Volume, Quantity and more
           </p>
         </div>
 
@@ -69,7 +69,7 @@ export default function UnitTypeList() {
             <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
-              placeholder="Search unit typesâ€¦"
+              placeholder="Search unit types…"
               value={search}
               onChange={e => setSearch(e.target.value)}
               className="w-full pl-10 pr-9 py-2.5 text-sm bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100 transition-all"
@@ -105,7 +105,7 @@ export default function UnitTypeList() {
               </thead>
               <tbody>
                 {loading ? (
-                  <tr><td colSpan={3} className="text-center py-16 text-gray-400 text-sm">Loadingâ€¦</td></tr>
+                  <tr><td colSpan={3} className="text-center py-16 text-gray-400 text-sm">Loading…</td></tr>
                 ) : paginated.length === 0 ? (
                   <tr><td colSpan={3} className="text-center py-16 text-gray-400 text-sm">
                     {records.length === 0
@@ -158,7 +158,7 @@ export default function UnitTypeList() {
               <span className="text-gray-500">
                 Showing{" "}
                 <span className="font-semibold text-gray-700">
-                  {(page - 1) * PAGE_SIZE + 1}â€“{Math.min(page * PAGE_SIZE, filtered.length)}
+                  {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filtered.length)}
                 </span>{" "}
                 of{" "}
                 <span className="font-semibold text-gray-700">{filtered.length}</span>{" "}
