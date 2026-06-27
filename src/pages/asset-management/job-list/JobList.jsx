@@ -95,7 +95,7 @@ export default function JobList() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Job List</h1>
           <p className="text-sm text-gray-500 mt-0.5">
-            Maintenance jobs raised for assets â€” track from Open through Completion
+            Maintenance jobs raised for assets — track from Open through Completion
           </p>
         </div>
 
@@ -104,7 +104,7 @@ export default function JobList() {
             <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
-              placeholder="Search by job ID, asset, typeâ€¦"
+              placeholder="Search by job ID, asset, type…"
               value={search}
               onChange={e => setSearch(e.target.value)}
               className="w-full pl-10 pr-9 py-2.5 text-sm bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100 transition-all"
@@ -164,7 +164,7 @@ export default function JobList() {
               </thead>
               <tbody>
                 {loading ? (
-                  <tr><td colSpan={8} className="text-center py-16 text-gray-400 text-sm">Loadingâ€¦</td></tr>
+                  <tr><td colSpan={8} className="text-center py-16 text-gray-400 text-sm">Loading…</td></tr>
                 ) : paginated.length === 0 ? (
                   <tr><td colSpan={8} className="text-center py-16 text-gray-400 text-sm">
                     {records.length === 0
@@ -188,20 +188,20 @@ export default function JobList() {
                       </div>
                     </td>
                     <td className="px-5 py-3.5">
-                      <p className="font-medium text-gray-800 leading-tight">{r.assetName || "â€”"}</p>
+                      <p className="font-medium text-gray-800 leading-tight">{r.assetName || "—"}</p>
                       <p className="text-xs text-gray-400 mt-0.5">{r.assetLocation || ""}</p>
                     </td>
-                    <td className="px-5 py-3.5 text-gray-600">{r.maintenanceTypeName || "â€”"}</td>
+                    <td className="px-5 py-3.5 text-gray-600">{r.maintenanceTypeName || "—"}</td>
                     <td className="px-5 py-3.5">
                       {r.priority ? (
                         <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${PRIORITY_PILL[r.priority] || "bg-gray-50 text-gray-500 border border-gray-200"}`}>
                           {r.priority}
                         </span>
-                      ) : <span className="text-gray-400">â€”</span>}
+                      ) : <span className="text-gray-400">—</span>}
                     </td>
-                    <td className="px-5 py-3.5 text-gray-600">{r.assignedToName || "â€”"}</td>
+                    <td className="px-5 py-3.5 text-gray-600">{r.assignedToName || "—"}</td>
                     <td className="px-5 py-3.5 text-gray-500 text-xs">
-                      {r.jobDate ? new Date(r.jobDate).toLocaleDateString("en-IN") : "â€”"}
+                      {r.jobDate ? new Date(r.jobDate).toLocaleDateString("en-IN") : "—"}
                     </td>
                     <td className="px-5 py-3.5">
                       <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${STATUS_PILL[r.status] || "bg-gray-50 text-gray-600"}`}>
