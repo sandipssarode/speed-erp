@@ -328,9 +328,9 @@ export default function Layout({ children }) {
                     { t: "GRN pending for PO #PO-0231", d: "1 hour ago" },
                     { t: "New sales quotation SQ-0089 received", d: "Today" },
                   ].map((n, i) => (
-                    <div key={i} className="px-4 py-2.5 hover:bg-brand-50 transition-colors cursor-pointer border-b border-gray-50 last:border-0">
-                      <p className="text-xs text-gray-700 leading-snug">{n.t}</p>
-                      <p className="text-[10px] text-gray-400 mt-0.5">{n.d}</p>
+                    <div key={i} className="group px-4 py-2.5 hover:bg-brand-600 transition-colors cursor-pointer border-b border-gray-50 last:border-0">
+                      <p className="text-xs text-gray-700 group-hover:text-white leading-snug">{n.t}</p>
+                      <p className="text-[10px] text-gray-400 group-hover:text-white/70 mt-0.5">{n.d}</p>
                     </div>
                   ))}
                 </div>
@@ -356,13 +356,13 @@ export default function Layout({ children }) {
                 <Link
                   to="/profile"
                   onClick={() => setProfileOpen(false)}
-                  className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-600 hover:bg-brand-50 hover:text-brand-600 transition-colors"
+                  className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-600 hover:bg-brand-600 hover:text-white transition-colors"
                 >
                   <User size={15} /> My Profile
                 </Link>
                 <button
                   onClick={handleLogoff}
-                  className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-600 hover:bg-red-50 hover:text-red-600 transition-colors border-t border-gray-100"
+                  className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-600 hover:bg-brand-600 hover:text-white transition-colors border-t border-gray-100"
                 >
                   <LogOut size={15} /> Log Off
                 </button>
