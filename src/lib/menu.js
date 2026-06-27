@@ -7,38 +7,28 @@ import {
 // ─────────────────────────────────────────────────────────────
 export const menu = [
   {
-    label: "Masters", icon: Database,
-    children: {
-      "HR & People": [
-        { label: "Department",            path: "/masters/department" },
-        { label: "Designation",           path: "/masters/designation" },
-        { label: "Employee Registration", path: "/masters/employee" },
-      ],
-      "Items & UOM": [
-        { label: "Product Type",          path: "/masters/product-type" },
-        { label: "Product Sub-type",      path: "/masters/product-subtype" },
-        { label: "Product",               path: "/masters/product-master" },
-        { label: "Unit Type",             path: "/masters/unit-type" },
-        { label: "Unit of Measure",       path: "/masters/uom" },
-      ],
-      "Parties": [
-        { label: "Vendor",                path: "/vendors" },
-        { label: "Customer",              path: "/sales/customers" },
-      ],
-      "Geographic": [
-        { label: "Country",               path: "/system/countries" },
-        { label: "State",                 path: "/system/states" },
-        { label: "District",              path: "/masters/district" },
-        { label: "Village / Taluka",      path: "/masters/village-taluka" },
-      ],
-      "Assets": [
-        { label: "Asset Structure",       path: "/masters/asset-structure" },
-        { label: "Asset Type",            path: "/masters/asset-type" },
-        { label: "Asset",                 path: "/masters/asset-master" },
-        { label: "Maintenance Type",      path: "/masters/maintenance-type" },
-        { label: "Work Order Type",       path: "/masters/work-order-type" },
-      ],
-    },
+    label: "Masters", icon: Database, flat: true,
+    links: [
+      { label: "Department",            path: "/masters/department" },
+      { label: "Designation",           path: "/masters/designation" },
+      { label: "Employee Registration", path: "/masters/employee" },
+      { label: "Vendor",                path: "/vendors" },
+      { label: "Customer",              path: "/sales/customers" },
+      { label: "Product Type",          path: "/masters/product-type" },
+      { label: "Product Sub-type",      path: "/masters/product-subtype" },
+      { label: "Product",               path: "/masters/product-master" },
+      { label: "Unit Type",             path: "/masters/unit-type" },
+      { label: "Unit of Measure",       path: "/masters/uom" },
+      { label: "Country",               path: "/system/countries" },
+      { label: "State",                 path: "/system/states" },
+      { label: "District",              path: "/masters/district" },
+      { label: "Village / Taluka",      path: "/masters/village-taluka" },
+      { label: "Asset Structure",       path: "/masters/asset-structure" },
+      { label: "Asset Type",            path: "/masters/asset-type" },
+      { label: "Asset",                 path: "/masters/asset-master" },
+      { label: "Maintenance Type",      path: "/masters/maintenance-type" },
+      { label: "Work Order Type",       path: "/masters/work-order-type" },
+    ],
   },
   {
     label: "Asset Management", icon: Wrench,
@@ -123,23 +113,17 @@ export const menu = [
     },
   },
   {
-    label: "System Setup", icon: Settings,
-    children: {
-      "Users & Access": [
-        { label: "Users",         path: "/system/users" },
-        { label: "Access Rights", path: "/system/access-rights" },
-      ],
-      "Organisation": [
-        { label: "Organisation",  path: "/system/organisations" },
-        { label: "Business Unit", path: "/system/business-units" },
-        { label: "Warehouse",     path: "/system/warehouses" },
-      ],
-      "Configuration": [
-        { label: "Document Series",    path: "/system/document-series" },
-        { label: "Financial Year",     path: "/system/financial-year" },
-        { label: "Email Configuration", path: "/system/email-config" },
-      ],
-    },
+    label: "System Setup", icon: Settings, flat: true,
+    links: [
+      { label: "Users",              path: "/system/users" },
+      { label: "Access Rights",      path: "/system/access-rights" },
+      { label: "Organisation",       path: "/system/organisations" },
+      { label: "Business Unit",      path: "/system/business-units" },
+      { label: "Warehouse",          path: "/system/warehouses" },
+      { label: "Document Series",    path: "/system/document-series" },
+      { label: "Financial Year",     path: "/system/financial-year" },
+      { label: "Email Configuration", path: "/system/email-config" },
+    ],
   },
 ];
 
