@@ -170,14 +170,7 @@ export default function EmployeeForm() {
       } else if (id) {
         const found = employees.find(r => r.id === id);
         if (found) {
-          const mgr = found.reportingManagerId ? employees.find(e => e.id === found.reportingManagerId) : null;
-          setForm({
-            ...found,
-            reportingManagerDept: found.reportingManagerDept || mgr?.departmentName || "",
-            reportingManagerLevel: found.reportingManagerLevel || mgr?.level || "",
-            reportingManagerDesig: found.reportingManagerDesig || mgr?.designationName || "",
-            reportingManagerLocation: found.reportingManagerLocation || mgr?.locationName || "",
-          });
+          setForm({ ...found });
         } else navigate("/masters/employee");
       }
     }).catch(console.error);
@@ -220,18 +213,6 @@ export default function EmployeeForm() {
     setForm(prev => ({ ...prev, locationId: locId, locationName: found?.locationName || "" }));
   };
 
-  const handleReportingManagerChange = (managerId) => {
-    const found = allRecords.find(r => r.id === managerId);
-    setForm(prev => ({
-      ...prev,
-      reportingManagerId: managerId,
-      reportingManagerName: found ? `${found.firstName} ${found.lastName}` : "",
-      reportingManagerDept: found?.departmentName || "",
-      reportingManagerLevel: found?.level || "",
-      reportingManagerDesig: found?.designationName || "",
-      reportingManagerLocation: found?.locationName || "",
-    }));
-  };
 
   const handleSave = async () => {
     const errs = validate(form, allRecords, isNew ? null : id);
@@ -280,7 +261,6 @@ export default function EmployeeForm() {
   const deptOptions = departments.map(d => ({ value: d.id, label: d.departmentName }));
   const desigOptions = designations.map(d => ({ value: d.id, label: d.designationName }));
   const locationOptions = locations.map(l => ({ value: l.id, label: l.locationName || l.locationId || l.id }));
-  const managerOptions = allRecords.filter(e => e.status === "Active" && e.id !== id).map(e => ({ value: e.id, label: `${e.firstName} ${e.lastName} (${e.employeeId})` }));
   const countryOptions = countries.map(c => ({ value: c.id, label: c.countryName }));
   const stateOptions = filteredStates.map(s => ({ value: s.id, label: s.stateName }));
   const districtOptions = filteredDistricts.map(d => ({ value: d.id, label: d.districtName }));
@@ -432,26 +412,20 @@ export default function EmployeeForm() {
               {/* Reporting To */}
               <div className="border-t border-gray-200 pt-4 space-y-3">
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Reporting To</p>
-                <Field label="Report To">
-                  <TSelect value={form.reportingManagerId} onChange={e => handleReportingManagerChange(e.target.value)} disabled={isReadOnly} options={managerOptions} placeholder="Select Reporting Manager (optional)" />
-                  <p className="text-[11px] text-gray-400 mt-0.5">Shows Active employees only.</p>
-                </Field>
-                {form.reportingManagerId && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <Field label="Report To — Department">
-                      <TInput value={form.reportingManagerDept} disabled={true} placeholder="—" />
-                    </Field>
-                    <Field label="Report To — Level">
-                      <TInput value={form.reportingManagerLevel} disabled={true} placeholder="—" />
-                    </Field>
-                    <Field label="Report To — Designation">
-                      <TInput value={form.reportingManagerDesig} disabled={true} placeholder="—" />
-                    </Field>
-                    <Field label="Report To — Location">
-                      <TInput value={form.reportingManagerLocation} disabled={true} placeholder="—" />
-                    </Field>
-                  </div>
-                )}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <Field label="Department">
+                    <TInput value={form.reportingManagerDept} onChange={e => setField("reportingManagerDept", e.target.value)} disabled={isReadOnly} placeholder="Department" />
+                  </Field>
+                  <Field label="Level">
+                    <TInput value={form.reportingManagerLevel} onChange={e => setField("reportingManagerLevel", e.target.value)} disabled={isReadOnly} placeholder="Level" />
+                  </Field>
+                  <Field label="Designation">
+                    <TInput value={form.reportingManagerDesig} onChange={e => setField("reportingManagerDesig", e.target.value)} disabled={isReadOnly} placeholder="Designation" />
+                  </Field>
+                  <Field label="Name">
+                    <TInput value={form.reportingManagerName} onChange={e => setField("reportingManagerName", e.target.value)} disabled={isReadOnly} placeholder="Name" />
+                  </Field>
+                </div>
               </div>
             </div>
 
