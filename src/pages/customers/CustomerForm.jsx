@@ -525,7 +525,7 @@ export default function CustomerForm() {
 
   return (
     <Layout>
-      <div className="max-w-7xl mx-auto space-y-4">
+      <div className="w-full space-y-4">
 
         {/* Back link */}
         <button onClick={() => navigate("/sales/customers")} className="flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600 transition-colors font-medium">

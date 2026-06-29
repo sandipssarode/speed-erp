@@ -178,7 +178,7 @@ export default function DistrictForm() {
 
   return (
     <Layout>
-      <div className="max-w-5xl mx-auto space-y-4">
+      <div className="w-full space-y-4">
 
         <button onClick={() => navigate("/masters/district")} className="flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600 transition-colors font-medium">
           <ChevronLeft size={15} /> District Master

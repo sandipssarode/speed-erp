@@ -447,7 +447,7 @@ export default function ProductForm() {
   // ─────────────────────────────────────────────────────────────
   return (
     <Layout>
-      <div className="space-y-3 max-w-7xl mx-auto">
+      <div className="w-full space-y-3">
 
         {/* Category Modal */}
         {showCategoryModal && (

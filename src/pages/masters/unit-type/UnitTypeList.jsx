@@ -56,7 +56,7 @@ export default function UnitTypeList() {
 
   return (
     <Layout>
-      <div className="max-w-6xl mx-auto space-y-4">
+      <div className="w-full space-y-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Unit Type Master</h1>
           <p className="text-sm text-gray-500 mt-0.5">

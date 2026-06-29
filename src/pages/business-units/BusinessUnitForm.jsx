@@ -321,7 +321,7 @@ export default function BusinessUnitForm() {
   // ─────────────────────────────────────────────────────────────
   return (
     <Layout>
-      <div className="space-y-3 max-w-7xl mx-auto">
+      <div className="w-full space-y-3">
 
         {/* Breadcrumb */}
         <div className="flex items-center gap-1.5 text-xs text-gray-400">

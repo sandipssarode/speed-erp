@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+﻿import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Layout from "../../components/Layout";
 import { api } from "../../lib/api.js";
@@ -199,7 +199,7 @@ export default function WorkOrderForm() {
 
   return (
     <Layout>
-      <div className="max-w-5xl mx-auto space-y-4">
+      <div className="w-full space-y-4">
 
         <button onClick={() => navigate("/asset-management/work-order")} className="flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600 transition-colors font-medium">
           <ChevronLeft size={15} /> Work Order

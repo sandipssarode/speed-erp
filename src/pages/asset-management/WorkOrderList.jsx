@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../../components/Layout";
 import {
@@ -86,7 +86,7 @@ export default function WorkOrderList() {
 
   return (
     <Layout>
-      <div className="max-w-7xl mx-auto space-y-4">
+      <div className="w-full space-y-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Work Order</h1>
           <p className="text-sm text-gray-500 mt-0.5">

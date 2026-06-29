@@ -75,7 +75,7 @@ export default function DesignationList() {
 
   return (
     <Layout>
-      <div className="max-w-6xl mx-auto space-y-4">
+      <div className="w-full space-y-4">
         {/* Heading */}
         <div>
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
