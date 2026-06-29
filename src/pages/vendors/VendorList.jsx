@@ -213,17 +213,12 @@ export default function VendorList() {
                       onClick={() => navigate(`/vendors/${v.id}`)}
                     >
                       <td className="px-5 py-3.5">
-                        <div className="flex items-center gap-3">
-                          <span className="w-9 h-9 rounded-lg bg-brand-50 ring-1 ring-brand-100 text-brand-700 flex items-center justify-center text-xs font-bold shrink-0">
-                            {(v.code || v.name || "?").slice(0, 2).toUpperCase()}
-                          </span>
-                          <span className="font-semibold text-gray-800 group-hover:text-brand-600 transition-colors">
+                        <span className="font-semibold text-gray-800 group-hover:text-brand-600 transition-colors">
                             {v.name}
                             {v.isManufacturer && <span className="ml-1.5 text-xs bg-purple-50 text-purple-600 px-1.5 py-0.5 rounded">Mfg</span>}
                             {v.isServiceJobwork && <span className="ml-1.5 text-xs bg-teal-50 text-teal-600 px-1.5 py-0.5 rounded">SVC</span>}
                             {v.isAgentDealer && <span className="ml-1.5 text-xs bg-orange-50 text-orange-600 px-1.5 py-0.5 rounded">Agent</span>}
                           </span>
-                        </div>
                       </td>
                       <td className="px-5 py-3.5 font-mono text-xs text-gray-400">
                         {v.code}

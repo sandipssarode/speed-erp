@@ -178,14 +178,9 @@ export default function JobList() {
                     onClick={() => navigate(`/asset-management/job-list/${r.id}`)}
                   >
                     <td className="px-5 py-3.5">
-                      <div className="flex items-center gap-3">
-                        <span className="w-9 h-9 rounded-lg bg-brand-50 ring-1 ring-brand-100 text-brand-700 flex items-center justify-center text-xs font-bold shrink-0">
-                          {(r.jobId || "J").slice(4, 6)}
-                        </span>
-                        <span className="font-semibold text-gray-800 group-hover:text-brand-600 transition-colors font-mono text-xs">
+                      <span className="font-semibold text-gray-800 group-hover:text-brand-600 transition-colors font-mono text-xs">
                           {r.jobId}
                         </span>
-                      </div>
                     </td>
                     <td className="px-5 py-3.5">
                       <p className="font-medium text-gray-800 leading-tight">{r.assetName || "—"}</p>

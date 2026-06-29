@@ -183,14 +183,9 @@ export default function DistrictList() {
                       onClick={() => navigate(`/masters/district/${r.id}`)}
                     >
                       <td className="px-5 py-3.5">
-                        <div className="flex items-center gap-3">
-                          <span className="w-9 h-9 rounded-lg bg-brand-50 ring-1 ring-brand-100 text-brand-700 flex items-center justify-center text-xs font-bold shrink-0">
-                            {(r.districtCode || "?").slice(0, 2).toUpperCase()}
-                          </span>
-                          <span className="font-semibold text-gray-800 group-hover:text-brand-600 transition-colors">
+                        <span className="font-semibold text-gray-800 group-hover:text-brand-600 transition-colors">
                             {r.districtName}
                           </span>
-                        </div>
                       </td>
                       <td className="px-5 py-3.5 font-mono text-xs text-gray-400">
                         {r.districtCode}
