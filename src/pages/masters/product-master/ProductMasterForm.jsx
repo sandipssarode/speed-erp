@@ -79,6 +79,7 @@ export default function ProductMasterForm() {
   const [allRecords, setAllRecords] = useState([]);
   const [productTypes, setProductTypes] = useState([]);
   const [allSubtypes, setAllSubtypes] = useState([]);
+  const [uoms, setUoms] = useState([]);
   const photoRef = useRef(null);
   const attachRef = useRef(null);
 
@@ -90,10 +91,12 @@ export default function ProductMasterForm() {
       api.get("/api/product-masters"),
       api.get("/api/product-types").catch(() => []),
       api.get("/api/product-subtypes").catch(() => []),
-    ]).then(([masters, types, subtypes]) => {
+      api.get("/api/uom").catch(() => []),
+    ]).then(([masters, types, subtypes, uomList]) => {
       setAllRecords(masters);
       setProductTypes(types.filter(t => !t.isDeactivated));
       setAllSubtypes(subtypes.filter(s => !s.isDeactivated));
+      setUoms(uomList.filter(u => !u.isDeactivated));
       if (!isNew && id) {
         const found = masters.find(r => r.id === id);
         if (found) setForm(found);
@@ -236,7 +239,7 @@ export default function ProductMasterForm() {
                   <TInput value={form.productName} onChange={e => setField("productName", e.target.value)} disabled={isReadOnly} placeholder="e.g. MS Plate 10mm" maxLength={128} error={errors.productName} />
                 </Field>
                 <Field label="Units" required error={errors.units}>
-                  <TInput value={form.units} onChange={e => setField("units", e.target.value.toUpperCase())} disabled={isReadOnly} placeholder="e.g. KGS, MTR, NOS" maxLength={20} error={errors.units} />
+                  <TSelect value={form.units} onChange={e => setField("units", e.target.value)} disabled={isReadOnly} options={uoms.map(u => ({ value: u.unitShortCode, label: `${u.unitName} (${u.unitShortCode})` }))} placeholder="Select Unit" error={errors.units} />
                   <p className="text-[11px] text-gray-400 mt-0.5">UOM Master dropdown coming soon.</p>
                 </Field>
                 <Field label="Reorder Level" error={errors.reorderLevel}>
