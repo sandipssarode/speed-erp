@@ -107,8 +107,8 @@ export default function DepartmentList() {
 
         {/* Table card */}
         <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm min-w-[540px]">
+          <div>
+            <table className="w-full text-sm">
               <thead>
                 <tr className="bg-gradient-to-r from-brand-800 to-brand-600">
                   <th className={th}>

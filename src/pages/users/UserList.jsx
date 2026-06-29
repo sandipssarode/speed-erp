@@ -49,8 +49,8 @@ export default function UserList() {
         {loading ? (
           <div className="text-center py-16 text-gray-400 text-sm">Loading users...</div>
         ) : viewMode === "list" ? (
-          <div className="overflow-x-auto border border-gray-300 rounded-lg bg-white">
-            <table className="min-w-full text-sm text-left">
+          <div className="border border-gray-300 rounded-lg bg-white">
+            <table className="w-full text-sm text-left">
               <thead className="bg-gray-50 border-b border-gray-300">
                 <tr>
                   <th className="px-4 py-3 font-semibold text-gray-900">Code</th>
