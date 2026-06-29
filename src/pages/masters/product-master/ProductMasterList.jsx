@@ -148,9 +148,9 @@ export default function ProductMasterList() {
                       Product Name <ChevronsUpDown size={13} className="opacity-70" />
                     </button>
                   </th>
+                  <th className={th}>Product Code</th>
                   <th className={th}>Sub-type</th>
                   <th className={th}>Type</th>
-                  <th className={th}>Product Code</th>
                   <th className={th}>Units</th>
                   <th className={th}>Status</th>
                   <th className={`${th} text-right`}>Actions</th>
@@ -189,14 +189,14 @@ export default function ProductMasterList() {
                             {r.productName}
                           </span>
                       </td>
+                      <td className="px-5 py-3.5 font-mono text-xs text-gray-400">
+                        {r.productCode}
+                      </td>
                       <td className="px-5 py-3.5 text-gray-600">
                         {r.subtypeName || "—"}
                       </td>
                       <td className="px-5 py-3.5 text-gray-600">
                         {r.productTypeName || "—"}
-                      </td>
-                      <td className="px-5 py-3.5 font-mono text-xs text-gray-400">
-                        {r.productCode}
                       </td>
                       <td className="px-5 py-3.5 text-gray-600">
                         {r.units || "—"}
