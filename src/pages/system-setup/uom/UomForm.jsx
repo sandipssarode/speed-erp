@@ -28,11 +28,12 @@ function Row({ label, required, error, children, help }) {
 }
 
 const emptyForm = () => ({
-  unitId:        `UOM-${Date.now().toString().slice(-5)}`,
-  unitTypeId:    "",
-  unitTypeName:  "",
-  unitName:      "",
-  unitShortCode: "",
+  unitId:          `UOM-${Date.now().toString().slice(-5)}`,
+  unitTypeId:      "",
+  unitTypeName:    "",
+  unitName:        "",
+  unitShortCode:   "",
+  conversionValue: "",
   createdAt: "", updatedAt: "", createdBy: "", updatedBy: "",
   changelog: [],
 });
@@ -51,6 +52,10 @@ function validate(form, allRecords, editingId) {
     e.unitShortCode = "Short Code must be max 10 characters.";
   else if (allRecords.some(r => r.unitShortCode?.trim().toLowerCase() === form.unitShortCode.trim().toLowerCase() && r.id !== editingId))
     e.unitShortCode = "Short Code already exists.";
+  if (form.conversionValue !== "" && form.conversionValue !== null && form.conversionValue !== undefined) {
+    const n = Number(form.conversionValue);
+    if (isNaN(n) || n <= 0) e.conversionValue = "Conversion Value must be a number greater than 0.";
+  }
   return e;
 }
 
@@ -135,6 +140,23 @@ export default function UomForm() {
     catch (err) { showToast(err.message || "Failed to delete.", "error"); }
   };
 
+  // Equivalent To: find the base unit (conversionValue == 1) in the same unit type
+  const baseUnit = allRecords.find(r =>
+    r.unitTypeId === form.unitTypeId &&
+    Number(r.conversionValue) === 1 &&
+    r.id !== id
+  );
+  const baseShortCode = baseUnit?.unitShortCode || "";
+  const convNum = form.conversionValue !== "" ? Number(form.conversionValue) : NaN;
+  let equivalentTo = "";
+  if (!isNaN(convNum) && convNum > 0 && form.unitShortCode) {
+    if (convNum === 1) {
+      equivalentTo = "Base Unit";
+    } else if (baseShortCode) {
+      equivalentTo = `1 ${form.unitShortCode.toUpperCase()} = ${form.conversionValue} ${baseShortCode.toUpperCase()}`;
+    }
+  }
+
   const headerBtn = "flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg font-medium border border-white/25 text-white hover:bg-white/15 transition-colors";
 
   return (
@@ -213,6 +235,28 @@ export default function UomForm() {
             <Row label="Short Code" required error={errors.unitShortCode} help="Max 10 characters — printed on all PO, GRN, and Sales documents.">
               <input value={form.unitShortCode} onChange={e => setField("unitShortCode", e.target.value.toUpperCase())} disabled={isReadOnly} placeholder="e.g. KGS" maxLength={10} className={inputCls(isReadOnly, errors.unitShortCode)} />
             </Row>
+
+            <Row label="Conversion Value" error={errors.conversionValue} help="How many Base Units equal 1 of this unit (e.g. 1 TON = 1000 KGS → enter 1000). Enter 1 to mark this as the Base Unit. Leave blank for standalone units like NOS, SET, BOX.">
+              <input
+                type="number"
+                min="0"
+                step="any"
+                value={form.conversionValue}
+                onChange={e => setField("conversionValue", e.target.value)}
+                disabled={isReadOnly}
+                placeholder="e.g. 1000"
+                className={inputCls(isReadOnly, errors.conversionValue)}
+              />
+            </Row>
+
+            {equivalentTo && (
+              <Row label="Equivalent To">
+                <div className="flex items-center px-3.5 py-2.5 text-sm border border-brand-100 bg-brand-50 rounded-xl text-brand-700 font-medium">
+                  {equivalentTo}
+                </div>
+                <p className="text-xs text-gray-400 mt-1.5">Auto-generated from Conversion Value and Short Code.</p>
+              </Row>
+            )}
 
           </div>
 
