@@ -37,10 +37,7 @@ export default function Signup() {
   }
 
   return (
-    <AuthLayout
-      headline="Join Speed ERP Today."
-      subtext="Create your account and start managing your operations with ease."
-    >
+    <AuthLayout>
       <h1 className="text-2xl font-bold text-gray-900 tracking-tight mb-1">Create Account</h1>
       <p className="text-sm text-gray-500 mb-7">Get started with Speed ERP.</p>
 

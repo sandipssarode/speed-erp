@@ -12,10 +12,7 @@ export default function ForgotPassword() {
   }
 
   return (
-    <AuthLayout
-      headline="Recover Your Access."
-      subtext="Enter your email and we'll send you a link to reset your password."
-    >
+    <AuthLayout>
       <h1 className="text-2xl font-bold text-gray-900 tracking-tight mb-1">Reset Password</h1>
       <p className="text-sm text-gray-500 mb-7">We&apos;ll email you a reset link.</p>
 

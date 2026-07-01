@@ -26,10 +26,7 @@ export default function Login() {
   }
 
   return (
-    <AuthLayout
-      headline="Manage Smarter. Grow Faster."
-      subtext="The complete operations platform for Speed Innovations."
-    >
+    <AuthLayout>
       <h1 className="text-2xl font-bold text-gray-900 tracking-tight mb-1">Welcome Back!</h1>
       <p className="text-sm text-gray-500 mb-7">Log in to continue to Speed ERP.</p>
 
