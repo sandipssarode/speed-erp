@@ -73,23 +73,28 @@ export default function AuthLayout({ children }) {
         </div>
       </div>
 
-      {/* ── Right 45% — White form panel ── */}
+      {/* ── Right 45% — Lavender bg + floating card ── */}
       <div
-        className="
-          flex flex-col items-center justify-center
-          w-full min-h-screen bg-white
-          px-6 sm:px-10 py-12
-          lg:w-[45%] lg:px-16
-          lg:rounded-l-[36px]
-        "
-        style={{ boxShadow: "-16px 0 70px rgba(72,44,128,0.16)" }}
+        className="w-full lg:w-[45%] flex flex-col items-center justify-center min-h-screen"
+        style={{
+          background: "radial-gradient(130% 110% at 70% 5%, #f5f0ff 0%, #ebe3fd 55%, #e2d9fb 100%)",
+          padding: "24px 24px 24px 12px",
+        }}
       >
         {/* Mobile logo */}
-        <div className="mb-10 lg:hidden">
+        <div className="mb-6 lg:hidden">
           <img src="/si_logo_trans.png" alt="Speed Innovations" className="h-12 w-auto" />
         </div>
 
-        <div className="w-full max-w-sm">
+        {/* Floating card */}
+        <div style={{
+          background: "#fff",
+          borderRadius: 28,
+          boxShadow: "0 24px 64px rgba(72,44,128,0.13), 0 4px 18px rgba(72,44,128,0.07)",
+          padding: "40px 36px",
+          width: "100%",
+          maxWidth: 400,
+        }}>
           {children}
         </div>
       </div>

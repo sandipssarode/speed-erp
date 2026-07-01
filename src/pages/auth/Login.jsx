@@ -1,14 +1,38 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Link used for forgot-password
+import { Link, useNavigate } from "react-router-dom";
 import { api } from "../../lib/api.js";
 import AuthLayout from "./AuthLayout.jsx";
 
+const field = {
+  width: "100%", boxSizing: "border-box",
+  padding: "11px 14px", borderRadius: 12,
+  border: "1.5px solid #E0D6F3",
+  background: "#F8F6FD", color: "#1C0F35",
+  fontSize: 14, outline: "none", fontFamily: "inherit",
+  transition: "border-color 0.2s, box-shadow 0.2s",
+};
+
+function Field({ label, children }) {
+  return (
+    <div style={{ marginBottom: 16 }}>
+      <label style={{ display: "block", fontSize: 12.5, fontWeight: 600, color: "#3A2268", marginBottom: 6 }}>
+        {label}
+      </label>
+      {children}
+    </div>
+  );
+}
+
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [email, setEmail]             = useState("");
+  const [password, setPassword]       = useState("");
+  const [showPass, setShowPass]       = useState(false);
+  const [error, setError]             = useState("");
+  const [loading, setLoading]         = useState(false);
   const navigate = useNavigate();
+
+  const focusStyle  = e => { e.target.style.borderColor = "#482C80"; e.target.style.boxShadow = "0 0 0 3px rgba(72,44,128,0.1)"; };
+  const blurStyle   = e => { e.target.style.borderColor = "#E0D6F3"; e.target.style.boxShadow = "none"; };
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -27,45 +51,107 @@ export default function Login() {
 
   return (
     <AuthLayout>
-      <h1 className="text-2xl font-bold text-gray-900 tracking-tight mb-1">Welcome Back!</h1>
-      <p className="text-sm text-gray-500 mb-7">Log in to continue to Speed ERP.</p>
+      {/* Heading */}
+      <div style={{ marginBottom: 28 }}>
+        <h1 style={{
+          fontSize: 26, fontWeight: 800, color: "#1C0F35",
+          letterSpacing: "-0.025em", lineHeight: 1.2,
+          fontFamily: "'Inter', system-ui, sans-serif", marginBottom: 6,
+        }}>
+          Welcome Back!
+        </h1>
+        <p style={{ fontSize: 13.5, color: "rgba(72,44,128,0.55)", lineHeight: 1.5 }}>
+          Log in to continue to Speed ERP.
+        </p>
+      </div>
 
       <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-1.5" htmlFor="email">Email</label>
+        {/* Email */}
+        <Field label="Email address">
           <input
-            id="email" type="email" value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-brand-400 transition-colors"
-            placeholder="you@example.com" required
+            type="email" value={email} placeholder="you@example.com" required
+            onChange={e => setEmail(e.target.value)}
+            style={field} onFocus={focusStyle} onBlur={blurStyle}
           />
-        </div>
+        </Field>
 
-        <div className="mb-5">
-          <div className="flex items-baseline justify-between mb-1.5">
-            <label className="text-sm font-medium text-gray-700" htmlFor="password">Password</label>
-            <Link to="/forgot-password" className="text-xs text-brand-600 hover:underline">Forgot password?</Link>
+        {/* Password */}
+        <Field label="Password">
+          <div style={{ position: "relative" }}>
+            <input
+              type={showPass ? "text" : "password"} value={password}
+              placeholder="Enter your password" required
+              onChange={e => setPassword(e.target.value)}
+              style={{ ...field, paddingRight: 44 }}
+              onFocus={focusStyle} onBlur={blurStyle}
+            />
+            <button
+              type="button" onClick={() => setShowPass(p => !p)}
+              style={{
+                position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)",
+                background: "none", border: "none", cursor: "pointer", padding: 4,
+                color: "#9E8CC8", display: "flex", alignItems: "center",
+              }}
+              tabIndex={-1}
+            >
+              {showPass ? (
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+                  <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+                  <line x1="1" y1="1" x2="23" y2="23"/>
+                </svg>
+              ) : (
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              )}
+            </button>
           </div>
-          <input
-            id="password" type="password" value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-brand-400 transition-colors"
-            placeholder="Enter your password" required
-          />
+        </Field>
+
+        {/* Forgot password — below password field */}
+        <div style={{ textAlign: "right", marginTop: -8, marginBottom: 22 }}>
+          <Link to="/forgot-password" style={{
+            fontSize: 12.5, color: "#482C80", fontWeight: 600, textDecoration: "none",
+          }}>
+            Forgot password?
+          </Link>
         </div>
 
         {error && (
-          <p className="text-sm text-red-600 mb-4 bg-red-50 border border-red-200 rounded-lg px-3 py-2">{error}</p>
+          <div style={{
+            fontSize: 13, color: "#C0432F",
+            background: "rgba(192,67,47,0.07)", border: "1px solid rgba(192,67,47,0.18)",
+            borderRadius: 10, padding: "10px 14px", marginBottom: 16,
+          }}>
+            {error}
+          </div>
         )}
 
+        {/* Submit */}
         <button
           type="submit" disabled={loading}
-          className="w-full py-2.5 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold transition-colors disabled:opacity-60 disabled:cursor-not-allowed shadow-sm"
+          style={{
+            width: "100%", padding: "13px", borderRadius: 12, border: "none",
+            background: "#482C80", color: "#fff",
+            fontSize: 14.5, fontWeight: 700, fontFamily: "inherit",
+            cursor: loading ? "not-allowed" : "pointer",
+            opacity: loading ? 0.65 : 1,
+            letterSpacing: "-0.01em",
+          }}
         >
           {loading ? "Logging in…" : "Log In"}
         </button>
       </form>
 
+      {/* Sign up */}
+      <p style={{ textAlign: "center", marginTop: 22, fontSize: 13.5, color: "rgba(72,44,128,0.55)" }}>
+        Don't have an account?{" "}
+        <Link to="/signup" style={{ color: "#482C80", fontWeight: 700, textDecoration: "none" }}>
+          Sign up
+        </Link>
+      </p>
     </AuthLayout>
   );
 }
