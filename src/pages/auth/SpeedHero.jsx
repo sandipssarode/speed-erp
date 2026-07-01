@@ -55,19 +55,8 @@ export default function SpeedHero() {
   return (
     <div style={{
       position: 'relative', width: 440, height: 750, overflow: 'hidden',
-      background: 'radial-gradient(130% 110% at 30% 5%, #f5f0ff 0%, #ebe3fd 55%, #e2d9fb 100%)',
       fontFamily: '"Hanken Grotesk",system-ui,sans-serif',
     }}>
-
-      {/* subtle orbs */}
-      <div style={{ position:'absolute', left:'15%', top:'25%', width:260, height:260,
-        borderRadius:'50%', background:'radial-gradient(closest-side,rgba(72,44,128,0.07),transparent)',
-        filter:'blur(28px)', pointerEvents:'none',
-      }}/>
-      <div style={{ position:'absolute', right:'10%', top:'55%', width:200, height:200,
-        borderRadius:'50%', background:'radial-gradient(closest-side,rgba(45,186,213,0.08),transparent)',
-        filter:'blur(22px)', pointerEvents:'none',
-      }}/>
 
       {/* ── Card 1 — Overview (dark, LEFT col) ── */}
       <Card ax={8} ay={0} rot="-4.5deg" anim="floaty" dur={7.5} delay={0} z={2}>
