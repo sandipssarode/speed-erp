@@ -1,20 +1,35 @@
+import { useRef, useLayoutEffect, useState } from "react";
 import SpeedHero from "./SpeedHero.jsx";
 
 export default function AuthLayout({ children }) {
+  const panelRef = useRef(null);
+  const [scale, setScale] = useState(0.88);
+
+  useLayoutEffect(() => {
+    const resize = () => {
+      if (panelRef.current) {
+        setScale(panelRef.current.offsetWidth / 780);
+      }
+    };
+    resize();
+    window.addEventListener("resize", resize);
+    return () => window.removeEventListener("resize", resize);
+  }, []);
+
   return (
     <div className="min-h-screen flex text-gray-900 font-sans">
 
       {/* ── Left 50% — Dark hero panel ── */}
       <div
+        ref={panelRef}
         className="hidden lg:block w-1/2 relative overflow-hidden"
         style={{ background: "radial-gradient(120% 90% at 35% 8%,#1E0935 0%,#0E1428 52%,#081B24 100%)" }}
       >
-        {/* Hero cards — scaled from top-left so nothing is cropped on the left edge */}
         <div style={{
           position: "absolute",
           top: 0,
           left: 0,
-          transform: "scale(0.88)",
+          transform: `scale(${scale})`,
           transformOrigin: "top left",
         }}>
           <SpeedHero />
