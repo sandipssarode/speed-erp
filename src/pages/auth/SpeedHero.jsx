@@ -54,7 +54,7 @@ const W = 208; // card width — each col is 208px, cols at x=8 and x=224
 export default function SpeedHero() {
   return (
     <div style={{
-      position: 'relative', width: 440, height: 800, overflow: 'hidden',
+      position: 'relative', width: 440, height: 750, overflow: 'hidden',
       background: 'radial-gradient(130% 110% at 30% 5%, #f5f0ff 0%, #ebe3fd 55%, #e2d9fb 100%)',
       fontFamily: '"Hanken Grotesk",system-ui,sans-serif',
     }}>
@@ -70,7 +70,7 @@ export default function SpeedHero() {
       }}/>
 
       {/* ── Card 1 — Overview (dark, LEFT col) ── */}
-      <Card ax={8} ay={12} rot="-4.5deg" anim="floaty" dur={7.5} delay={0} z={2}>
+      <Card ax={8} ay={0} rot="-4.5deg" anim="floaty" dur={7.5} delay={0} z={2}>
         <DarkCard w={W}>
           <div style={{ display:'flex', alignItems:'center', gap:7, marginBottom:10 }}>
             <div style={{ width:20,height:20,borderRadius:6,background:PURPLE,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0 }}>
@@ -97,7 +97,7 @@ export default function SpeedHero() {
       </Card>
 
       {/* ── Card 2 — Goods Receipt (dark, RIGHT col) ── */}
-      <Card ax={224} ay={160} rot="3.5deg" anim="floaty2" dur={8.5} delay={-1.5} z={2}>
+      <Card ax={224} ay={145} rot="3.5deg" anim="floaty2" dur={8.5} delay={-1.5} z={2}>
         <DarkCard w={W}>
           <div style={{ display:'flex', alignItems:'center', gap:7, marginBottom:10 }}>
             <span style={{ fontSize:11.5, fontWeight:800, letterSpacing:'0.05em' }}>SPEED</span>
@@ -121,7 +121,7 @@ export default function SpeedHero() {
       </Card>
 
       {/* ── Card 3 — Action Center (light, LEFT col) ── */}
-      <Card ax={8} ay={340} rot="-2.5deg" anim="floaty" dur={7} delay={-2.2} z={3}>
+      <Card ax={8} ay={305} rot="-2.5deg" anim="floaty" dur={7} delay={-2.2} z={3}>
         <LightCard w={W}>
           <div style={{ display:'flex', alignItems:'center', marginBottom:10 }}>
             <span style={{ fontSize:12, fontWeight:800 }}>Action Center</span>
@@ -146,7 +146,7 @@ export default function SpeedHero() {
       </Card>
 
       {/* ── Card 4 — Purchase Orders (light, RIGHT col) ── */}
-      <Card ax={224} ay={470} rot="3deg" anim="floaty2" dur={8} delay={-3} z={3}>
+      <Card ax={224} ay={430} rot="3deg" anim="floaty2" dur={8} delay={-3} z={3}>
         <LightCard w={W}>
           <div style={{ display:'flex', alignItems:'center', marginBottom:10 }}>
             <span style={{ fontSize:12, fontWeight:800 }}>Purchase Orders</span>
@@ -172,7 +172,7 @@ export default function SpeedHero() {
       </Card>
 
       {/* ── Card 5 — Inventory (light, LEFT col) ── */}
-      <Card ax={8} ay={632} rot="-3deg" anim="floaty" dur={7.8} delay={-1.1} z={3}>
+      <Card ax={8} ay={590} rot="-3deg" anim="floaty" dur={7.8} delay={-1.1} z={3}>
         <LightCard w={W}>
           <div style={{ display:'flex', alignItems:'center', marginBottom:10 }}>
             <span style={{ fontSize:12, fontWeight:800 }}>Inventory</span>

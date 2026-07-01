@@ -2,6 +2,7 @@ import { useRef, useLayoutEffect, useState } from "react";
 import SpeedHero from "./SpeedHero.jsx";
 
 const HERO_W = 440; // SpeedHero canvas width
+const HERO_PAD_RIGHT = 24; // breathing room on the right
 
 export default function AuthLayout({ children }) {
   const heroColRef = useRef(null);
@@ -10,7 +11,7 @@ export default function AuthLayout({ children }) {
   useLayoutEffect(() => {
     const resize = () => {
       if (heroColRef.current) {
-        setScale(heroColRef.current.offsetWidth / HERO_W);
+        setScale((heroColRef.current.offsetWidth - HERO_PAD_RIGHT) / HERO_W);
       }
     };
     resize();
@@ -49,14 +50,14 @@ export default function AuthLayout({ children }) {
           </div>
         </div>
 
-        {/* Hero column — hero anchored to top with same 36px padding as logo */}
+        {/* Hero column — fills top-to-bottom, 24px right breathing room */}
         <div ref={heroColRef} className="flex-1 relative overflow-hidden">
           <div style={{
             position: "absolute",
-            top: 36,
-            bottom: 36,
+            top: 0,
+            bottom: 0,
             left: 0,
-            right: 0,
+            right: HERO_PAD_RIGHT,
             overflow: "hidden",
           }}>
             <div style={{
