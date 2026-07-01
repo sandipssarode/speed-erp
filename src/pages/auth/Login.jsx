@@ -139,7 +139,10 @@ export default function Login() {
             cursor: loading ? "not-allowed" : "pointer",
             opacity: loading ? 0.65 : 1,
             letterSpacing: "-0.01em",
+            transition: "transform 0.18s ease, box-shadow 0.18s ease",
           }}
+          onMouseEnter={e => { if (!loading) { e.target.style.transform = "translateY(-3px)"; e.target.style.boxShadow = "0 8px 24px rgba(72,44,128,0.35)"; }}}
+          onMouseLeave={e => { e.target.style.transform = ""; e.target.style.boxShadow = ""; }}
         >
           {loading ? "Logging in…" : "Log In"}
         </button>
