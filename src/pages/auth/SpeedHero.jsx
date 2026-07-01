@@ -54,7 +54,8 @@ const W = 208; // card width — each col is 208px, cols at x=8 and x=224
 export default function SpeedHero() {
   return (
     <div style={{
-      position: 'relative', width: 440, height: 750, overflow: 'hidden',
+      position: 'relative', width: 440, height: 750,
+      background: 'transparent',
       fontFamily: '"Hanken Grotesk",system-ui,sans-serif',
     }}>
 
