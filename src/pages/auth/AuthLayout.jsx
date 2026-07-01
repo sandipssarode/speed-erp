@@ -36,12 +36,6 @@ export default function AuthLayout({ children }) {
 
           {/* Heading + subheading — vertically centred */}
           <div className="flex-1 flex flex-col justify-center" style={{ gap: 0 }}>
-            <p style={{
-              fontSize: 11.5, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase",
-              color: "#2DBAD5", marginBottom: 14,
-            }}>
-              ERP Platform
-            </p>
             <h2 style={{
               fontSize: 42, fontWeight: 900, lineHeight: 1.08, letterSpacing: "-0.03em",
               background: "linear-gradient(115deg,#1C0F35 10%,#482C80 60%,#10A48A 100%)",
