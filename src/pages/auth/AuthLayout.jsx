@@ -25,28 +25,9 @@ export default function AuthLayout({ headline, subtext, children }) {
           style={{ background: "radial-gradient(circle, rgba(121,120,233,0.2) 0%, transparent 70%)", filter: "blur(28px)" }} />
 
         {/* Logo — top left */}
-        <div className="relative z-10 flex items-center gap-3">
-          <svg viewBox="0 0 48 48" width="42" height="42" className="rounded-xl flex-shrink-0">
-            <defs>
-              <linearGradient id="ahl-bg" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="#050d1a"/>
-                <stop offset="100%" stopColor="#0f2045"/>
-              </linearGradient>
-              <linearGradient id="ahl-s" x1="34" y1="11" x2="12" y2="42" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="#e2d4ff"/>
-                <stop offset="100%" stopColor="#60a5fa"/>
-              </linearGradient>
-            </defs>
-            <rect width="48" height="48" rx="11" fill="url(#ahl-bg)"/>
-            <path d="M 34 11 C 34 11 12 11 12 20 C 12 28 34 26 34 35 C 34 41 12 42 12 42"
-              fill="none" stroke="url(#ahl-s)" strokeWidth="5.5" strokeLinecap="round"/>
-            <circle cx="34" cy="11" r="3.5" fill="white"/>
-            <circle cx="12" cy="42" r="2.5" fill="#93c5fd" fillOpacity="0.8"/>
-          </svg>
-          <div>
-            <div className="text-white font-semibold text-base leading-tight tracking-tight">Speed ERP</div>
-            <div className="text-xs tracking-widest uppercase" style={{ color: "rgba(255,255,255,0.4)" }}>Speed Innovations</div>
-          </div>
+        <div className="relative z-10">
+          <img src="/si_logo_trans.png" alt="Speed Innovations" className="h-10 w-auto"
+            style={{ filter: "brightness(0) invert(1)" }} />
         </div>
 
         {/* Center content */}
@@ -112,28 +93,8 @@ export default function AuthLayout({ headline, subtext, children }) {
       {/* ── Right Form Panel ── */}
       <div className="flex flex-col items-center justify-center w-full lg:w-2/5 min-h-screen bg-white px-6 sm:px-10 lg:px-14 py-12">
         {/* Mobile logo */}
-        <div className="flex items-center gap-3 mb-8 lg:hidden">
-          <svg viewBox="0 0 48 48" width="40" height="40" className="rounded-xl flex-shrink-0">
-            <defs>
-              <linearGradient id="ahr-bg" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="#050d1a"/>
-                <stop offset="100%" stopColor="#0f2045"/>
-              </linearGradient>
-              <linearGradient id="ahr-s" x1="34" y1="11" x2="12" y2="42" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="#e2d4ff"/>
-                <stop offset="100%" stopColor="#60a5fa"/>
-              </linearGradient>
-            </defs>
-            <rect width="48" height="48" rx="11" fill="url(#ahr-bg)"/>
-            <path d="M 34 11 C 34 11 12 11 12 20 C 12 28 34 26 34 35 C 34 41 12 42 12 42"
-              fill="none" stroke="url(#ahr-s)" strokeWidth="5.5" strokeLinecap="round"/>
-            <circle cx="34" cy="11" r="3.5" fill="white"/>
-            <circle cx="12" cy="42" r="2.5" fill="#93c5fd" fillOpacity="0.8"/>
-          </svg>
-          <div>
-            <div className="text-gray-900 font-semibold text-base leading-tight">Speed ERP</div>
-            <div className="text-gray-400 text-xs tracking-widest uppercase">Speed Innovations</div>
-          </div>
+        <div className="mb-8 lg:hidden">
+          <img src="/si_logo_trans.png" alt="Speed Innovations" className="h-9 w-auto" />
         </div>
 
         <div className="w-full max-w-sm">
