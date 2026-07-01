@@ -1,22 +1,23 @@
 @import "tailwindcss";
 
 @theme {
-  /* ── Indigo brand color scale (Skydash) ── */
-  --color-brand-50:  #f1f1fb;
-  --color-brand-100: #e3e3f7;
-  --color-brand-200: #c6c5ef;
-  --color-brand-300: #a3a2e6;
-  --color-brand-400: #7978e9;
-  --color-brand-500: #605ecf;
-  --color-brand-600: #4b49ac;   /* primary */
-  --color-brand-700: #3e3c8d;
-  --color-brand-800: #302e6e;
-  --color-brand-900: #21204c;
+  /* ── Speed Innovations brand color scale (logo purple #482C80) ── */
+  --color-brand-50:  #F0EBF9;
+  --color-brand-100: #E0D6F3;
+  --color-brand-200: #C1ADE7;
+  --color-brand-300: #9D7DD6;
+  --color-brand-400: #7251BE;
+  --color-brand-500: #5C3CA4;
+  --color-brand-600: #482C80;   /* primary — logo purple */
+  --color-brand-700: #3A2268;
+  --color-brand-800: #2B1850;
+  --color-brand-900: #1C0F35;
 
-  /* ── Supporting accents ── */
-  --color-accent-blue: #7da0fa;  /* periwinkle */
-  --color-accent-sky:  #98bdff;  /* light sky   */
-  --color-coral:       #f3797e;  /* coral        */
+  /* ── Speed Innovations teal accents (logo speed-lines gradient) ── */
+  --color-teal-400:  #2DBAD5;   /* bright teal — gradient start */
+  --color-teal-500:  #1AA8BC;
+  --color-teal-600:  #10A48A;   /* teal-green — gradient end   */
+  --color-coral:     #f3797e;   /* coral (kept for status use)  */
 
   /* ── Typography ── */
   --font-sans: "Inter", system-ui, sans-serif;

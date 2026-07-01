@@ -7,7 +7,7 @@ export default function AuthLayout({ children }) {
       {/* ── Left 50% — Dark hero panel ── */}
       <div
         className="hidden lg:block w-1/2 relative overflow-hidden"
-        style={{ background: "radial-gradient(120% 90% at 50% 6%,#241834 0%,#170F22 52%,#100A18 100%)" }}
+        style={{ background: "radial-gradient(120% 90% at 35% 8%,#1E0935 0%,#0E1428 52%,#081B24 100%)" }}
       >
         {/* Hero cards — scaled from top-left so nothing is cropped on the left edge */}
         <div style={{
@@ -40,7 +40,7 @@ export default function AuthLayout({ children }) {
           lg:w-1/2 lg:px-16
           lg:rounded-l-[36px]
         "
-        style={{ boxShadow: "-16px 0 70px rgba(80,40,160,0.13)" }}
+        style={{ boxShadow: "-16px 0 70px rgba(72,44,128,0.16)" }}
       >
         {/* Mobile logo */}
         <div className="mb-10 lg:hidden">
