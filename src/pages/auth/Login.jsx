@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // Link used for forgot-password
 import { api } from "../../lib/api.js";
 import AuthLayout from "./AuthLayout.jsx";
 
@@ -66,10 +66,6 @@ export default function Login() {
         </button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-gray-500">
-        Don&apos;t have an account?{" "}
-        <Link to="/signup" className="text-brand-600 font-medium hover:underline">Sign up</Link>
-      </p>
     </AuthLayout>
   );
 }
