@@ -6,13 +6,20 @@ const HERO_PAD_RIGHT = 24;
 const BG = "radial-gradient(130% 110% at 30% 5%, #f5f0ff 0%, #ebe3fd 55%, #e2d9fb 100%)";
 
 export default function AuthLayout({ children }) {
-  const heroColRef = useRef(null);
-  const [scale, setScale] = useState(0.9);
+  const heroColRef  = useRef(null);
+  const textColRef  = useRef(null);
+  const [scale, setScale]         = useState(0.9);
+  const [cardWidth, setCardWidth] = useState("100%");
 
   useLayoutEffect(() => {
     const resize = () => {
       if (heroColRef.current) {
         setScale((heroColRef.current.offsetWidth - HERO_PAD_RIGHT) / HERO_W);
+      }
+      if (textColRef.current && window.innerWidth >= 1024) {
+        setCardWidth(textColRef.current.offsetWidth + "px");
+      } else {
+        setCardWidth("100%");
       }
     };
     resize();
@@ -30,6 +37,7 @@ export default function AuthLayout({ children }) {
       >
         {/* Text column */}
         <div
+          ref={textColRef}
           className="flex flex-col shrink-0 h-full z-10"
           style={{ width: "48%", padding: "40px 28px 40px 44px" }}
         >
@@ -71,13 +79,13 @@ export default function AuthLayout({ children }) {
           <img src="/si_logo_trans.png" alt="Speed Innovations" className="h-14 w-auto" />
         </div>
 
-        {/* Card — full height, content centred */}
+        {/* Card — width matches left text column, height fills panel */}
         <div
-          className="flex-1 w-full bg-white flex flex-col justify-center
-                     px-6 sm:px-10 lg:px-11
-                     rounded-2xl sm:rounded-3xl"
+          className="flex-1 bg-white flex flex-col justify-center rounded-2xl sm:rounded-[24px]"
           style={{
-            maxWidth: 440,
+            width: cardWidth,
+            maxWidth: "100%",
+            padding: "48px clamp(24px, 4vw, 44px)",
             boxShadow: "0 24px 64px rgba(72,44,128,0.13), 0 4px 18px rgba(72,44,128,0.07)",
           }}
         >
