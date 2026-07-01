@@ -1,6 +1,8 @@
 import { useRef, useLayoutEffect, useState } from "react";
 import SpeedHero from "./SpeedHero.jsx";
 
+const HERO_W = 440; // SpeedHero canvas width
+
 export default function AuthLayout({ children }) {
   const heroColRef = useRef(null);
   const [scale, setScale] = useState(0.9);
@@ -8,8 +10,7 @@ export default function AuthLayout({ children }) {
   useLayoutEffect(() => {
     const resize = () => {
       if (heroColRef.current) {
-        /* scale hero to fill its column width exactly */
-        setScale(heroColRef.current.offsetWidth / 440);
+        setScale(heroColRef.current.offsetWidth / HERO_W);
       }
     };
     resize();
@@ -20,19 +21,19 @@ export default function AuthLayout({ children }) {
   return (
     <div className="min-h-screen flex text-gray-900 font-sans">
 
-      {/* ── Left 55% panel — row split: text | hero ── */}
+      {/* ── Left 55% panel — row: text col | hero col ── */}
       <div
-        className="hidden lg:flex flex-row w-[55%] overflow-hidden"
+        className="hidden lg:flex flex-row w-[55%] h-screen overflow-hidden"
         style={{ background: "radial-gradient(130% 110% at 30% 5%, #f5f0ff 0%, #ebe3fd 55%, #e2d9fb 100%)" }}
       >
-        {/* Text column — left-left */}
-        <div className="flex flex-col shrink-0 pt-9 pb-9 px-10 z-10" style={{ width: "48%" }}>
+        {/* Text column */}
+        <div className="flex flex-col shrink-0 h-full z-10" style={{ width: "48%", padding: "36px 32px 36px 40px" }}>
           {/* Logo */}
           <div className="shrink-0">
             <img src="/si_logo_trans.png" alt="Speed Innovations" className="h-14 w-auto" />
           </div>
 
-          {/* Heading + subheading vertically centred in remaining space */}
+          {/* Heading + subheading — vertically centred */}
           <div className="flex-1 flex flex-col justify-center">
             <h2 style={{
               fontSize: 36, fontWeight: 900, lineHeight: 1.12, letterSpacing: "-0.025em",
@@ -42,23 +43,31 @@ export default function AuthLayout({ children }) {
             }}>
               Manage<br />Smarter.<br />Grow<br />Faster.
             </h2>
-            <p style={{ fontSize: 13, color: "rgba(72,44,128,0.55)", lineHeight: 1.75, maxWidth: 230 }}>
+            <p style={{ fontSize: 13, color: "rgba(72,44,128,0.55)", lineHeight: 1.75, maxWidth: 220 }}>
               Procurement, inventory, sales & finance — all in one place.
             </p>
           </div>
         </div>
 
-        {/* Hero column — left-right */}
-        <div
-          ref={heroColRef}
-          className="flex-1 relative overflow-hidden flex items-center justify-center"
-        >
+        {/* Hero column — hero anchored to top with same 36px padding as logo */}
+        <div ref={heroColRef} className="flex-1 relative overflow-hidden">
           <div style={{
-            transform: `scale(${scale})`,
-            transformOrigin: "center center",
-            flexShrink: 0,
+            position: "absolute",
+            top: 36,
+            bottom: 36,
+            left: 0,
+            right: 0,
+            overflow: "hidden",
           }}>
-            <SpeedHero />
+            <div style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              transform: `scale(${scale})`,
+              transformOrigin: "top left",
+            }}>
+              <SpeedHero />
+            </div>
           </div>
         </div>
       </div>
