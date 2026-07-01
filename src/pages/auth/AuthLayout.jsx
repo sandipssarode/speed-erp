@@ -63,21 +63,18 @@ export default function AuthLayout({ children }) {
 
       {/* ── Right panel ── */}
       <div
-        className="w-full lg:w-[45%] flex flex-col items-center justify-center min-h-screen
-                   px-4 py-8 sm:px-8 sm:py-10 lg:py-4 lg:pr-3 lg:pl-2"
+        className="w-full lg:w-[45%] h-screen flex flex-col items-center p-3 lg:pl-2 lg:pr-3"
         style={{ background: "radial-gradient(130% 110% at 70% 5%, #f5f0ff 0%, #ebe3fd 55%, #e2d9fb 100%)" }}
       >
         {/* Mobile logo */}
-        <div className="mb-7 lg:hidden">
+        <div className="pt-6 pb-4 lg:hidden">
           <img src="/si_logo_trans.png" alt="Speed Innovations" className="h-14 w-auto" />
         </div>
 
-        {/* Floating card — responsive padding & radius */}
+        {/* Card — full height, content centred */}
         <div
-          className="w-full bg-white
-                     px-6 py-8
-                     sm:px-10 sm:py-10
-                     lg:px-11 lg:py-12
+          className="flex-1 w-full bg-white flex flex-col justify-center
+                     px-6 sm:px-10 lg:px-11
                      rounded-2xl sm:rounded-3xl"
           style={{
             maxWidth: 440,
