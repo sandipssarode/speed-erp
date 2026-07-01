@@ -71,7 +71,7 @@ export default function AuthLayout({ children }) {
 
       {/* ── Right panel ── */}
       <div
-        className="w-full lg:w-[45%] h-screen flex flex-col items-center p-3 lg:pl-2 lg:pr-3"
+        className="w-full lg:w-[45%] h-screen flex flex-col items-center justify-center p-3 lg:pl-2 lg:pr-3"
         style={{ background: "radial-gradient(130% 110% at 70% 5%, #f5f0ff 0%, #ebe3fd 55%, #e2d9fb 100%)" }}
       >
         {/* Mobile logo */}
@@ -81,7 +81,7 @@ export default function AuthLayout({ children }) {
 
         {/* Card — width matches left text column, height fills panel */}
         <div
-          className="flex-1 bg-white flex flex-col rounded-2xl sm:rounded-[24px]"
+          className="bg-white flex flex-col rounded-2xl sm:rounded-[24px]"
           style={{
             width: cardWidth,
             maxWidth: "100%",
