@@ -28,23 +28,29 @@ export default function AuthLayout({ children }) {
         style={{ background: "radial-gradient(130% 110% at 30% 5%, #f5f0ff 0%, #ebe3fd 55%, #e2d9fb 100%)" }}
       >
         {/* Text column */}
-        <div className="flex flex-col shrink-0 h-full z-10" style={{ width: "48%", padding: "36px 32px 36px 40px" }}>
+        <div className="flex flex-col shrink-0 h-full z-10" style={{ width: "48%", padding: "40px 28px 40px 44px" }}>
           {/* Logo */}
           <div className="shrink-0">
-            <img src="/si_logo_trans.png" alt="Speed Innovations" className="h-14 w-auto" />
+            <img src="/si_logo_trans.png" alt="Speed Innovations" className="h-20 w-auto" />
           </div>
 
           {/* Heading + subheading — vertically centred */}
-          <div className="flex-1 flex flex-col justify-center">
+          <div className="flex-1 flex flex-col justify-center" style={{ gap: 0 }}>
+            <p style={{
+              fontSize: 11.5, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase",
+              color: "#2DBAD5", marginBottom: 14,
+            }}>
+              ERP Platform
+            </p>
             <h2 style={{
-              fontSize: 36, fontWeight: 900, lineHeight: 1.12, letterSpacing: "-0.025em",
-              background: "linear-gradient(115deg,#1C0F35 10%,#482C80 55%,#10A48A 100%)",
+              fontSize: 42, fontWeight: 900, lineHeight: 1.08, letterSpacing: "-0.03em",
+              background: "linear-gradient(115deg,#1C0F35 10%,#482C80 60%,#10A48A 100%)",
               WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-              marginBottom: 12,
+              marginBottom: 18,
             }}>
               Manage<br />Smarter.<br />Grow<br />Faster.
             </h2>
-            <p style={{ fontSize: 13, color: "rgba(72,44,128,0.55)", lineHeight: 1.75, maxWidth: 220 }}>
+            <p style={{ fontSize: 13.5, color: "rgba(72,44,128,0.6)", lineHeight: 1.8, maxWidth: 210 }}>
               Procurement, inventory, sales & finance — all in one place.
             </p>
           </div>
