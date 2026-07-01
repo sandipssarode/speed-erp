@@ -41,7 +41,7 @@ function Btn({ children }) {
   return (
     <button style={{
       width: '100%', height: 34, marginTop: 13, borderRadius: 9,
-      background: btnGradient, color: '#fff',
+      background: PURPLE, color: '#fff',
       fontSize: 12.5, fontWeight: 700, fontFamily: 'inherit', border: 'none', cursor: 'default',
     }}>{children}</button>
   );
