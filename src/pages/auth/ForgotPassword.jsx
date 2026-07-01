@@ -29,7 +29,15 @@ export default function ForgotPassword() {
 
         <button
           type="submit"
-          className="w-full py-2.5 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold transition-colors shadow-sm"
+          style={{
+            width: "100%", padding: "13px", borderRadius: 12, border: "none",
+            background: "#482C80", color: "#fff",
+            fontSize: 14.5, fontWeight: 700, fontFamily: "inherit",
+            cursor: "pointer", letterSpacing: "-0.01em",
+            transition: "transform 0.18s ease, box-shadow 0.18s ease",
+          }}
+          onMouseEnter={e => { e.target.style.transform = "translateY(-3px)"; e.target.style.boxShadow = "0 8px 24px rgba(72,44,128,0.35)"; }}
+          onMouseLeave={e => { e.target.style.transform = ""; e.target.style.boxShadow = ""; }}
         >
           Send Reset Link
         </button>
