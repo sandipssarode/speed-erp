@@ -1,6 +1,7 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { api } from "../../lib/api.js";
+import AuthLayout from "./AuthLayout.jsx";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -25,66 +26,53 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 text-gray-900 font-sans">
-      <div className="w-full max-w-sm mx-4 p-6 sm:p-8 bg-white border border-gray-200 rounded-2xl shadow-lg">
-        <div className="flex flex-col items-center gap-3 mb-7">
-          <svg viewBox="0 0 48 48" width="56" height="56" className="w-14 h-14 rounded-2xl shadow-md">
-            <defs>
-              <linearGradient id="login-bg" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="#050d1a"/>
-                <stop offset="100%" stopColor="#0f2045"/>
-              </linearGradient>
-              <linearGradient id="login-s" x1="34" y1="11" x2="12" y2="42" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="#e2d4ff"/>
-                <stop offset="100%" stopColor="#60a5fa"/>
-              </linearGradient>
-            </defs>
-            <rect width="48" height="48" rx="11" fill="url(#login-bg)"/>
-            <path d="M 34 11 C 34 11 12 11 12 20 C 12 28 34 26 34 35 C 34 41 12 42 12 42"
-              fill="none" stroke="url(#login-s)" strokeWidth="5.5" strokeLinecap="round"/>
-            <circle cx="34" cy="11" r="3.5" fill="white"/>
-            <circle cx="12" cy="42" r="2.5" fill="#93c5fd" fillOpacity="0.8"/>
-          </svg>
-          <div className="text-center">
-            <h1 className="text-xl font-bold text-gray-900 tracking-tight">Speed ERP</h1>
-            <p className="text-xs text-gray-500 tracking-widest uppercase mt-0.5">Speed Innovations</p>
-          </div>
+    <AuthLayout
+      headline="Manage Smarter. Grow Faster."
+      subtext="The complete operations platform for Speed Innovations."
+    >
+      <h1 className="text-2xl font-bold text-gray-900 tracking-tight mb-1">Welcome Back!</h1>
+      <p className="text-sm text-gray-500 mb-7">Log in to continue to Speed ERP.</p>
+
+      <form onSubmit={handleSubmit}>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-1.5" htmlFor="email">Email</label>
+          <input
+            id="email" type="email" value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-brand-400 transition-colors"
+            placeholder="you@example.com" required
+          />
         </div>
 
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-sm text-gray-700 mb-2" htmlFor="email">Email</label>
-            <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-300"
-              placeholder="you@example.com" required />
+        <div className="mb-5">
+          <div className="flex items-baseline justify-between mb-1.5">
+            <label className="text-sm font-medium text-gray-700" htmlFor="password">Password</label>
+            <Link to="/forgot-password" className="text-xs text-brand-600 hover:underline">Forgot password?</Link>
           </div>
-
-          <div className="mb-4">
-            <div className="flex items-baseline justify-between mb-2">
-              <label className="text-sm text-gray-700" htmlFor="password">Password</label>
-              <Link to="/forgot-password" className="text-xs text-gray-700 hover:underline">Forgot password?</Link>
-            </div>
-            <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-300"
-              placeholder="Enter your password" required />
-          </div>
-
-          {error && <p className="text-sm text-red-600 mb-3 bg-red-50 border border-red-200 rounded px-3 py-2">{error}</p>}
-
-          <button type="submit" disabled={loading}
-            className="w-full py-2 rounded-md bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
-            {loading ? "Logging in..." : "Log In"}
-          </button>
-        </form>
-
-        <div className="mt-4 text-center text-sm text-gray-600">
-          Don't have an account?
-          <Link to="/signup" className="ml-1 text-brand-600 font-medium hover:underline">Sign up</Link>
+          <input
+            id="password" type="password" value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-brand-400 transition-colors"
+            placeholder="Enter your password" required
+          />
         </div>
-      </div>
-    </div>
+
+        {error && (
+          <p className="text-sm text-red-600 mb-4 bg-red-50 border border-red-200 rounded-lg px-3 py-2">{error}</p>
+        )}
+
+        <button
+          type="submit" disabled={loading}
+          className="w-full py-2.5 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold transition-colors disabled:opacity-60 disabled:cursor-not-allowed shadow-sm"
+        >
+          {loading ? "Logging in…" : "Log In"}
+        </button>
+      </form>
+
+      <p className="mt-6 text-center text-sm text-gray-500">
+        Don&apos;t have an account?{" "}
+        <Link to="/signup" className="text-brand-600 font-medium hover:underline">Sign up</Link>
+      </p>
+    </AuthLayout>
   );
 }
-
-
-
