@@ -23,7 +23,7 @@ export default function AuthLayout({ children }) {
       <div
         ref={panelRef}
         className="hidden lg:flex flex-col w-[55%] overflow-hidden"
-        style={{ background: "radial-gradient(120% 90% at 35% 8%,#1E0935 0%,#0E1428 52%,#081B24 100%)" }}
+        style={{ background: "radial-gradient(130% 110% at 30% 5%, #f5f0ff 0%, #ebe3fd 55%, #e2d9fb 100%)" }}
       >
         {/* Logo */}
         <div className="shrink-0 pt-9 px-10 z-10 relative">
@@ -31,7 +31,6 @@ export default function AuthLayout({ children }) {
             src="/si_logo_trans.png"
             alt="Speed Innovations"
             className="h-16 w-auto"
-            style={{ filter: "brightness(0) invert(1)" }}
           />
         </div>
 
@@ -39,13 +38,13 @@ export default function AuthLayout({ children }) {
         <div className="shrink-0 px-10 mt-9 z-10 relative">
           <h2 style={{
             fontSize: 40, fontWeight: 900, lineHeight: 1.1, letterSpacing: "-0.025em",
-            background: "linear-gradient(110deg,#fff 25%,#2DBAD5 70%,#10A48A 100%)",
+            background: "linear-gradient(110deg,#1C0F35 10%,#482C80 55%,#10A48A 100%)",
             WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
             marginBottom: 10,
           }}>
             Manage Smarter.<br />Grow Faster.
           </h2>
-          <p style={{ fontSize: 13.5, color: "rgba(255,255,255,0.45)", lineHeight: 1.7, maxWidth: 360 }}>
+          <p style={{ fontSize: 13.5, color: "rgba(72,44,128,0.55)", lineHeight: 1.7, maxWidth: 360 }}>
             Procurement, inventory, sales & finance —<br />all in one place, built for Speed Innovations.
           </p>
         </div>
