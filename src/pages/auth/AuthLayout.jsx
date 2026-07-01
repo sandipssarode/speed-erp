@@ -42,7 +42,7 @@ export default function AuthLayout({ children }) {
               WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
               marginBottom: 18,
             }}>
-              Manage<br />Smarter.<br />Grow<br />Faster.
+              Manage Smarter.<br />Grow Faster.
             </h2>
             <p style={{ fontSize: 13.5, color: "rgba(72,44,128,0.6)", lineHeight: 1.8, maxWidth: 210 }}>
               Procurement, inventory, sales & finance — all in one place.
