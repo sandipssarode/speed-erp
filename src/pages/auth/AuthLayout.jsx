@@ -78,7 +78,7 @@ export default function AuthLayout({ children }) {
         className="w-full lg:w-[45%] flex flex-col items-center justify-center min-h-screen"
         style={{
           background: "radial-gradient(130% 110% at 70% 5%, #f5f0ff 0%, #ebe3fd 55%, #e2d9fb 100%)",
-          padding: "24px 24px 24px 12px",
+          padding: "12px 12px 12px 6px",
         }}
       >
         {/* Mobile logo */}
