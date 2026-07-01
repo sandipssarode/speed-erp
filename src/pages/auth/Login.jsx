@@ -14,7 +14,7 @@ const field = {
 
 function Field({ label, children }) {
   return (
-    <div style={{ marginBottom: 16 }}>
+    <div style={{ marginBottom: 20 }}>
       <label style={{ display: "block", fontSize: 12.5, fontWeight: 600, color: "#3A2268", marginBottom: 6 }}>
         {label}
       </label>
@@ -52,7 +52,7 @@ export default function Login() {
   return (
     <AuthLayout>
       {/* Heading */}
-      <div style={{ marginBottom: 28 }}>
+      <div style={{ marginBottom: 36 }}>
         <h1 style={{
           fontSize: 26, fontWeight: 800, color: "#1C0F35",
           letterSpacing: "-0.025em", lineHeight: 1.2,
@@ -111,7 +111,7 @@ export default function Login() {
         </Field>
 
         {/* Forgot password — below password field */}
-        <div style={{ textAlign: "right", marginTop: -8, marginBottom: 22 }}>
+        <div style={{ textAlign: "right", marginTop: -6, marginBottom: 28 }}>
           <Link to="/forgot-password" style={{
             fontSize: 12.5, color: "#482C80", fontWeight: 600, textDecoration: "none",
           }}>
@@ -146,7 +146,7 @@ export default function Login() {
       </form>
 
       {/* Sign up */}
-      <p style={{ textAlign: "center", marginTop: 22, fontSize: 13.5, color: "rgba(72,44,128,0.55)" }}>
+      <p style={{ textAlign: "center", marginTop: 28, fontSize: 13.5, color: "rgba(72,44,128,0.55)" }}>
         Don't have an account?{" "}
         <Link to="/signup" style={{ color: "#482C80", fontWeight: 700, textDecoration: "none" }}>
           Sign up

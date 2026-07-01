@@ -91,7 +91,7 @@ export default function AuthLayout({ children }) {
           background: "#fff",
           borderRadius: 28,
           boxShadow: "0 24px 64px rgba(72,44,128,0.13), 0 4px 18px rgba(72,44,128,0.07)",
-          padding: "40px 36px",
+          padding: "48px 44px",
           width: "100%",
           maxWidth: 400,
         }}>
