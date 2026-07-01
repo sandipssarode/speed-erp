@@ -81,11 +81,14 @@ export default function AuthLayout({ children }) {
 
         {/* Card — width matches left text column, height fills panel */}
         <div
-          className="flex-1 bg-white flex flex-col justify-center rounded-2xl sm:rounded-[24px]"
+          className="flex-1 bg-white flex flex-col rounded-2xl sm:rounded-[24px]"
           style={{
             width: cardWidth,
             maxWidth: "100%",
-            padding: "48px clamp(24px, 4vw, 44px)",
+            paddingTop: "clamp(40px, 6vh, 60px)",
+            paddingBottom: "clamp(40px, 6vh, 60px)",
+            paddingLeft: "clamp(24px, 4vw, 44px)",
+            paddingRight: "clamp(24px, 4vw, 44px)",
             boxShadow: "0 24px 64px rgba(72,44,128,0.13), 0 4px 18px rgba(72,44,128,0.07)",
           }}
         >
