@@ -10,7 +10,7 @@ import { menu, isModuleActive, getActiveState } from "../lib/menu.js";
 // ─────────────────────────────────────────────────────────────
 // LAYOUT
 // ─────────────────────────────────────────────────────────────
-export default function Layout({ children }) {
+export default function Layout({ children, headerActions }) {
   const navigate = useNavigate();
   const location = useLocation();
   const user = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
@@ -334,8 +334,10 @@ export default function Layout({ children }) {
           />
         </div>
 
-        {/* Actions: notification + profile */}
+        {/* Actions: page-supplied actions + notification + profile */}
         <div ref={topMenuRef} className="flex items-center gap-1.5 ml-auto">
+
+          {headerActions}
 
           {/* Notification */}
           <div className="relative">

@@ -102,26 +102,29 @@ export default function Dashboard() {
   const totalOrders = donutData[0].value + donutData[1].value;
   const openTickets = tickets.filter(t => t.status !== "Resolved").length;
 
+  const ticketHeaderAction = (
+    <button
+      onClick={() => setTicketOpen(v => !v)}
+      aria-label="Support Tickets"
+      className="relative p-2 rounded-xl text-white/90 hover:bg-white/15 transition-colors"
+    >
+      <Ticket size={19} />
+      {openTickets > 0 && (
+        <span className="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 flex items-center justify-center rounded-full bg-red-500 text-white text-[9px] font-bold ring-2 ring-brand-700">
+          {openTickets}
+        </span>
+      )}
+    </button>
+  );
+
   return (
-    <Layout>
+    <Layout headerActions={ticketHeaderAction}>
       <div className="space-y-5 pb-6">
 
         {/* ── Page header ── */}
-        <div className="flex items-center justify-between flex-wrap gap-3">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900 tracking-tight leading-tight">Dashboard</h1>
-            <p className="text-sm text-gray-500 mt-0.5">Overview of your operations at a glance</p>
-          </div>
-          <button
-            onClick={() => setTicketOpen(v => !v)}
-            className="flex items-center gap-2 text-xs px-3 py-2 rounded-lg border border-brand-200 text-brand-600 hover:bg-brand-50 transition-colors"
-          >
-            <Ticket size={13} />
-            Support Tickets
-            {openTickets > 0 && (
-              <span className="bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">{openTickets}</span>
-            )}
-          </button>
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 tracking-tight leading-tight">Dashboard</h1>
+          <p className="text-sm text-gray-500 mt-0.5">Overview of your operations at a glance</p>
         </div>
 
         {/* ── KPI Cards ── */}
