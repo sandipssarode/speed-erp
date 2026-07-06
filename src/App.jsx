@@ -61,6 +61,8 @@ import UomList from "./pages/system-setup/uom/UomList";
 import UomForm from "./pages/system-setup/uom/UomForm";
 import JobList from "./pages/asset-management/job-list/JobList";
 import JobForm from "./pages/asset-management/job-list/JobForm";
+import ResourceList from "./pages/asset-management/resources/ResourceList";
+import ResourceForm from "./pages/asset-management/resources/ResourceForm";
 
 function App() {
   return (
@@ -91,6 +93,11 @@ function App() {
         <Route path="/asset-management/job-list"     element={<JobList />} />
         <Route path="/asset-management/job-list/new" element={<JobForm />} />
         <Route path="/asset-management/job-list/:id" element={<JobForm />} />
+
+        {/* Asset Management — Resources */}
+        <Route path="/asset-management/resources"     element={<ResourceList />} />
+        <Route path="/asset-management/resources/new" element={<ResourceForm />} />
+        <Route path="/asset-management/resources/:id" element={<ResourceForm />} />
 
         {/* Module roots — redirect to dashboard (no landing pages) */}
         <Route path="/masters"          element={<Navigate to="/dashboard" replace />} />
