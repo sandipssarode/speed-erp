@@ -81,27 +81,37 @@ export default function Layout({ children, headerActions }) {
   );
 
   // ── Desktop flyout panel anchored to the right of a module row ──────────────
-  const FlyoutPanel = ({ mod, nearBottom }) => (
-    <div className={`absolute left-full pl-2 z-50 ${nearBottom ? "bottom-0" : "top-0"} animate-flyout`}>
+  // Always mounted; visibility is driven purely by CSS (:hover on the module
+  // row group), so opening/closing can never miss a mouseenter/mouseleave
+  // event the way JS-tracked hover state occasionally did.
+  const FlyoutPanel = ({ nearBottom, children: panelChildren }) => (
+    <div className={`absolute left-full pl-2 z-50 ${nearBottom ? "bottom-0" : "top-0"}
+      invisible opacity-0 -translate-x-1.5 pointer-events-none
+      group-hover/module:visible group-hover/module:opacity-100 group-hover/module:translate-x-0 group-hover/module:pointer-events-auto
+      transition-all duration-150`}>
       <div className="bg-white rounded-2xl ring-1 ring-black/5 shadow-[0_16px_48px_-12px_rgba(45,43,58,0.45)] p-4 max-h-[78vh] overflow-y-auto">
-        {mod.flat ? (
-          <div className="grid grid-cols-[repeat(3,max-content)] gap-x-6 gap-y-0.5">
-            {mod.links.map(link => <FlyoutLink key={link.path} link={link} />)}
-          </div>
-        ) : (
-          <div className="flex gap-8">
-            {Object.entries(mod.children).map(([section, links]) => (
-              <div key={section} className="min-w-[150px]">
-                <p className="text-[10px] font-bold text-brand-600 uppercase tracking-wider mb-1 px-2.5">{section}</p>
-                <div className="flex flex-col whitespace-nowrap">
-                  {links.map(link => <FlyoutLink key={link.path} link={link} />)}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+        {panelChildren}
       </div>
     </div>
+  );
+
+  const FlyoutContent = ({ mod }) => (
+    mod.flat ? (
+      <div className="grid grid-cols-[repeat(3,max-content)] gap-x-6 gap-y-0.5">
+        {mod.links.map(link => <FlyoutLink key={link.path} link={link} />)}
+      </div>
+    ) : (
+      <div className="flex gap-8">
+        {Object.entries(mod.children).map(([section, links]) => (
+          <div key={section} className="min-w-[150px]">
+            <p className="text-[10px] font-bold text-brand-600 uppercase tracking-wider mb-1 px-2.5">{section}</p>
+            <div className="flex flex-col whitespace-nowrap">
+              {links.map(link => <FlyoutLink key={link.path} link={link} />)}
+            </div>
+          </div>
+        ))}
+      </div>
+    )
   );
 
   // ── Desktop nav: Dashboard + module rows (icon + label) with flyout ─────────
@@ -132,40 +142,38 @@ export default function Layout({ children, headerActions }) {
       {/* Modules */}
       {menu.map((mod, i) => {
         const ModIcon   = mod.icon;
-        const isOpen    = openModule === mod.label;
         const hasActive = isModuleActive(mod, location.pathname);
         const nearBottom = i >= menu.length - 2;
 
-        const highlight = isOpen || hasActive;
         return (
           <div
             key={mod.label}
-            className="relative"
-            onMouseEnter={() => setOpenModule(mod.label)}
-            onMouseLeave={() => setOpenModule(p => p === mod.label ? null : p)}
+            className="relative group/module"
           >
             <button
               onClick={(e) => e.preventDefault()}
-              className={`group relative flex items-center justify-between w-full gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all cursor-default ${
-                highlight
+              className={`relative flex items-center justify-between w-full gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all cursor-default ${
+                hasActive
                   ? "bg-brand-600 text-white shadow-md shadow-brand-200"
-                  : "text-gray-500 hover:bg-brand-600 hover:text-white"
+                  : "text-gray-500 group-hover/module:bg-brand-600 group-hover/module:text-white"
               }`}
             >
               <span className="flex items-center gap-3">
                 <span className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${
-                  highlight
+                  hasActive
                     ? "bg-white/20 text-white"
-                    : "bg-brand-50 text-brand-600 group-hover:bg-white/20 group-hover:text-white"
+                    : "bg-brand-50 text-brand-600 group-hover/module:bg-white/20 group-hover/module:text-white"
                 }`}>
                   <ModIcon size={16} />
                 </span>
                 <span>{mod.label}</span>
               </span>
-              <ChevronRight size={14} className={highlight ? "text-white/80" : "text-gray-400"} />
+              <ChevronRight size={14} className={hasActive ? "text-white/80" : "text-gray-400 group-hover/module:text-white/80"} />
             </button>
 
-            {isOpen && <FlyoutPanel mod={mod} nearBottom={nearBottom} />}
+            <FlyoutPanel nearBottom={nearBottom}>
+              <FlyoutContent mod={mod} />
+            </FlyoutPanel>
           </div>
         );
       })}
@@ -337,7 +345,7 @@ export default function Layout({ children, headerActions }) {
         </div>
 
         {/* Actions: page-supplied actions + notification + profile */}
-        <div ref={topMenuRef} className="flex items-center gap-1.5 ml-auto">
+        <div ref={topMenuRef} className="flex items-center gap-3 ml-auto pl-4">
 
           {headerActions}
 
