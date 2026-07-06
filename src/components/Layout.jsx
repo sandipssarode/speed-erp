@@ -325,11 +325,11 @@ export default function Layout({ children, headerActions }) {
         </button>
 
         {/* Logo zone (aligns with the fixed sidebar width) */}
-        <div className="flex items-center shrink-0 lg:w-64 lg:px-4">
+        <div className="flex items-center justify-center shrink-0 lg:w-64 lg:px-4">
           <img
             src={siLogo}
             alt="Speed Innovations"
-            className="h-12 w-auto object-contain"
+            className="h-16 w-auto object-contain ml-4"
             style={{ filter: "brightness(0) invert(1)" }}
           />
         </div>
