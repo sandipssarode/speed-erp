@@ -334,18 +334,18 @@ export default function Layout({ children, headerActions }) {
           />
         </div>
 
-        {/* Search (aligned with the dashboard content) */}
-        <div className="hidden md:flex items-center gap-2 flex-1 max-w-md lg:ml-5 bg-white/10 border border-white/20 rounded-xl px-3 py-2 focus-within:ring-2 focus-within:ring-white/30 transition-all">
-          <Search size={16} className="text-white/60 shrink-0" />
-          <input
-            type="text"
-            placeholder="Search…"
-            className="bg-transparent outline-none text-sm w-full text-white placeholder:text-white/50"
-          />
-        </div>
-
-        {/* Actions: page-supplied actions + notification + profile */}
+        {/* Actions: search + page-supplied actions + notification + profile */}
         <div ref={topMenuRef} className="flex items-center gap-3 ml-auto pl-4">
+
+          {/* Search (compact, sits beside the ticket/notification/profile icons) */}
+          <div className="hidden md:flex items-center gap-2 w-48 bg-white/10 border border-white/20 rounded-xl px-3 py-2 focus-within:ring-2 focus-within:ring-white/30 transition-all">
+            <Search size={16} className="text-white/60 shrink-0" />
+            <input
+              type="text"
+              placeholder="Search…"
+              className="bg-transparent outline-none text-sm w-full text-white placeholder:text-white/50"
+            />
+          </div>
 
           {headerActions}
 
