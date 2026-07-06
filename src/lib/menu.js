@@ -42,6 +42,7 @@ export const menu = [
         { label: "Work Order", path: "/asset-management/work-order" },
         { label: "Job List",   path: "/asset-management/job-list" },
         { label: "Resources",  path: "/asset-management/resources" },
+        { label: "Counters",   path: "/asset-management/counters" },
       ],
     },
   },

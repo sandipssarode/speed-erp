@@ -63,6 +63,8 @@ import JobList from "./pages/asset-management/job-list/JobList";
 import JobForm from "./pages/asset-management/job-list/JobForm";
 import ResourceList from "./pages/asset-management/resources/ResourceList";
 import ResourceForm from "./pages/asset-management/resources/ResourceForm";
+import CounterList from "./pages/asset-management/counters/CounterList";
+import CounterForm from "./pages/asset-management/counters/CounterForm";
 
 function App() {
   return (
@@ -98,6 +100,11 @@ function App() {
         <Route path="/asset-management/resources"     element={<ResourceList />} />
         <Route path="/asset-management/resources/new" element={<ResourceForm />} />
         <Route path="/asset-management/resources/:id" element={<ResourceForm />} />
+
+        {/* Asset Management — Counters */}
+        <Route path="/asset-management/counters"     element={<CounterList />} />
+        <Route path="/asset-management/counters/new" element={<CounterForm />} />
+        <Route path="/asset-management/counters/:id" element={<CounterForm />} />
 
         {/* Module roots — redirect to dashboard (no landing pages) */}
         <Route path="/masters"          element={<Navigate to="/dashboard" replace />} />

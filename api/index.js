@@ -20,6 +20,7 @@ export default async function handler(req, res) {
       case 'admin-reseed': {
         if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
         await Promise.all([
+          sql`DELETE FROM counters`,
           sql`DELETE FROM resources`,
           sql`DELETE FROM job_list`,
           sql`DELETE FROM assets`,
@@ -902,6 +903,39 @@ export default async function handler(req, res) {
             const existing = await sql`SELECT id FROM resources WHERE code=${v.resourceId}`;
             if (existing.length) return res.status(409).json({ error: 'Resource ID already exists.' });
             await sql`INSERT INTO resources (id, code, work_order_id, resource_type, status, data, created_at, updated_at) VALUES (${v.id}, ${v.resourceId}, ${v.workOrderId||null}, ${v.resourceType||null}, ${v.status||'Active'}, ${JSON.stringify(v)}, ${v.createdAt}, ${v.updatedAt})`;
+            return res.status(201).json(v);
+          }
+        }
+        break;
+      }
+
+      // ── COUNTERS ──────────────────────────────────────────────
+      case 'counters': {
+        if (id) {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM counters WHERE id=${id}`;
+            if (!rows.length) return res.status(404).json({ error: 'Not found' });
+            return res.json(rows[0].data);
+          }
+          if (req.method === 'PUT') {
+            const v = req.body;
+            await sql`UPDATE counters SET code=${v.counterId}, asset_id=${v.assetId||null}, counter_type=${v.counterType||null}, status=${v.status||'Active'}, data=${JSON.stringify(v)}, updated_at=${v.updatedAt} WHERE id=${id}`;
+            return res.json(v);
+          }
+          if (req.method === 'DELETE') {
+            await sql`DELETE FROM counters WHERE id=${id}`;
+            return res.json({ success: true });
+          }
+        } else {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM counters ORDER BY created_at DESC`;
+            return res.json(rows.map(r => r.data));
+          }
+          if (req.method === 'POST') {
+            const v = req.body;
+            const existing = await sql`SELECT id FROM counters WHERE code=${v.counterId}`;
+            if (existing.length) return res.status(409).json({ error: 'Counter ID already exists.' });
+            await sql`INSERT INTO counters (id, code, asset_id, counter_type, status, data, created_at, updated_at) VALUES (${v.id}, ${v.counterId}, ${v.assetId||null}, ${v.counterType||null}, ${v.status||'Active'}, ${JSON.stringify(v)}, ${v.createdAt}, ${v.updatedAt})`;
             return res.status(201).json(v);
           }
         }
