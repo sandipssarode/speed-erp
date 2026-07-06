@@ -35,6 +35,13 @@
   font-family: "Inter", system-ui, sans-serif;
 }
 
+/* ── Branded gradient header (dark violet → primary purple) ── */
+@layer utilities {
+  .bg-brand-header {
+    background: linear-gradient(135deg, var(--color-brand-900) 0%, var(--color-brand-700) 55%, var(--color-brand-600) 100%);
+  }
+}
+
 /* ── Global typographic hierarchy (bold headings, strong buttons) ── */
 @layer base {
   h1 { font-weight: 700; letter-spacing: -0.02em; color: #0f172a; }

@@ -111,13 +111,19 @@ export default function Layout({ children }) {
       {/* Dashboard */}
       <Link
         to="/dashboard"
-        className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+        className={`group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all ${
           location.pathname === "/dashboard"
             ? "bg-brand-600 text-white shadow-md shadow-brand-200"
             : "text-gray-500 hover:bg-brand-600 hover:text-white"
         }`}
       >
-        <LayoutDashboard size={18} className="shrink-0" />
+        <span className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${
+          location.pathname === "/dashboard"
+            ? "bg-white/20 text-white"
+            : "bg-brand-50 text-brand-600 group-hover:bg-white/20 group-hover:text-white"
+        }`}>
+          <LayoutDashboard size={16} />
+        </span>
         <span>Dashboard</span>
       </Link>
 
@@ -138,14 +144,20 @@ export default function Layout({ children }) {
           >
             <button
               onClick={() => setOpenModule(p => p === mod.label ? null : mod.label)}
-              className={`relative flex items-center justify-between w-full gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
+              className={`group relative flex items-center justify-between w-full gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                 highlight
                   ? "bg-brand-600 text-white shadow-md shadow-brand-200"
                   : "text-gray-500 hover:bg-brand-600 hover:text-white"
               }`}
             >
               <span className="flex items-center gap-3">
-                <ModIcon size={17} className="shrink-0" />
+                <span className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${
+                  highlight
+                    ? "bg-white/20 text-white"
+                    : "bg-brand-50 text-brand-600 group-hover:bg-white/20 group-hover:text-white"
+                }`}>
+                  <ModIcon size={16} />
+                </span>
                 <span>{mod.label}</span>
               </span>
               <ChevronRight size={14} className={highlight ? "text-white/80" : "text-gray-400"} />
@@ -168,13 +180,19 @@ export default function Layout({ children }) {
       <Link
         to="/dashboard"
         onClick={onLinkClick}
-        className={`flex items-center gap-3 px-3 py-2.5 mx-2 my-1 rounded-xl text-sm font-semibold transition-all ${
+        className={`group flex items-center gap-3 px-3 py-2.5 mx-2 my-1 rounded-xl text-sm font-semibold transition-all ${
           location.pathname === "/dashboard"
             ? "bg-brand-600 text-white shadow-md shadow-brand-200"
             : "text-gray-600 hover:bg-brand-600 hover:text-white"
         }`}
       >
-        <LayoutDashboard size={18} className="shrink-0" />
+        <span className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${
+          location.pathname === "/dashboard"
+            ? "bg-white/20 text-white"
+            : "bg-brand-50 text-brand-600 group-hover:bg-white/20 group-hover:text-white"
+        }`}>
+          <LayoutDashboard size={16} />
+        </span>
         <span>Dashboard</span>
       </Link>
 
@@ -190,7 +208,7 @@ export default function Layout({ children }) {
           <div key={mod.label}>
             <button
               onClick={() => toggleModule(mod.label)}
-              className={`flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all my-0.5 ${
+              className={`group flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all my-0.5 ${
                 isOpen
                   ? "bg-brand-600 text-white"
                   : hasActive
@@ -200,7 +218,15 @@ export default function Layout({ children }) {
               style={{ width: "calc(100% - 16px)", marginLeft: 8 }}
             >
               <span className="flex items-center gap-3">
-                <ModIcon size={17} className="shrink-0" />
+                <span className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${
+                  isOpen
+                    ? "bg-white/20 text-white"
+                    : hasActive
+                    ? "bg-brand-600 text-white"
+                    : "bg-brand-50 text-brand-600 group-hover:bg-white/20 group-hover:text-white"
+                }`}>
+                  <ModIcon size={16} />
+                </span>
                 <span>{mod.label}</span>
               </span>
               <span className={isOpen ? "text-brand-200" : "text-gray-400"}>
@@ -278,11 +304,11 @@ export default function Layout({ children }) {
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-[#f3f4fb] text-gray-800">
       {/* ── TOP BAR ── */}
-      <header className="bg-white/90 backdrop-blur-sm border-b border-brand-200 flex items-center gap-2 lg:gap-0 pl-3 lg:pl-0 pr-3 lg:pr-4 py-2 shadow-sm shrink-0 z-30">
+      <header className="bg-brand-header border-b border-brand-900/40 flex items-center gap-2 lg:gap-0 pl-3 lg:pl-0 pr-3 lg:pr-4 py-2 shadow-lg shadow-brand-900/20 shrink-0 z-30">
         {/* Mobile hamburger */}
         <button
           onClick={() => setMobileOpen(true)}
-          className="lg:hidden p-1.5 rounded-lg hover:bg-brand-50 text-gray-500"
+          className="lg:hidden p-1.5 rounded-lg hover:bg-white/15 text-white/90"
           aria-label="Open menu"
         >
           <Menu size={20} />
@@ -290,16 +316,18 @@ export default function Layout({ children }) {
 
         {/* Logo zone (aligns with the fixed sidebar width) */}
         <div className="flex items-center shrink-0 lg:w-64 lg:px-4">
-          <img src={siLogo} alt="Speed Innovations" className="h-14 w-auto object-contain" />
+          <div className="bg-white/95 rounded-xl px-3 py-1.5 shadow-sm">
+            <img src={siLogo} alt="Speed Innovations" className="h-11 w-auto object-contain" />
+          </div>
         </div>
 
         {/* Search (aligned with the dashboard content) */}
-        <div className="hidden md:flex items-center gap-2 flex-1 max-w-md lg:ml-5 bg-brand-50/70 border border-brand-100 rounded-xl px-3 py-2 focus-within:ring-2 focus-within:ring-brand-200 transition-all">
-          <Search size={16} className="text-gray-400 shrink-0" />
+        <div className="hidden md:flex items-center gap-2 flex-1 max-w-md lg:ml-5 bg-white/10 border border-white/20 rounded-xl px-3 py-2 focus-within:ring-2 focus-within:ring-white/30 transition-all">
+          <Search size={16} className="text-white/60 shrink-0" />
           <input
             type="text"
             placeholder="Search…"
-            className="bg-transparent outline-none text-sm w-full placeholder:text-gray-400"
+            className="bg-transparent outline-none text-sm w-full text-white placeholder:text-white/50"
           />
         </div>
 
@@ -311,10 +339,10 @@ export default function Layout({ children }) {
             <button
               onClick={() => { setNotifOpen(v => !v); setProfileOpen(false); }}
               aria-label="Notifications"
-              className="relative p-2 rounded-xl text-gray-500 hover:bg-brand-50 hover:text-brand-600 transition-colors"
+              className="relative p-2 rounded-xl text-white/90 hover:bg-white/15 transition-colors"
             >
               <Bell size={19} />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-coral ring-2 ring-white" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-coral ring-2 ring-brand-700" />
             </button>
             {notifOpen && (
               <div className="absolute right-0 mt-2 w-72 max-w-[calc(100vw-1.5rem)] z-40 animate-flyout bg-white rounded-2xl border border-brand-200 ring-1 ring-black/5 shadow-[0_16px_48px_-12px_rgba(45,43,58,0.45)] overflow-hidden">
@@ -343,7 +371,7 @@ export default function Layout({ children }) {
             <button
               onClick={() => { setProfileOpen(v => !v); setNotifOpen(false); }}
               aria-label="Profile"
-              className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-600 to-brand-800 flex items-center justify-center text-white text-sm font-bold shadow-sm hover:shadow-md transition-shadow"
+              className="w-9 h-9 rounded-full bg-white text-brand-700 flex items-center justify-center text-sm font-bold shadow-sm hover:bg-white/90 hover:shadow-md transition-all"
             >
               {userInitial}
             </button>

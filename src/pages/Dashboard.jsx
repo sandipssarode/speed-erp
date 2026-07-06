@@ -154,17 +154,17 @@ export default function Dashboard() {
             </div>
             <div className="space-y-2.5">
               {[
-                { label: "Raise Purchase Order", path: "/purchase/requisition", color: "#4b49ac", Icon: ShoppingCart },
-                { label: "Create Sales Order",   path: "/sales/orders",         color: "#7da0fa", Icon: BarChart2    },
-                { label: "Add Employee",          path: "/masters/employee/new", color: "#7978e9", Icon: Users        },
-              ].map(({ label, path, color, Icon }) => (
+                { label: "Raise Purchase Order", path: "/purchase/requisition", badge: "bg-brand-100 text-brand-600", Icon: ShoppingCart },
+                { label: "Create Sales Order",   path: "/sales/orders",         badge: "bg-teal-400/15 text-teal-600", Icon: BarChart2    },
+                { label: "Add Employee",          path: "/masters/employee/new", badge: "bg-brand-50 text-brand-400",  Icon: Users        },
+              ].map(({ label, path, badge, Icon }) => (
                 <button
                   key={label}
                   onClick={() => navigate(path)}
                   className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border border-gray-100 bg-white/60 hover:bg-white hover:shadow-sm transition-all text-left group"
                 >
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: color + "15" }}>
-                    <Icon size={15} style={{ color }} />
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${badge}`}>
+                    <Icon size={15} />
                   </div>
                   <span className="text-sm font-medium text-gray-700">{label}</span>
                   <ArrowRight size={13} className="ml-auto text-gray-300 group-hover:text-gray-500 transition-colors" />
