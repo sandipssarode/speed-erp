@@ -22,6 +22,23 @@
   /* ── Typography ── */
   --font-sans: "Inter", system-ui, sans-serif;
 
+  /* ── Type scale — bumped up from Tailwind defaults for a more legible,
+     bank-grade density (ICICI-style reference: larger labels/body text) ── */
+  --text-xs:               0.8125rem;  /* 13px, was 12px */
+  --text-xs--line-height:  1.125rem;
+  --text-sm:               0.9375rem;  /* 15px, was 14px */
+  --text-sm--line-height:  1.375rem;
+  --text-base:             1.0625rem;  /* 17px, was 16px */
+  --text-base--line-height: 1.625rem;
+  --text-lg:               1.1875rem;  /* 19px, was 18px */
+  --text-lg--line-height:  1.75rem;
+  --text-xl:               1.3125rem;  /* 21px, was 20px */
+  --text-xl--line-height:  1.875rem;
+  --text-2xl:              1.625rem;   /* 26px, was 24px */
+  --text-2xl--line-height: 2rem;
+  --text-3xl:              2rem;       /* 32px, was 30px */
+  --text-3xl--line-height: 2.375rem;
+
   /* ── Richer text grays (default Tailwind grays read dull/washed) ── */
   --color-gray-400: #7b8493;   /* was #9ca3af — icons / placeholders */
   --color-gray-500: #545d6b;   /* was #6b7280 — secondary text */
