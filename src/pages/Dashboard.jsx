@@ -106,11 +106,12 @@ export default function Dashboard() {
     <button
       onClick={() => setTicketOpen(v => !v)}
       aria-label="Support Tickets"
-      className="relative p-2 rounded-xl text-white/90 hover:bg-white/15 transition-colors"
+      className="relative flex items-center gap-2 h-9 pl-3.5 pr-3 rounded-full bg-white text-brand-700 text-sm font-semibold shadow-sm hover:bg-white/90 hover:shadow-md transition-all"
     >
-      <Ticket size={19} />
+      <Ticket size={16} />
+      Support Tickets
       {openTickets > 0 && (
-        <span className="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 flex items-center justify-center rounded-full bg-red-500 text-white text-[9px] font-bold ring-2 ring-brand-700">
+        <span className="min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full bg-red-500 text-white text-[10px] font-bold">
           {openTickets}
         </span>
       )}

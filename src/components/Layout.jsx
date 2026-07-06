@@ -83,7 +83,7 @@ export default function Layout({ children, headerActions }) {
   // ── Desktop flyout panel anchored to the right of a module row ──────────────
   const FlyoutPanel = ({ mod, nearBottom }) => (
     <div className={`absolute left-full pl-2 z-50 ${nearBottom ? "bottom-0" : "top-0"} animate-flyout`}>
-      <div className="bg-white rounded-2xl border border-brand-200 ring-1 ring-black/5 shadow-[0_16px_48px_-12px_rgba(45,43,58,0.45)] p-4 max-h-[78vh] overflow-y-auto">
+      <div className="bg-white rounded-2xl ring-1 ring-black/5 shadow-[0_16px_48px_-12px_rgba(45,43,58,0.45)] p-4 max-h-[78vh] overflow-y-auto">
         {mod.flat ? (
           <div className="grid grid-cols-[repeat(3,max-content)] gap-x-6 gap-y-0.5">
             {mod.links.map(link => <FlyoutLink key={link.path} link={link} />)}
@@ -141,10 +141,12 @@ export default function Layout({ children, headerActions }) {
           <div
             key={mod.label}
             className="relative"
+            onMouseEnter={() => setOpenModule(mod.label)}
+            onMouseLeave={() => setOpenModule(p => p === mod.label ? null : p)}
           >
             <button
-              onClick={() => setOpenModule(p => p === mod.label ? null : mod.label)}
-              className={`group relative flex items-center justify-between w-full gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
+              onClick={(e) => e.preventDefault()}
+              className={`group relative flex items-center justify-between w-full gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all cursor-default ${
                 highlight
                   ? "bg-brand-600 text-white shadow-md shadow-brand-200"
                   : "text-gray-500 hover:bg-brand-600 hover:text-white"
@@ -304,7 +306,7 @@ export default function Layout({ children, headerActions }) {
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-[#f3f4fb] text-gray-800">
       {/* ── TOP BAR ── */}
-      <header className="bg-brand-header border-b border-brand-900/40 flex items-center gap-2 lg:gap-0 pl-3 lg:pl-0 pr-3 lg:pr-4 py-2 shadow-lg shadow-brand-900/20 shrink-0 z-30">
+      <header className="bg-brand-header border-b border-brand-900/40 flex items-center gap-2 lg:gap-0 pl-3 lg:pl-0 pr-3 lg:pr-4 h-20 shadow-lg shadow-brand-900/20 shrink-0 z-30">
         {/* Mobile hamburger */}
         <button
           onClick={() => setMobileOpen(true)}
@@ -319,7 +321,7 @@ export default function Layout({ children, headerActions }) {
           <img
             src={siLogo}
             alt="Speed Innovations"
-            className="h-11 w-auto object-contain"
+            className="h-12 w-auto object-contain"
             style={{ filter: "brightness(0) invert(1)" }}
           />
         </div>
@@ -344,13 +346,13 @@ export default function Layout({ children, headerActions }) {
             <button
               onClick={() => { setNotifOpen(v => !v); setProfileOpen(false); }}
               aria-label="Notifications"
-              className="relative p-2 rounded-xl text-white/90 hover:bg-white/15 transition-colors"
+              className="relative w-9 h-9 rounded-full bg-white text-brand-700 flex items-center justify-center shadow-sm hover:bg-white/90 hover:shadow-md transition-all"
             >
-              <Bell size={19} />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-coral ring-2 ring-brand-700" />
+              <Bell size={17} />
+              <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-coral ring-2 ring-white" />
             </button>
             {notifOpen && (
-              <div className="absolute right-0 mt-2 w-72 max-w-[calc(100vw-1.5rem)] z-40 animate-flyout bg-white rounded-2xl border border-brand-200 ring-1 ring-black/5 shadow-[0_16px_48px_-12px_rgba(45,43,58,0.45)] overflow-hidden">
+              <div className="absolute right-0 mt-2 w-72 max-w-[calc(100vw-1.5rem)] z-40 animate-flyout bg-white rounded-2xl ring-1 ring-black/5 shadow-[0_16px_48px_-12px_rgba(45,43,58,0.45)] overflow-hidden">
                 <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
                   <p className="text-sm font-semibold text-gray-700">Notifications</p>
                   <span className="text-[10px] font-bold text-white bg-coral rounded-full px-2 py-0.5">3 new</span>
@@ -381,7 +383,7 @@ export default function Layout({ children, headerActions }) {
               {userInitial}
             </button>
             {profileOpen && (
-              <div className="absolute right-0 mt-2 w-52 z-40 animate-flyout bg-white rounded-2xl border border-brand-200 ring-1 ring-black/5 shadow-[0_16px_48px_-12px_rgba(45,43,58,0.45)] overflow-hidden">
+              <div className="absolute right-0 mt-2 w-52 z-40 animate-flyout bg-white rounded-2xl ring-1 ring-black/5 shadow-[0_16px_48px_-12px_rgba(45,43,58,0.45)] overflow-hidden">
                 <div className="px-4 py-3 border-b border-gray-100">
                   <p className="text-sm font-semibold text-gray-700 truncate">{userName}</p>
                   <p className="text-[10px] text-gray-400">Speed IT Innovations</p>
