@@ -65,6 +65,14 @@ import ResourceList from "./pages/asset-management/resources/ResourceList";
 import ResourceForm from "./pages/asset-management/resources/ResourceForm";
 import CounterList from "./pages/asset-management/counters/CounterList";
 import CounterForm from "./pages/asset-management/counters/CounterForm";
+import MaintenanceRequestList from "./pages/asset-management/maintenance-request/MaintenanceRequestList";
+import MaintenanceRequestForm from "./pages/asset-management/maintenance-request/MaintenanceRequestForm";
+import SparePartList from "./pages/asset-management/spare-parts/SparePartList";
+import SparePartForm from "./pages/asset-management/spare-parts/SparePartForm";
+import MaintenancePlanList from "./pages/asset-management/maintenance-plan/MaintenancePlanList";
+import MaintenancePlanForm from "./pages/asset-management/maintenance-plan/MaintenancePlanForm";
+import BomMasterList from "./pages/masters/bom-master/BomMasterList";
+import BomMasterForm from "./pages/masters/bom-master/BomMasterForm";
 
 function App() {
   return (
@@ -87,6 +95,11 @@ function App() {
         <Route path="/masters/work-order-type"      element={<WorkOrderTypeList />} />
         <Route path="/masters/work-order-type/new"  element={<WorkOrderTypeForm />} />
         <Route path="/masters/work-order-type/:id"  element={<WorkOrderTypeForm />} />
+
+        {/* Masters — BOM Master */}
+        <Route path="/masters/bom-master"     element={<BomMasterList />} />
+        <Route path="/masters/bom-master/new" element={<BomMasterForm />} />
+        <Route path="/masters/bom-master/:id" element={<BomMasterForm />} />
         <Route path="/asset-management/work-order"     element={<WorkOrderList />} />
         <Route path="/asset-management/work-order/new" element={<WorkOrderForm />} />
         <Route path="/asset-management/work-order/:id" element={<WorkOrderForm />} />
@@ -105,6 +118,21 @@ function App() {
         <Route path="/asset-management/counters"     element={<CounterList />} />
         <Route path="/asset-management/counters/new" element={<CounterForm />} />
         <Route path="/asset-management/counters/:id" element={<CounterForm />} />
+
+        {/* Asset Management — Maintenance Request */}
+        <Route path="/asset-management/maintenance-request"     element={<MaintenanceRequestList />} />
+        <Route path="/asset-management/maintenance-request/new" element={<MaintenanceRequestForm />} />
+        <Route path="/asset-management/maintenance-request/:id" element={<MaintenanceRequestForm />} />
+
+        {/* Asset Management — Spare Parts */}
+        <Route path="/asset-management/spare-parts"     element={<SparePartList />} />
+        <Route path="/asset-management/spare-parts/new" element={<SparePartForm />} />
+        <Route path="/asset-management/spare-parts/:id" element={<SparePartForm />} />
+
+        {/* Asset Management — Maintenance Plan */}
+        <Route path="/asset-management/maintenance-plan"     element={<MaintenancePlanList />} />
+        <Route path="/asset-management/maintenance-plan/new" element={<MaintenancePlanForm />} />
+        <Route path="/asset-management/maintenance-plan/:id" element={<MaintenancePlanForm />} />
 
         {/* Module roots — redirect to dashboard (no landing pages) */}
         <Route path="/masters"          element={<Navigate to="/dashboard" replace />} />

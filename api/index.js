@@ -20,6 +20,10 @@ export default async function handler(req, res) {
       case 'admin-reseed': {
         if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
         await Promise.all([
+          sql`DELETE FROM bom_masters`,
+          sql`DELETE FROM maintenance_plans`,
+          sql`DELETE FROM spare_parts`,
+          sql`DELETE FROM maintenance_requests`,
           sql`DELETE FROM counters`,
           sql`DELETE FROM resources`,
           sql`DELETE FROM job_list`,
@@ -936,6 +940,138 @@ export default async function handler(req, res) {
             const existing = await sql`SELECT id FROM counters WHERE code=${v.counterId}`;
             if (existing.length) return res.status(409).json({ error: 'Counter ID already exists.' });
             await sql`INSERT INTO counters (id, code, asset_id, counter_type, status, data, created_at, updated_at) VALUES (${v.id}, ${v.counterId}, ${v.assetId||null}, ${v.counterType||null}, ${v.status||'Active'}, ${JSON.stringify(v)}, ${v.createdAt}, ${v.updatedAt})`;
+            return res.status(201).json(v);
+          }
+        }
+        break;
+      }
+
+      // ── MAINTENANCE REQUESTS ──────────────────────────────────
+      case 'maintenance-requests': {
+        if (id) {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM maintenance_requests WHERE id=${id}`;
+            if (!rows.length) return res.status(404).json({ error: 'Not found' });
+            return res.json(rows[0].data);
+          }
+          if (req.method === 'PUT') {
+            const v = req.body;
+            await sql`UPDATE maintenance_requests SET code=${v.requestId}, asset_id=${v.assetId||null}, priority=${v.priority||null}, status=${v.status||'New'}, data=${JSON.stringify(v)}, updated_at=${v.updatedAt} WHERE id=${id}`;
+            return res.json(v);
+          }
+          if (req.method === 'DELETE') {
+            await sql`DELETE FROM maintenance_requests WHERE id=${id}`;
+            return res.json({ success: true });
+          }
+        } else {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM maintenance_requests ORDER BY created_at DESC`;
+            return res.json(rows.map(r => r.data));
+          }
+          if (req.method === 'POST') {
+            const v = req.body;
+            const existing = await sql`SELECT id FROM maintenance_requests WHERE code=${v.requestId}`;
+            if (existing.length) return res.status(409).json({ error: 'Request ID already exists.' });
+            await sql`INSERT INTO maintenance_requests (id, code, asset_id, priority, status, data, created_at, updated_at) VALUES (${v.id}, ${v.requestId}, ${v.assetId||null}, ${v.priority||null}, ${v.status||'New'}, ${JSON.stringify(v)}, ${v.createdAt}, ${v.updatedAt})`;
+            return res.status(201).json(v);
+          }
+        }
+        break;
+      }
+
+      // ── SPARE PARTS ───────────────────────────────────────────
+      case 'spare-parts': {
+        if (id) {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM spare_parts WHERE id=${id}`;
+            if (!rows.length) return res.status(404).json({ error: 'Not found' });
+            return res.json(rows[0].data);
+          }
+          if (req.method === 'PUT') {
+            const v = req.body;
+            await sql`UPDATE spare_parts SET code=${v.sparePartId}, asset_id=${v.assetId||null}, product_id=${v.productId||null}, status=${v.status||'Issued'}, data=${JSON.stringify(v)}, updated_at=${v.updatedAt} WHERE id=${id}`;
+            return res.json(v);
+          }
+          if (req.method === 'DELETE') {
+            await sql`DELETE FROM spare_parts WHERE id=${id}`;
+            return res.json({ success: true });
+          }
+        } else {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM spare_parts ORDER BY created_at DESC`;
+            return res.json(rows.map(r => r.data));
+          }
+          if (req.method === 'POST') {
+            const v = req.body;
+            const existing = await sql`SELECT id FROM spare_parts WHERE code=${v.sparePartId}`;
+            if (existing.length) return res.status(409).json({ error: 'Spare Part ID already exists.' });
+            await sql`INSERT INTO spare_parts (id, code, asset_id, product_id, status, data, created_at, updated_at) VALUES (${v.id}, ${v.sparePartId}, ${v.assetId||null}, ${v.productId||null}, ${v.status||'Issued'}, ${JSON.stringify(v)}, ${v.createdAt}, ${v.updatedAt})`;
+            return res.status(201).json(v);
+          }
+        }
+        break;
+      }
+
+      // ── MAINTENANCE PLANS ─────────────────────────────────────
+      case 'maintenance-plans': {
+        if (id) {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM maintenance_plans WHERE id=${id}`;
+            if (!rows.length) return res.status(404).json({ error: 'Not found' });
+            return res.json(rows[0].data);
+          }
+          if (req.method === 'PUT') {
+            const v = req.body;
+            await sql`UPDATE maintenance_plans SET code=${v.planId}, asset_id=${v.assetId||null}, frequency_type=${v.frequencyType||null}, status=${v.status||'Active'}, data=${JSON.stringify(v)}, updated_at=${v.updatedAt} WHERE id=${id}`;
+            return res.json(v);
+          }
+          if (req.method === 'DELETE') {
+            await sql`DELETE FROM maintenance_plans WHERE id=${id}`;
+            return res.json({ success: true });
+          }
+        } else {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM maintenance_plans ORDER BY created_at DESC`;
+            return res.json(rows.map(r => r.data));
+          }
+          if (req.method === 'POST') {
+            const v = req.body;
+            const existing = await sql`SELECT id FROM maintenance_plans WHERE code=${v.planId}`;
+            if (existing.length) return res.status(409).json({ error: 'Plan ID already exists.' });
+            await sql`INSERT INTO maintenance_plans (id, code, asset_id, frequency_type, status, data, created_at, updated_at) VALUES (${v.id}, ${v.planId}, ${v.assetId||null}, ${v.frequencyType||null}, ${v.status||'Active'}, ${JSON.stringify(v)}, ${v.createdAt}, ${v.updatedAt})`;
+            return res.status(201).json(v);
+          }
+        }
+        break;
+      }
+
+      // ── BOM MASTERS ───────────────────────────────────────────
+      case 'bom-masters': {
+        if (id) {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM bom_masters WHERE id=${id}`;
+            if (!rows.length) return res.status(404).json({ error: 'Not found' });
+            return res.json(rows[0].data);
+          }
+          if (req.method === 'PUT') {
+            const v = req.body;
+            await sql`UPDATE bom_masters SET code=${v.bomId}, produce_item_id=${v.produceItemId||null}, is_active=${!v.isDeactivated}, data=${JSON.stringify(v)}, updated_at=${v.updatedAt} WHERE id=${id}`;
+            return res.json(v);
+          }
+          if (req.method === 'DELETE') {
+            await sql`DELETE FROM bom_masters WHERE id=${id}`;
+            return res.json({ success: true });
+          }
+        } else {
+          if (req.method === 'GET') {
+            const rows = await sql`SELECT data FROM bom_masters ORDER BY created_at DESC`;
+            return res.json(rows.map(r => r.data));
+          }
+          if (req.method === 'POST') {
+            const v = req.body;
+            const existing = await sql`SELECT id FROM bom_masters WHERE code=${v.bomId}`;
+            if (existing.length) return res.status(409).json({ error: 'BOM ID already exists.' });
+            await sql`INSERT INTO bom_masters (id, code, produce_item_id, is_active, data, created_at, updated_at) VALUES (${v.id}, ${v.bomId}, ${v.produceItemId||null}, ${!v.isDeactivated}, ${JSON.stringify(v)}, ${v.createdAt}, ${v.updatedAt})`;
             return res.status(201).json(v);
           }
         }

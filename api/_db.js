@@ -53,6 +53,10 @@ export async function ensureSchema(sql) {
     sql`CREATE TABLE IF NOT EXISTS job_list (id TEXT PRIMARY KEY, code TEXT UNIQUE NOT NULL, asset_id TEXT, maintenance_type_id TEXT, priority TEXT, status TEXT DEFAULT 'Open', assigned_to_id TEXT, job_date DATE, data JSONB NOT NULL, created_at TIMESTAMPTZ DEFAULT NOW(), updated_at TIMESTAMPTZ DEFAULT NOW())`,
     sql`CREATE TABLE IF NOT EXISTS resources (id TEXT PRIMARY KEY, code TEXT UNIQUE NOT NULL, work_order_id TEXT, resource_type TEXT, status TEXT DEFAULT 'Active', data JSONB NOT NULL, created_at TIMESTAMPTZ DEFAULT NOW(), updated_at TIMESTAMPTZ DEFAULT NOW())`,
     sql`CREATE TABLE IF NOT EXISTS counters (id TEXT PRIMARY KEY, code TEXT UNIQUE NOT NULL, asset_id TEXT, counter_type TEXT, status TEXT DEFAULT 'Active', data JSONB NOT NULL, created_at TIMESTAMPTZ DEFAULT NOW(), updated_at TIMESTAMPTZ DEFAULT NOW())`,
+    sql`CREATE TABLE IF NOT EXISTS maintenance_requests (id TEXT PRIMARY KEY, code TEXT UNIQUE NOT NULL, asset_id TEXT, priority TEXT, status TEXT DEFAULT 'New', data JSONB NOT NULL, created_at TIMESTAMPTZ DEFAULT NOW(), updated_at TIMESTAMPTZ DEFAULT NOW())`,
+    sql`CREATE TABLE IF NOT EXISTS spare_parts (id TEXT PRIMARY KEY, code TEXT UNIQUE NOT NULL, asset_id TEXT, product_id TEXT, status TEXT DEFAULT 'Issued', data JSONB NOT NULL, created_at TIMESTAMPTZ DEFAULT NOW(), updated_at TIMESTAMPTZ DEFAULT NOW())`,
+    sql`CREATE TABLE IF NOT EXISTS maintenance_plans (id TEXT PRIMARY KEY, code TEXT UNIQUE NOT NULL, asset_id TEXT, frequency_type TEXT, status TEXT DEFAULT 'Active', data JSONB NOT NULL, created_at TIMESTAMPTZ DEFAULT NOW(), updated_at TIMESTAMPTZ DEFAULT NOW())`,
+    sql`CREATE TABLE IF NOT EXISTS bom_masters (id TEXT PRIMARY KEY, code TEXT UNIQUE NOT NULL, produce_item_id TEXT, is_active BOOLEAN DEFAULT true, data JSONB NOT NULL, created_at TIMESTAMPTZ DEFAULT NOW(), updated_at TIMESTAMPTZ DEFAULT NOW())`,
   ]);
 
   // Check all seed counts in parallel
