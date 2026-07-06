@@ -316,9 +316,12 @@ export default function Layout({ children }) {
 
         {/* Logo zone (aligns with the fixed sidebar width) */}
         <div className="flex items-center shrink-0 lg:w-64 lg:px-4">
-          <div className="bg-white/95 rounded-xl px-3 py-1.5 shadow-sm">
-            <img src={siLogo} alt="Speed Innovations" className="h-11 w-auto object-contain" />
-          </div>
+          <img
+            src={siLogo}
+            alt="Speed Innovations"
+            className="h-11 w-auto object-contain"
+            style={{ filter: "brightness(0) invert(1)" }}
+          />
         </div>
 
         {/* Search (aligned with the dashboard content) */}
