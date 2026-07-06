@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Layout from "../../../components/Layout";
 import { api } from "../../../lib/api.js";
 import {
-  Save, Trash2, Edit2, FileText, CheckCircle, AlertCircle, ChevronLeft, Ruler,
+  Save, Trash2, Edit2, FileText, CheckCircle, AlertCircle, ChevronLeft, Ruler, CornerDownRight,
 } from "lucide-react";
 
 const inputCls = (disabled, error) =>
@@ -140,21 +140,16 @@ export default function UomForm() {
     catch (err) { showToast(err.message || "Failed to delete.", "error"); }
   };
 
-  // Equivalent To: find the base unit (conversionValue == 1) in the same unit type
-  const baseUnit = allRecords.find(r =>
-    r.unitTypeId === form.unitTypeId &&
-    Number(r.conversionValue) === 1 &&
-    r.id !== id
-  );
+  // Base Unit is configured on Unit Type Master (Base Unit → a specific Unit
+  // Master record), not inferred — look up the selected type, then that unit.
+  const selectedUnitType = unitTypes.find(t => t.id === form.unitTypeId);
+  const baseUnit = allRecords.find(r => r.id === selectedUnitType?.baseUnitId);
   const baseShortCode = baseUnit?.unitShortCode || "";
+
   const convNum = form.conversionValue !== "" ? Number(form.conversionValue) : NaN;
   let equivalentTo = "";
-  if (!isNaN(convNum) && convNum > 0 && form.unitShortCode) {
-    if (convNum === 1) {
-      equivalentTo = "Base Unit";
-    } else if (baseShortCode) {
-      equivalentTo = `1 ${form.unitShortCode.toUpperCase()} = ${form.conversionValue} ${baseShortCode.toUpperCase()}`;
-    }
+  if (!isNaN(convNum) && convNum > 0 && form.unitShortCode && baseShortCode) {
+    equivalentTo = `1 ${form.unitShortCode.toUpperCase()} = ${form.conversionValue} ${baseShortCode.toUpperCase()}`;
   }
 
   const headerBtn = "flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg font-medium border border-white/25 text-white hover:bg-white/15 transition-colors";
@@ -226,6 +221,19 @@ export default function UomForm() {
                 <option value="">Select Unit Type</option>
                 {unitTypes.map(t => <option key={t.id} value={t.id}>{t.unitTypeName}</option>)}
               </select>
+              {selectedUnitType && (
+                baseShortCode ? (
+                  <p className="text-xs text-brand-600 mt-1.5 flex items-center gap-1">
+                    <CornerDownRight size={11} className="shrink-0" />
+                    Base unit for {selectedUnitType.unitTypeName} = {baseShortCode.toUpperCase()}
+                  </p>
+                ) : (
+                  <p className="text-xs text-amber-600 mt-1.5 flex items-center gap-1">
+                    <AlertCircle size={11} className="shrink-0" />
+                    Base unit not configured for this Unit Type. "Equivalent To" cannot generate — set it on Unit Type Master first.
+                  </p>
+                )
+              )}
             </Row>
 
             <Row label="Unit Name" required error={errors.unitName}>
@@ -236,7 +244,7 @@ export default function UomForm() {
               <input value={form.unitShortCode} onChange={e => setField("unitShortCode", e.target.value.toUpperCase())} disabled={isReadOnly} placeholder="e.g. KGS" maxLength={10} className={inputCls(isReadOnly, errors.unitShortCode)} />
             </Row>
 
-            <Row label="Conversion Value" error={errors.conversionValue} help="How many Base Units equal 1 of this unit (e.g. 1 TON = 1000 KGS → enter 1000). Enter 1 to mark this as the Base Unit. Leave blank for standalone units like NOS, SET, BOX.">
+            <Row label="Conversion Value" error={errors.conversionValue} help="How many of this unit's Unit Type's Base Unit equal 1 of this unit (e.g. 1 TON = 1000 KGS → enter 1000). Enter 1 for the Base Unit itself. Leave blank for standalone units like NOS, SET, BOX.">
               <input
                 type="number"
                 min="0"

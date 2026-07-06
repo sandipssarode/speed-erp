@@ -30,6 +30,7 @@ function Row({ label, required, error, children, help }) {
 const emptyForm = () => ({
   unitTypeId:   `UT-${Date.now().toString().slice(-5)}`,
   unitTypeName: "",
+  baseUnitId:   "",
   createdAt: "", updatedAt: "", createdBy: "", updatedBy: "",
   changelog: [],
 });
@@ -57,14 +58,19 @@ export default function UnitTypeForm() {
   const [toast, setToast]             = useState(null);
   const [showChangelog, setShowChangelog] = useState(false);
   const [allRecords, setAllRecords]   = useState([]);
+  const [units, setUnits]             = useState([]);
 
   const user = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
   const isReadOnly = mode === "view";
   const editing = mode === "new" || mode === "edit";
 
   useEffect(() => {
-    api.get("/api/unit-types").then(list => {
+    Promise.all([
+      api.get("/api/unit-types"),
+      api.get("/api/uom"),
+    ]).then(([list, uoms]) => {
       setAllRecords(list);
+      setUnits(uoms);
       if (!isNew && id) {
         const found = list.find(r => r.id === id);
         if (found) setForm(found);
@@ -72,6 +78,10 @@ export default function UnitTypeForm() {
       }
     }).catch(console.error);
   }, [id, isNew]);
+
+  // Only units already classified under this unit type can be its Base Unit —
+  // new (unsaved) types have none yet; assign Base Unit after creating units.
+  const eligibleBaseUnits = units.filter(u => u.unitTypeId === id);
 
   const showToast = (msg, type = "success") => {
     setToast({ msg, type });
@@ -179,6 +189,28 @@ export default function UnitTypeForm() {
             </Row>
             <Row label="Unit Type Name" required error={errors.unitTypeName}>
               <input value={form.unitTypeName} onChange={e => setField("unitTypeName", e.target.value)} disabled={isReadOnly} placeholder="e.g. Weight" className={inputCls(isReadOnly, errors.unitTypeName)} />
+            </Row>
+            <Row
+              label="Base Unit"
+              help={
+                isNew
+                  ? "Save this Unit Type first, create its units in Unit Master, then come back to set the Base Unit."
+                  : "Standard reference unit for this type (e.g. Weight → KGS). Drives the \"Equivalent To\" formula on Unit Master."
+              }
+            >
+              <select
+                value={form.baseUnitId || ""}
+                onChange={e => setField("baseUnitId", e.target.value)}
+                disabled={isReadOnly || isNew}
+                className={inputCls(isReadOnly || isNew, null)}
+              >
+                <option value="">
+                  {eligibleBaseUnits.length ? "Select Base Unit" : "No units yet — create one in Unit Master"}
+                </option>
+                {eligibleBaseUnits.map(u => (
+                  <option key={u.id} value={u.id}>{u.unitName} ({u.unitShortCode})</option>
+                ))}
+              </select>
             </Row>
           </div>
 
